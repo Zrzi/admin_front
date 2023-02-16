@@ -1,25 +1,96 @@
-import { createRouter, createWebHashHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import { createRouter, createWebHashHistory  } from 'vue-router';
+import Login from '@/views/Login';
+import Home from '@/views/Home';
+import Users from '@/views/authority/Users';
+import Roles from '@/views/authority/Roles';
+import Role from '@/views/authority/Role';
+import Systems from '@/views/authority/Systems';
+import Excels from '@/views/excels/Excels';
+import Excel from '@/views/excels/Excel';
+import Resources from "@/views/authority/Resources";
 
 const routes = [
   {
-    path: '/',
-    name: 'home',
-    component: HomeView
+    path: '/login',
+    name: 'login',
+    component: Login
   },
   {
-    path: '/about',
-    name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
+    path: '/home',
+    name: 'home',
+    component: Home,
+    children: [
+      {
+        path: 'users',
+        name: 'users',
+        component: Users,
+        meta: {
+          title: '用户管理'
+        },
+        children: [
+        ]
+      },
+      {
+        path: 'roles',
+        name: 'roles',
+        component: Roles,
+        meta: {
+          title: '角色管理'
+        },
+        children: [
+          {
+            path: ':id',
+            name: 'role',
+            component: Role
+          }
+        ]
+      },
+      {
+        path: 'systems',
+        name: 'systems',
+        component: Systems,
+        meta: {
+          title: '系统管理'
+        }
+      },
+      {
+        path: 'excels',
+        name: 'excels',
+        component: Excels,
+        meta: {
+          title: 'excel映射管理'
+        },
+        children: [
+          {
+            path: ':id',
+            name: 'excel',
+            component: Excel
+          }
+        ]
+      }
+    ]
+  },
+  {
+    path: '/resources',
+    name: 'resources',
+    component: Resources,
+    meta: {
+      title: '资源管理'
+    }
+  },
+  {
+    path: '',
+    redirect: 'home'
   }
 ]
 
 const router = createRouter({
   history: createWebHashHistory(),
   routes
+})
+
+router.beforeEach((to, from, next) => {
+  next()
 })
 
 export default router
