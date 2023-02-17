@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-model="addRoleFormVisible" title="添加角色">
+  <el-dialog v-model="addRoleFormVisible" title="添加角色" @opened="init" @close="cancelAddRoleForm">
     <el-form :model="addRoleForm" :rules="addRoleFormRules" ref="addRoleForm">
       <el-form-item label="角色名称" prop="roleName" :label-width="formLabelWidth">
         <el-input v-model="addRoleForm.roleName" autocomplete="off" />
@@ -13,9 +13,6 @@
               :value="system.systemId"
           />
         </el-select>
-      </el-form-item>
-      <el-form-item label="描述" prop="description" :label-width="formLabelWidth">
-        <el-input v-model="addRoleForm.description" type="textArea" :rows="3" autocomplete="off" clearable />
       </el-form-item>
     </el-form>
     <template #footer>
@@ -35,60 +32,50 @@ export default {
   props: [],
   data() {
     return {
+      systems: [],
       formLabelWidth: '140px',
       addRoleFormVisible: false,
       addRoleForm: {
         roleName: '',
-        systemName: '',
-        description: ''
+        systemId: ''
       },
       addRoleFormRules: {
         roleName: [
           {required: true, message: '请输入角色名称', trigger: 'blur'},
           {max: 16, message: '角色名称最长16个字', trigger: 'blur'}
         ],
-        systemName: [
+        systemId: [
           {required: true, messageType: '请选择所属系统', trigger: 'blur'}
-        ],
-        description: [
-          {max: 100, message: '最多100个字符', trigger: 'blur'}
         ]
       },
     }
   },
   methods: {
-    clearAddRoleForm() {
-      this.roleName = '';
-      this.systemName = '';
-      this.description = '';
+    init() {
+      let _this = this;
+      _this.$httpAuthorty.get('/system/get').then(res => {
+        const result = res.data;
+        _this.systems = result.data;
+      });
     },
     cancelAddRoleForm() {
-      this.clearAddRoleForm();
       this.addRoleFormVisible = false;
+      this.$refs['addRoleForm'].resetFields();
       this.$emit('close-add-role');
     },
     addRole(formName) {
       this.$refs[formName].validate((valid) => {
+        let roleForm = this.addRoleForm;
+        let _this = this;
         if (valid) {
-          let form = this.addRoleForm;
-          this.$axios.post('/addRole', form).then(res => {
+          _this.$httpAuthority.post('/role/post', roleForm).then(res => {
             ElMessage({
               message: '添加成功',
               duration: 3 * 1000,
               center: true,
               type: 'success'
             });
-            this.clear();
-            this.formVisible = false;
-          }).catch(error => {
-            ElMessage({
-              message: '提交错误',
-              duration: 3 * 1000,
-              center: true,
-              type: 'error'
-            });
-            this.clear();
-          })
+          });
         } else {
           ElMessage({
             message: '输入错误',
@@ -96,25 +83,13 @@ export default {
             center: true,
             type: 'error'
           });
-          this.clear();
         }
+        _this.cancelAddRoleForm();
       });
     }
   },
-  computed: {
-    systems: {
-      get() {
-        return [
-          {
-            systemId: 'S01',
-            systemName: '系统1'
-          }
-        ];
-      }
-    }
-  },
   created() {
-    this.clearAddRoleForm();
+
   }
 }
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-model="authenticateFormVisible" @opened="init" title="角色授权" style="text-align: left; width: 70vw">
+  <el-dialog v-model="authenticateFormVisible" @opened="init" @close="cancelAuthenticate" title="角色授权" style="text-align: left; width: 70vw">
     <div style="display: flex; align-items: center; justify-content: space-between">
       <el-form-item prop="searchKey" style="width: 20vw">
         <el-input v-model="searchKey" placeholder="请输入资源名称或资源路径" autocomplete="off" />
@@ -65,7 +65,9 @@ export default {
   methods: {
     init() {
       let _this = this;
-      _this.$httpAuthority.get('/roleResource/get', _this.systemId, _this.roleId).then(res => {
+      let systemId = this.systemId;
+      let roleId = this.roleId;
+      _this.$httpAuthority.get('/roleResource/get', {params: {systemId, roleId}}).then(res => {
         const result = res.data;
         _this.resources = result.data;
         _this.total = _this.resources.length;
@@ -91,7 +93,6 @@ export default {
         return resource.resourceId;
       });
     },
-    clearAuthenticateForm() {},
     cancelAuthenticate() {
       this.authenticateFormVisible = false;
       this.$emit('close-authenticate')
@@ -112,7 +113,7 @@ export default {
           type: 'success'
         });
       });
-      this.$emit('close-add-member')
+      _this.cancelAuthenticate();
     }
   },
   created() {

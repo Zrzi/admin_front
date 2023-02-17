@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="添加成员" :v-model="addMemberFormVisible" @opened="init">
+  <el-dialog title="添加成员" :v-model="addMemberFormVisible" @opened="init" @close="cancelAddMember">
     <div style="display: flex; align-items: center; justify-content: space-between">
       <el-form-item prop="searchKey" style="width: 20vw">
         <el-input v-model="searchKey" placeholder="请输入用户名或姓名" autocomplete="off" />
@@ -93,11 +93,11 @@ export default {
         this.clearAddMemberForm();
       } else {
         let _this = this;
-        let form = {
-          roleId: this.roleId;
-          userNos: _this.usersId;
+        let addMemberRoleForm = {
+          roleId: this.roleId,
+          userNos: _this.usersId
         }
-        _this.$httpAuthority.post('/memberRole/addMemberRole', form).then(res => {
+        _this.$httpAuthority.post('/memberRole/addMemberRole', addMemberRoleForm).then(res => {
           ElMessage({
             message: '添加成功',
             duration: 3 * 1000,
@@ -107,7 +107,7 @@ export default {
           _this.$emit('add-member-success');
         });
       }
-      this.$emit('close-add-member');
+      this.cancelAddMember();
     },
     handleSelectionChange(array) {
       this.usersId = array.map(user => {

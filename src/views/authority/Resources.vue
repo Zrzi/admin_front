@@ -44,8 +44,8 @@
           @current-change="handleCurrentChange"
       />
     </div>
-    <el-dialog v-model="addResourceFormVisible" title="添加资源">
-      <el-form :model="addResourceForm" :rules="addResourceRules">
+    <el-dialog v-model="addResourceFormVisible" title="添加资源" @close="cancelAddResource">
+      <el-form :model="addResourceForm" :rules="addResourceRules" ref="addResourceForm">
         <el-form-item label="资源类型" prop="resourceType" :label-width="formLabelWidth">
           <el-radio-group v-model="addResourceForm.resourceType">
             <el-radio label="功能操作">功能操作</el-radio>
@@ -74,11 +74,11 @@
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="cancelAddResource">取消</el-button>
-          <el-button type="primary" @click="addResource('addResourceForm')">确认</el-button>
+          <el-button type="primary" @click="addResource">确认</el-button>
         </span>
       </template>
     </el-dialog>
-    <el-dialog v-model="editResourceFormVisible" title="编辑资源">
+    <el-dialog v-model="editResourceFormVisible" title="编辑资源" @close="cancelEditResource">
       <el-form :model="editResourceForm" :rules="editResourceRules" ref="editResourceForm">
         <el-form-item label="资源类型" prop="resourceType" :label-width="formLabelWidth">
           <el-radio-group v-model="editResourceForm.resourceType">
@@ -108,7 +108,7 @@
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="cancelEditResource">取消</el-button>
-          <el-button type="primary" @click="editResource('editResourceForm')">确认</el-button>
+          <el-button type="primary" @click="editResource">确认</el-button>
         </span>
       </template>
     </el-dialog>
@@ -236,43 +236,27 @@ export default {
       this.currentPage = val;
       this.changeList();
     },
-    clear() {
-      this.addResourceForm.resourceType = '';
-      this.addResourceForm.resourceName = '';
-      this.addResourceForm.resourceUrl = '';
-      this.addResourceForm.parentResource = '';
-      this.addResourceForm.systemId = '';
-      this.editResourceForm.resourceType = '';
-      this.editResourceForm.resourceId = '';
-      this.editResourceForm.resourceName = '';
-      this.editResourceForm.resourceUrl = '';
-      this.editResourceForm.parentResource = '';
-      this.editResourceSelectedId = '';
-    },
     clickAddResource() {
       this.clear();
       this.addResourceFormVisible = true;
     },
     cancelAddResource() {
-      this.clear();
+      this.$refs['addResourceForm'].resetFields();
       this.addResourceFormVisible = false;
     },
-    addResource(formName) {
-      let form = this.addResourceForm;
-      form.systemId = this.systemId;
+    addResource() {
+      let resourceForm = this.addResourceForm;
+      resourceForm.systemId = this.systemId;
       let _this = this;
-      this.$refs[formName].validate((valid) => {
+      this.$refs['addResourceForm'].validate((valid) => {
         if (valid) {
-          _this.$httpAuthority.post('/resource/post', form).then(res => {
+          _this.$httpAuthority.post('/resource/post', resourceForm).then(res => {
             ElMessage({
               message: '添加成功',
               duration: 3 * 1000,
               center: true,
               type: 'success'
             });
-            _this.clear();
-            _this.addResourceFormVisible = false;
-            _this.init();
           });
         } else {
           ElMessage({
@@ -281,35 +265,30 @@ export default {
             center: true,
             type: 'error'
           });
-          _this.clear();
-          return false;
         }
+        _this.cancelAddResource();
       });
     },
     clickEditResource(row) {
-      this.clear();
       this.editResourceSelectedId = row.resourceId;
-      // todo 获取id对应的数据，返显到form中。
       this.editResourceFormVisible = true;
     },
     cancelEditResource() {
-      this.clear();
+      this.$refs['editResourceForm'].resetFields();
       this.editResourceFormVisible = false;
     },
-    editResource(formName) {
+    editResource() {
       let _this = this;
-      let form = this.editResourceForm;
-      _this.$refs[formName].validate((valid) => {
+      let resourceForm = this.editResourceForm;
+      _this.$refs['editResourceForm'].validate((valid) => {
         if (valid) {
-          this.$httpAuthority.post('/resource/update', form).then(res => {
+          this.$httpAuthority.post('/resource/update', resourceForm).then(res => {
             ElMessage({
               message: '修改成功',
               duration: 3 * 1000,
               center: true,
               type: 'success'
             });
-            _this.clear();
-            _this.editResourceFormVisible = false;
           });
         } else {
           ElMessage({
@@ -318,9 +297,8 @@ export default {
             center: true,
             type: 'error'
           });
-          _this.clear();
-          return false;
         }
+        _this.cancelEditResource();
       });
     },
     clickRemoveResource(row) {
@@ -342,6 +320,7 @@ export default {
   },
   created() {
     this.systemId = this.$route.query.systemId;
+    this.currentPage = 1;
     this.init();
   }
 }

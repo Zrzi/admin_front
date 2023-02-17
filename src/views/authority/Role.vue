@@ -3,7 +3,7 @@
     <div style="display: flex; align-items: center; justify-content: space-between">
       <span style="padding-left: 1px; padding-right: 5px">{{ this.roleName }}</span>
       <div>
-<!--        <el-button type="primary" @click="clickEditRole">编辑角色</el-button>-->
+        <el-button type="primary" @click="clickEditRole">编辑角色</el-button>
         <el-button type="primary" @click="clickAuthenticate">角色授权</el-button>
         <el-button type="primary" @click="clickAddMember">添加成员</el-button>
         <el-button type="danger" @click="clickRemoveRole">删除角色</el-button>
@@ -62,7 +62,11 @@
           @current-change="handleCurrentChange"
       />
     </div>
-<!--    <EditRoleDialog v-model="editRoleFormVisible" @close-edit-role="this.editRoleFormVisible = false"></EditRoleDialog>-->
+    <EditRoleDialog
+        v-model="editRoleFormVisible"
+        :role-id="roleId"
+        @close-edit-role="this.editRoleFormVisible = false">
+    </EditRoleDialog>
     <AuthenticateDialog
         v-model="authenticateFormVisible"
         :role-id="roleId" :system-id="systemId"
@@ -139,7 +143,8 @@ export default {
     clickRemoveUser(row) {
       let userNo = row.userNo;
       let _this = this;
-      _this.$httpAuthority('/memberRole/deleteMemberRole', _this.roleId, userNo).then(res => {
+      let roleId = this.roleId;
+      _this.$httpAuthority('/memberRole/deleteMemberRole', {params: {roleId, userNo}}).then(res => {
         ElMessage({
           message: '删除成功',
           duration: 3 * 1000,
@@ -152,9 +157,9 @@ export default {
         _this.changeList();
       });
     },
-    // clickEditRole() {
-    //   this.editRoleFormVisible = true;
-    // },
+    clickEditRole() {
+      this.editRoleFormVisible = true;
+    },
     clickAuthenticate() {
       this.authenticateFormVisible = true;
     },

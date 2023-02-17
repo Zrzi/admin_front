@@ -29,7 +29,10 @@
         <router-view />
       </el-main>
     </el-container>
-    <AddRoleDialog v-model="addRoleFormVisible" @close-add-role="this.addRoleFormVisible=false"></AddRoleDialog>
+    <AddRoleDialog
+        v-model="addRoleFormVisible"
+        @close-add-role="this.addRoleFormVisible=false">
+    </AddRoleDialog>
   </div>
 </template>
 

@@ -2,7 +2,7 @@ import axios from "axios";
 import router from "../router";
 import { ELMessage } from 'element-plus';
 
-const API = axios.create({
+const httpAuthority = axios.create({
     baseURL: 'http://localhost:8000',
     timeout: 2000,
     headers: {
@@ -10,12 +10,12 @@ const API = axios.create({
     }
 });
 
-API.interceptors.request.use(config => {
+httpAuthority.interceptors.request.use(config => {
     config.headers['Authorization'] = localStorage.getItem("token");
     return config;
 })
 
-API.interceptors.response.use(response => {
+httpAuthority.interceptors.response.use(response => {
         let res = response.data;
         if (res.code === 200) {
             return response

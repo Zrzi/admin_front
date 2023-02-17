@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-model="editRoleFormVisible" title="编辑角色">
+  <el-dialog v-model="editRoleFormVisible" title="编辑角色" @opened="init" @close="cancelEditRole">
     <el-form :model="editRoleForm" :rules="editRoleFormRules" ref="editRoleForm">
       <el-form-item label="角色名称" prop="roleName" :label-width="formLabelWidth">
         <el-input v-model="editRoleForm.roleName" autocomplete="off" />
@@ -8,13 +8,15 @@
     <template #footer>
         <span class="dialog-footer">
           <el-button @click="cancelEditRole">取消</el-button>
-          <el-button type="primary" @click="editRole('editRoleForm')">确认</el-button>
+          <el-button type="primary" @click="editRole()">确认</el-button>
         </span>
     </template>
   </el-dialog>
 </template>
 
 <script>
+import {ElMessage} from "element-plus";
+
 export default {
   name: "EditRoleDialog",
   props: ['roleId', 'roleName', 'systemId', 'systemName'],
@@ -34,21 +36,34 @@ export default {
     }
   },
   methods: {
-    clearEditRoleForm() {
-      this.editRoleForm.roleName = '';
-    },
+    init() {},
     cancelEditRole() {
-      this.clearEditRoleForm();
       this.editRoleFormVisible = false;
+      this.$refs['editRoleForm'].resetFields();
       this.$emit('close-edit-role')
     },
-    editRole(formName) {
-      let form = this.$refs[formName].validate(valid => {
+    editRole() {
+      let _this = this;
+      let roleForm = this.editRoleForm;
+      _this.$refs['editRoleForm'].validate(valid => {
         if (valid) {
-
+          _this.$httpAuthority.post('/role/update', roleForm).then(res => {
+            ElMessage({
+              message: '添加成功',
+              duration: 3 * 1000,
+              center: true,
+              type: 'success'
+            });
+          });
         } else {
-
+          ElMessage({
+            message: '输入错误',
+            duration: 3 * 1000,
+            center: true,
+            type: 'error'
+          });
         }
+        _this.cancelEditRole();
       });
     },
   },

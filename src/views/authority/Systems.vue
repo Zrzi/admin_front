@@ -35,7 +35,7 @@
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="cancelAddSystem">取消</el-button>
-          <el-button type="primary" @click="addSystem('addSystemForm')">确认</el-button>
+          <el-button type="primary" @click="addSystem">确认</el-button>
         </span>
       </template>
     </el-dialog>
@@ -48,7 +48,7 @@
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="cancelEditSystem">取消</el-button>
-          <el-button type="primary" @click="editSystem('editSystemForm')">确认</el-button>
+          <el-button type="primary" @click="editSystem">确认</el-button>
         </span>
       </template>
     </el-dialog>
@@ -86,9 +86,6 @@ export default {
         systemName: [
           {required: true, message: '请输入系统名称', trigger: 'blur'},
           {max: 16, message: '系统名称长度不超过16个字符', trigger: 'blur'}
-        ],
-        systemId: [
-          {required: true, message: '请输入系统编码', trigger: 'blur'}
         ]
       },
       formLabelWidth: '140px'
@@ -128,14 +125,13 @@ export default {
       this.editSystemFormVisible = true;
     },
     cancelAddSystem() {
-      this.addSystemForm.systemName = '';
-      this.addSystemForm.systemId = '';
+      this.$refs['addSystemForm'].resetFields();
       this.addSystemFormVisible = false;
     },
-    addSystem(formName) {
+    addSystem() {
       let form = this.addSystemForm;
       let _this = this;
-      this.$refs[formName].validate((valid) => {
+      this.$refs['addSystemForm'].validate((valid) => {
         if (valid) {
           _this.$httpAuthority.post('/system/post', form).then(res => {
             ElMessage({
@@ -144,8 +140,6 @@ export default {
               center: true,
               type: 'success'
             });
-            _this.clear();
-            _this.formVisible = false;
             _this.init();
           });
         } else {
@@ -155,30 +149,27 @@ export default {
             center: true,
             type: 'error'
           });
-          _this.clear();
-          return false;
         }
+        _this.cancelAddSystem();
       });
     },
     cancelEditSystem() {
-      this.editSystemForm.systemName = '';
-      this.editSystemForm.systemId = '';
+      this.$refs['editSystemForm'].resetFields();
       this.editSystemFormVisible = false;
     },
-    editSystem(formName) {
+    editSystem() {
       let _this = this;
       let form = this.editSystemForm;
-      this.$refs[formName].validate((valid) => {
+      form.systemId = this.systemSelected.systemId;
+      this.$refs['editSystemForm'].validate((valid) => {
         if (valid) {
-          _this.$axios.post('/system/update', form).then(res => {
+          _this.$httpAuthority.post('/system/update', form).then(res => {
             ElMessage({
               message: '修改成功',
               duration: 3 * 1000,
               center: true,
               type: 'success'
             });
-            _this.clear();
-            _this.formVisible = false;
             _this.init();
           });
         } else {
@@ -188,9 +179,8 @@ export default {
             center: true,
             type: 'error'
           });
-          _this.clear();
-          return false;
         }
+        _this.cancelEditSystem();
       });
     }
   },
