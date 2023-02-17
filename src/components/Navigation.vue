@@ -33,7 +33,7 @@
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="cancel">取消</el-button>
-          <el-button type="primary" @click="resetPassword('resetPasswordForm')">确认</el-button>
+          <el-button type="primary" @click="resetPassword">确认</el-button>
         </span>
       </template>
     </el-dialog>
@@ -90,31 +90,30 @@ export default {
         sessionStorage.clear();
         this.$store.commit("RESET_STATE");
         this.$router.push({path: '/login'})
-      })
+      }).catch(message => {});
     },
     clear() {
-      this.resetPasswordForm.oldPassword = '';
-      this.resetPasswordForm.newPassword1 = '';
-      this.resetPasswordForm.newPassword2 = '';
+      this.$refs['resetPasswordForm'].resetFields();
     },
     cancel() {
       this.clear();
       this.formVisible = false;
     },
-    resetPassword(formName) {
-      this.$refs[formName].validate((valid) => {
+    resetPassword() {
+      this.$refs['resetPasswordForm'].validate((valid) => {
         if (valid) {
-          let form = this.resetPasswordForm;
+          let resetPasswordForm = this.resetPasswordForm;
           let _this = this;
-          _this.$httpAuthority.post('/resetPassword', form).then(res => {
+          _this.$httpAuthority.post('/resetPassword', resetPasswordForm).then(res => {
             ElMessage({
               message: '修改成功',
               duration: 3 * 1000,
               center: true,
               type: 'success'
             });
-            this.clear();
-            this.formVisible = false;
+            _this.cancel();
+          }).catch(message => {
+            _this.clear();
           });
         } else {
           ElMessage({
@@ -125,7 +124,7 @@ export default {
           });
           this.clear();
         }
-      })
+      });
     }
   }
 }

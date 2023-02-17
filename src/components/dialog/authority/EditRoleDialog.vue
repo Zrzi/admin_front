@@ -19,9 +19,9 @@ import {ElMessage} from "element-plus";
 
 export default {
   name: "EditRoleDialog",
-  props: ['roleId', 'roleName', 'systemId', 'systemName'],
   data() {
     return {
+      roleId: '',
       formLabelWidth: '140px',
       editRoleFormVisible: false,
       editRoleForm: {
@@ -36,24 +36,33 @@ export default {
     }
   },
   methods: {
-    init() {},
-    cancelEditRole() {
-      this.editRoleFormVisible = false;
+    init() {
+      this.roleId = this.$store.state.roleId;
+    },
+    clearEditRoleForm() {
       this.$refs['editRoleForm'].resetFields();
+    },
+    cancelEditRole() {
+      this.clearEditRoleForm();
+      this.editRoleFormVisible = false;
       this.$emit('close-edit-role')
     },
     editRole() {
       let _this = this;
       let roleForm = this.editRoleForm;
+      roleForm.roleId = this.roleId;
       _this.$refs['editRoleForm'].validate(valid => {
         if (valid) {
           _this.$httpAuthority.post('/role/update', roleForm).then(res => {
             ElMessage({
-              message: '添加成功',
+              message: '修改成功',
               duration: 3 * 1000,
               center: true,
               type: 'success'
             });
+            this.cancelEditRole();
+          }).catch(message => {
+            this.clearEditRoleForm();
           });
         } else {
           ElMessage({
@@ -62,13 +71,13 @@ export default {
             center: true,
             type: 'error'
           });
+          this.clearEditRoleForm();
         }
-        _this.cancelEditRole();
       });
     },
   },
   created() {
-    this.clearEditRoleForm();
+
   }
 }
 </script>

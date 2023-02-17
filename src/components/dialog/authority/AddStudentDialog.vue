@@ -152,7 +152,7 @@ export default {
               center: true,
               type: 'success'
             });
-          });
+          }).catch(message => {});
         } else {
           ElMessage({
             message: '输入错误',

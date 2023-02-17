@@ -51,12 +51,14 @@ export default {
     }
   },
   methods: {
-    init() {
-      let _this = this;
-      _this.$httpAuthority.get('/role/get').then(res => {
-        const result = res.result;
-        _this.systems = result.data;
-      });
+    async init() {
+      // let _this = this;
+      let res = await this.$httpAuthority.get('/role/get');
+      this.systems = res.data.data;
+      // _this.$httpAuthority.get('/role/get').then(res => {
+      //   const result = res.result;
+      //   _this.systems = result.data;
+      // }).catch(message => {});
     },
     editMouseEnterStyle() {
       document.querySelector('body').style.cursor = 'pointer';
@@ -71,7 +73,7 @@ export default {
       this.$router.push({path: '/home/roles/' + roleId});
     }
   },
-  created() {
+  mounted() {
     this.init();
   }
 }

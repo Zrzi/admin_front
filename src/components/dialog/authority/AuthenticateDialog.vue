@@ -16,11 +16,11 @@
                 style="width: 100%" height="200"
                 ref="authenticateTable">
         <el-table-column type="selection" fixed="left" reserve-selection header-align="center" />
-        <el-table-column prop="resourceId" label="资源编码" header-align="center" />
-        <el-table-column prop="resourceName" label="资源名称" header-align="center" />
-        <el-table-column prop="systemName" label="所属系统" header-align="center" />
-        <el-table-column prop="resourceUrl" label="资源路径" header-align="center" />
-        <el-table-column prop="parentResource" label="父资源" header-align="center" />
+        <el-table-column prop="resourceId" label="资源编码" header-align="center" :show-overflow-tooltip="true" />
+        <el-table-column prop="resourceName" label="资源名称" header-align="center" :show-overflow-tooltip="true" />
+        <el-table-column prop="systemName" label="所属系统" header-align="center" :show-overflow-tooltip="true" />
+        <el-table-column prop="resourceUrl" label="资源路径" header-align="center" :show-overflow-tooltip="true" />
+        <el-table-column prop="parentResource" label="父资源" header-align="center" :show-overflow-tooltip="true" />
         <el-table-column prop="resourceType" label="资源类型" header-align="center" />
       </el-table>
     </div>
@@ -47,9 +47,10 @@ import {ElMessage} from "element-plus";
 
 export default {
   name: "AuthenticateDialog",
-  props: ['roleId', 'roleName', 'systemId', 'systemName'],
   data() {
     return {
+      roleId: '',
+      systemId: '',
       searchKey: '',
       pageSize: 5,
       total: 0,
@@ -64,6 +65,9 @@ export default {
   },
   methods: {
     init() {
+      this.currentPage = 1;
+      this.roleId = this.$store.state.roleId;
+      this.systemId = this.$store.state.systemId;
       let _this = this;
       let systemId = this.systemId;
       let roleId = this.roleId;
@@ -95,25 +99,30 @@ export default {
     },
     cancelAuthenticate() {
       this.authenticateFormVisible = false;
-      this.$emit('close-authenticate')
+      this.resources = [];
+      this.resourcesShow = [];
+      this.resourcesSelected = [];
+      this.$refs['authenticateTable'].clearSelection();
+      this.$emit('close-authenticate');
     },
     authenticate() {
       let _this = this;
-      let form = {
+      let editRoleResourceForm = {
         roleId: _this.roleId,
         systemId: _this.systemId,
         resourceIds: _this.resourcesSelected
       };
-      _this.$httpAuthority.post('/roleResource/post', form).then(res => {
-        const result = res.data;
+      _this.$httpAuthority.post('/roleResource/post', editRoleResourceForm).then(res => {
         ElMessage({
           message: '提交成功',
           duration: 3 * 1000,
           center: true,
           type: 'success'
         });
+        _this.cancelAuthenticate();
+      }).catch(message => {
+
       });
-      _this.cancelAuthenticate();
     }
   },
   created() {

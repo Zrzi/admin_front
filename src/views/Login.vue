@@ -14,14 +14,14 @@
     </el-col>
     <el-col :span="13">
       <el-form label-position="right" :rules="rules" label-width="80px" :model="loginForm" ref="loginForm">
-        <el-form-item label="用户名" prop="userNo" style="width: 380px;">
+        <el-form-item label="用户名" v-model="loginForm.userNo" prop="userNo" style="width: 380px;">
           <el-input v-model="loginForm.userNo" placeholder="请输入用户名"></el-input>
         </el-form-item>
-        <el-form-item label="密码" prop="password" style="width: 380px;">
+        <el-form-item label="密码" v-model="loginForm.password" prop="password" style="width: 380px;">
           <el-input type="password" v-model="loginForm.password" placeholder="请输入密码"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="submitForm('loginForm')">提交</el-button>
+          <el-button type="primary" @click="submitForm">登录</el-button>
         </el-form-item>
       </el-form>
     </el-col>
@@ -50,16 +50,16 @@ export default {
     }
   },
   methods: {
-    submitForm(formName) {
-      let form = this.loginForm;
+    submitForm() {
+      let loginForm = this.loginForm;
       let _this = this;
-      this.$refs[formName].validate((valid) => {
+      this.$refs['loginForm'].validate((valid) => {
         if (valid) {
-          _this.$httpAuthority.post('/login', form).then(res => {
+          _this.$httpAuthority.post('/login', loginForm).then(res => {
             const jwt = res.data.data.token;
             this.$store.commit("SET_TOKENS", jwt);
-            this.$router.push({path: '/home/role'});
-          });
+            this.$router.push({path: '/home/roles'});
+          }).catch(message => {});
         } else {
           ElMessage({
             message: '输入错误',
@@ -67,8 +67,8 @@ export default {
             center: true,
             type: 'error'
           });
-          // return false;
         }
+        _this.$refs['loginForm'].resetFields();
       });
     }
   }

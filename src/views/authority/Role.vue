@@ -20,7 +20,7 @@
       </div>
     </div>
     <div>
-      <el-table :data="this.usersShow" style="width: 100%" height="280" table-layout="auto">
+      <el-table :data="this.users" style="width: 100%" height="280" table-layout="auto">
         <el-table-column prop="userNo" label="用户名" />
         <el-table-column prop="username" label="姓名" />
         <el-table-column label="角色编码">
@@ -55,28 +55,25 @@
     <div style="display: flex; align-items: center; justify-content: center">
       <el-pagination
           :page-size="this.pageSize"
-          :pager-count="this.pageCount"
           layout="prev, pager, next"
           :total="this.total"
           :current-page="this.currentPage"
           @current-change="handleCurrentChange"
+          @update:page-size="handleUpdatePageSize"
       />
     </div>
     <EditRoleDialog
         v-model="editRoleFormVisible"
-        :role-id="roleId"
         @close-edit-role="this.editRoleFormVisible = false">
     </EditRoleDialog>
     <AuthenticateDialog
         v-model="authenticateFormVisible"
-        :role-id="roleId" :system-id="systemId"
-        @close-authenticate="this.authenticateFormVisible = false"
-        @add-member-success="this.init(this.roleId)">
+        @close-authenticate="this.authenticateFormVisible = false">
     </AuthenticateDialog>
     <AddMemberDialog
         v-model="addMemberFormVisible"
-        :role-id="roleId" :system-id="systemId"
-        @close-add-member="this.addMemberFormVisible = false">
+        @close-add-member="this.addMemberFormVisible = false"
+        @add-member-success="this.getUsers">
     </AddMemberDialog>
   </div>
 </template>
@@ -97,14 +94,12 @@ export default {
       systemId: -1,
       systemName: '',
       users: [],
-      usersShow: [],
       searchKey: '',
       pageSize: 10,
-      pageCount: 11,
       currentPage: 1,
       total: 0,
       formLabelWidth: '140px',
-      // editRoleFormVisible: false,
+      editRoleFormVisible: false,
       authenticateFormVisible: false,
       addMemberFormVisible: false,
     }
@@ -116,30 +111,37 @@ export default {
     editMouseLeaveStyle() {
       document.querySelector('body').style.cursor = 'default';
     },
-    init(roleId) {
+    init() {
+      let roleId = this.roleId;
       let _this = this;
-      _this.$httpAuthority.get('/role/getByRoleId', roleId).then(res => {
-        const data = res.data.data;
-        _this.roleName = data.roleName;
-        _this.systemId = 'S01';
-        _this.systemName = '系统1';
-      });
-      _this.$httpAuthority.get('/memberRole/get', roleId).then(res => {
+      _this.$httpAuthority.get('/role/getByRoleId', {params: {roleId}}).then(res => {
         const result = res.data;
-        _this.users = result.data;
-        _this.usersShow = _this.users.slice(0, this.pageSize);
-        _this.total = _this.users.length;
-      });
+        _this.roleName = result.data.roleName;
+        _this.systemId = result.data.systemId;
+        _this.$store.commit("SET_SYSTEM_ID", _this.systemId);
+        _this.systemName = result.data.systemName;
+      }).catch(message => {});
+      _this.getUsers();
+    },
+    getUsers() {
+      let _this = this;
+      let roleId = this.roleId;
+      let start = (this.currentPage - 1) * this.pageSize;
+      let pageSize = this.pageSize;
+      _this.$httpAuthority.get('/memberRole/get', {params: {roleId, start, pageSize}}).then(res => {
+        const result = res.data;
+        _this.users = result.data.users;
+        _this.total = result.data.total;
+      }).catch(message => {});
     },
     changeList() {
-      let start = (this.currentPage - 1) * this.pageSize;
-      let end = (this.currentPage) * this.pageSize;
-      this.usersShow = this.users.slice(start, end);
+      this.getUsers();
     },
     handleCurrentChange(val) {
       this.currentPage = val;
       this.changeList();
     },
+    handleUpdatePageSize(val) {},
     clickRemoveUser(row) {
       let userNo = row.userNo;
       let _this = this;
@@ -155,7 +157,7 @@ export default {
           return user.userNo !== userNo;
         });
         _this.changeList();
-      });
+      }).catch(message => {});
     },
     clickEditRole() {
       this.editRoleFormVisible = true;
@@ -178,16 +180,18 @@ export default {
           type: 'success'
         });
         _this.$router.push({path: '/home/roles'})
-      });
+      }).catch(message => {});
     },
   },
   beforeRouteUpdate(to, from) {
     this.roleId = to.params.id;
-    this.init(this.roleId);
+    this.$store.commit("SET_ROLE_ID", this.roleId);
+    this.init();
   },
   mounted() {
     this.roleId = this.$route.params.id;
-    this.init(this.roleId);
+    this.$store.commit("SET_ROLE_ID", this.roleId);
+    this.init();
   }
 }
 </script>

@@ -1,10 +1,10 @@
 import axios from "axios";
 import router from "../router";
-import { ELMessage } from 'element-plus';
+import { ElMessage } from 'element-plus';
 
 const httpAuthority = axios.create({
     baseURL: 'http://localhost:8000',
-    timeout: 2000,
+    timeout: 10 * 60 * 1000,
     headers: {
         "Content-Type": "application/json; charset=utf-8"
     }
@@ -18,14 +18,31 @@ httpAuthority.interceptors.request.use(config => {
 httpAuthority.interceptors.response.use(response => {
         let res = response.data;
         if (res.code === 200) {
-            return response
+            return Promise.resolve(response);
+        } else if (res.code === 800002) {
+            ElMessage({
+                message: '用户未登录',
+                duration: 3 * 1000,
+                type: 'error',
+                center: true
+            });
+            router.push("/login");
+            return Promise.reject(response.data.message)
+        } else if (res.code === 800003) {
+            ElMessage({
+                message: '用户无权限',
+                duration: 3 * 1000,
+                type: 'error',
+                center: true
+            });
+            return Promise.reject(response.data.message)
         } else {
-            ELMessage({
+            ElMessage({
                 message: res.message ? res.message : '系统异常',
                 duration: 3 * 1000,
                 type: 'error',
                 center: true
-            })
+            });
             return Promise.reject(response.data.message)
         }
     },
@@ -36,13 +53,13 @@ httpAuthority.interceptors.response.use(response => {
         if (error.response.status === 401) {
             router.push("/login");
         }
-        ELMessage({
+        ElMessage({
             message: error.message,
             duration: 3 * 1000,
             type: 'error',
             center: true
-        })
-        return Promise.reject(error)
+        });
+        return Promise.reject(error);
     }
 )
 

@@ -117,14 +117,14 @@ export default {
   methods: {
     init() {
       let _this = this;
-      // _this.$httpAuthority.get("/user/get").then(res => {
-      //   const result = res.data;
-      //   _this.students = result.data.students;
-      //   _this.teachers = result.data.teachers;
-      //   _this.total = this.students.length;
-      //   _this.studentsShow = this.students.slice(0, this.pageSize);
-      //   _this.teachersShow = this.teachers.slice(0, this.pageSize);
-      // });
+      _this.$httpAuthority.get("/user/get").then(res => {
+        const result = res.data;
+        _this.students = result.data.students;
+        _this.teachers = result.data.teachers;
+        _this.total = this.students.length;
+        _this.studentsShow = this.students.slice(0, this.pageSize);
+        _this.teachersShow = this.teachers.slice(0, this.pageSize);
+      });
     },
     editMouseEnterStyle() {
       document.querySelector('body').style.cursor = 'pointer';

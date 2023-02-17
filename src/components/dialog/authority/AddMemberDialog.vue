@@ -40,9 +40,9 @@ import {ElMessage} from "element-plus";
 
 export default {
   name: "AddMemberDialog",
-  props: ['roleId', 'roleName', 'systemId', 'systemName'],
   data() {
     return {
+      roleId: '',
       addMemberFormVisible: false,
       searchKey: '',
       // 用于添加成员时查询到的用户，注意查询到的用户都是不具有该角色的
@@ -56,13 +56,15 @@ export default {
   },
   methods: {
     init() {
+      this.currentPage = 1;
+      this.roleId = this.$store.state.roleId;
       let _this = this;
       _this.$httpAuthority.get('/memberRole/getUnaddedUser', _this.roleId).then(res => {
         const result = res.data;
         _this.usersSelected = result.data;
         _this.usersSelectedShow = _this.usersSelected.slice(0, this.pageSize);
         _this.total = _this.usersSelected.length;
-      });
+      }).catch(message => {});
     },
     handleCurrentChange(val) {
       this.currentPage = val;
@@ -105,9 +107,11 @@ export default {
             type: 'success'
           });
           _this.$emit('add-member-success');
+          this.cancelAddMember();
+        }).catch(message => {
+          this.clearAddMemberForm();
         });
       }
-      this.cancelAddMember();
     },
     handleSelectionChange(array) {
       this.usersId = array.map(user => {

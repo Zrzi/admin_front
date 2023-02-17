@@ -13,14 +13,14 @@
       <el-button type="primary" @click="clickAddResource">添加资源</el-button>
     </div>
     <div>
-      <el-table :data="this.resourcesShow" style="width: 100%" height="400" ref="resourcesTable">
-        <el-table-column prop="resourceId" label="资源编码" />
+      <el-table :data="this.resources" style="width: 100%" height="400" ref="resourcesTable">
+        <el-table-column prop="resourceId" label="资源编码" :show-overflow-tooltip="true" />
         <el-table-column prop="resourceName" label="资源名称" />
         <el-table-column prop="systemName" label="所属系统" />
         <el-table-column prop="resourceUrl" label="资源路径" />
         <el-table-column prop="parentResource" label="父资源" />
         <el-table-column prop="resourceType" label="资源类型" />
-        <el-table-column prop="updatedTime" label="修改时间" />
+        <el-table-column prop="updatedDate" label="修改时间" :show-overflow-tooltip="true" />
         <el-table-column fixed="right" label="操作">
           <template #default="scope">
             <span style="color: #409EFF; margin: 1vmin"
@@ -42,6 +42,7 @@
           :total="this.total"
           :current-page="this.currentPage"
           @current-change="handleCurrentChange"
+          @update:page-size="handleUpdatePageSize"
       />
     </div>
     <el-dialog v-model="addResourceFormVisible" title="添加资源" @close="cancelAddResource">
@@ -157,7 +158,6 @@ export default {
       systemId: '',
       searchKey: '',
       resources:[],
-      resourcesShow: [],
       pageSize: 10,
       currentPage: 1,
       total: 0,
@@ -181,7 +181,6 @@ export default {
           {required: true, message: '请输入资源路径', trigger: 'blur'}
         ],
         parentResource: [
-          {required: true, message: '请选择父资源', trigger: 'blur'},
           {validator: checkAddParentResource, trigger: 'blur'}
         ]
       },
@@ -205,7 +204,6 @@ export default {
           {required: true, message: '请输入资源路径', trigger: 'blur'}
         ],
         parentResource: [
-          {required: true, message: '请选择父资源', trigger: 'blur'},
           {validator: checkEditParentResource, trigger: 'blur'}
         ]
       }
@@ -213,13 +211,26 @@ export default {
   },
   methods: {
     init() {
+      this.getData();
+    },
+    getData() {
       let _this = this;
-      _this.$httpAuthority.get("/resource/get").then(res => {
+      let systemId = _this.systemId;
+      let start = (this.currentPage - 1) * this.pageSize;
+      let pageSize = this.pageSize;
+      _this.$httpAuthority.get("/resource/get", {params: {systemId, start, pageSize}}).then(res => {
         const result = res.data;
-        _this.resources = result.data;
-        _this.total = _this.resources.length;
-        _this.resourcesShow = _this.resources.slice(0, this.pageSize);
-      });
+        _this.resources = result.data.resources;
+        _this.total = result.data.total;
+      }).catch(message => {});
+    },
+    getTotal() {
+      let _this = this;
+      let systemId = _this.systemId;
+      _this.$httpAuthority.get("/resource/count", {params: {systemId}}).then(res => {
+        const result = res.data;
+        _this.total = result.total;
+      }).catch(message => {});
     },
     editMouseEnterStyle() {
       document.querySelector('body').style.cursor = 'pointer';
@@ -228,27 +239,28 @@ export default {
       document.querySelector('body').style.cursor = 'default';
     },
     changeList() {
-      let start = (this.currentPage - 1) * this.pageSize;
-      let end = (this.currentPage) * this.pageSize;
-      this.resourcesShow = this.resources.slice(start, end);
+      this.getData();
     },
     handleCurrentChange(val) {
       this.currentPage = val;
       this.changeList();
     },
+    handleUpdatePageSize(val) {},
+    clearAddResourceForm() {
+      this.$refs['addResourceForm'].resetFields();
+    },
     clickAddResource() {
-      this.clear();
       this.addResourceFormVisible = true;
     },
     cancelAddResource() {
-      this.$refs['addResourceForm'].resetFields();
+      this.clearAddResourceForm();
       this.addResourceFormVisible = false;
     },
     addResource() {
       let resourceForm = this.addResourceForm;
       resourceForm.systemId = this.systemId;
       let _this = this;
-      this.$refs['addResourceForm'].validate((valid) => {
+      _this.$refs['addResourceForm'].validate((valid) => {
         if (valid) {
           _this.$httpAuthority.post('/resource/post', resourceForm).then(res => {
             ElMessage({
@@ -257,6 +269,11 @@ export default {
               center: true,
               type: 'success'
             });
+            _this.total = _this.total + 1;
+            _this.cancelAddResource();
+            _this.getData();
+          }).catch(message => {
+            _this.clearAddResourceForm();
           });
         } else {
           ElMessage({
@@ -265,16 +282,19 @@ export default {
             center: true,
             type: 'error'
           });
+          _this.clearAddResourceForm();
         }
-        _this.cancelAddResource();
       });
+    },
+    clearEditResourceForm() {
+      this.$refs['editResourceForm'].resetFields();
     },
     clickEditResource(row) {
       this.editResourceSelectedId = row.resourceId;
       this.editResourceFormVisible = true;
     },
     cancelEditResource() {
-      this.$refs['editResourceForm'].resetFields();
+      this.clearEditResourceForm();
       this.editResourceFormVisible = false;
     },
     editResource() {
@@ -289,6 +309,10 @@ export default {
               center: true,
               type: 'success'
             });
+            _this.cancelEditResource();
+            _this.getData();
+          }).catch(message => {
+            _this.clearEditResourceForm();
           });
         } else {
           ElMessage({
@@ -297,8 +321,8 @@ export default {
             center: true,
             type: 'error'
           });
+          _this.clearEditResourceForm();
         }
-        _this.cancelEditResource();
       });
     },
     clickRemoveResource(row) {
@@ -315,7 +339,7 @@ export default {
           return resource.resourceId !== resourceId;
         });
         _this.changeList();
-      });
+      }).catch(message => {});
     }
   },
   created() {

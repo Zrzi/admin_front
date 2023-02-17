@@ -18,7 +18,7 @@
     <template #footer>
         <span class="dialog-footer">
           <el-button @click="cancelAddRoleForm">取消</el-button>
-          <el-button type="primary" @click="addRole('addRoleForm')">确认</el-button>
+          <el-button type="primary" @click="addRole">确认</el-button>
         </span>
     </template>
   </el-dialog>
@@ -56,15 +56,15 @@ export default {
       _this.$httpAuthorty.get('/system/get').then(res => {
         const result = res.data;
         _this.systems = result.data;
-      });
+      }).catch(message => {});
     },
     cancelAddRoleForm() {
       this.addRoleFormVisible = false;
       this.$refs['addRoleForm'].resetFields();
       this.$emit('close-add-role');
     },
-    addRole(formName) {
-      this.$refs[formName].validate((valid) => {
+    addRole() {
+      this.$refs['addRoleForm'].validate((valid) => {
         let roleForm = this.addRoleForm;
         let _this = this;
         if (valid) {
@@ -75,7 +75,7 @@ export default {
               center: true,
               type: 'success'
             });
-          });
+          }).catch(message => {});
         } else {
           ElMessage({
             message: '输入错误',

@@ -11,7 +11,7 @@
         <el-col v-for="col in this.numsPerRow" :span="5" style="width: 18vw">
           <el-card shadow="always" v-if="this.numsPerRow * (row - 1) + col - 1 < this.systemsNum">
             <div style="text-align: left; font-size: medium"><b>{{ this.systems[this.numsPerRow * (row - 1) + col - 1].systemName }}</b></div>
-            <div style="text-align: left; font-size: smaller">系统编码: {{ this.systems[this.numsPerRow * (row - 1) + col - 1].systemId}}</div>
+<!--            <div style="text-align: left; font-size: smaller">系统编码: {{ this.systems[this.numsPerRow * (row - 1) + col - 1].systemId}}</div>-->
             <div style="display: flex; align-items: center; justify-content: space-between">
               <span style="font-size: small; color: #409EFF"
                     @click="clickResources(this.numsPerRow * (row - 1) + col - 1)"
@@ -99,7 +99,7 @@ export default {
         _this.systems = result.data;
         _this.systemsNum = _this.systems.length;
         _this.rows = Math.ceil(_this.systemsNum / _this.numsPerRow);
-      });
+      }).catch(message => {});
     },
     editMouseEnterStyle() {
       document.querySelector('body').style.cursor = 'pointer';
@@ -141,7 +141,7 @@ export default {
               type: 'success'
             });
             _this.init();
-          });
+          }).catch(message => {});
         } else {
           ElMessage({
             message: '输入错误',
@@ -171,7 +171,7 @@ export default {
               type: 'success'
             });
             _this.init();
-          });
+          }).catch(message => {});
         } else {
           ElMessage({
             message: '输入错误',
