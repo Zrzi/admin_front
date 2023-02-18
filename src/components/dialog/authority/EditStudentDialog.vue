@@ -23,8 +23,8 @@
         <el-date-picker v-model="editStudentForm.birthday" type="date" placeholder="选择出生日期"
                         value-format="YYYY-MM-DD" :disabled-date="disabledDate" />
       </el-form-item>
-      <el-form-item label="身份证" prop="ID" :label-width="formLabelWidth">
-        <el-input v-model="editStudentForm.ID" autocomplete="off" />
+      <el-form-item label="身份证" prop="id" :label-width="formLabelWidth">
+        <el-input v-model="editStudentForm.id" autocomplete="off" />
       </el-form-item>
       <el-form-item label="在校状态" prop="status" :label-width="formLabelWidth">
         <el-input v-model="editStudentForm.status" autocomplete="off" />
@@ -70,7 +70,7 @@ export default {
         curGrade: '',
         enterYear: '',
         birthday: '',
-        ID: '',
+        id: '',
         status: '',
         nation: '',
         politicalStatus: '',
@@ -104,7 +104,7 @@ export default {
         birthday: [
           {required: true, message: '请输入学生出生日期', trigger: 'blur'},
         ],
-        ID: [
+        id: [
           {max: 20, message: '学生身份证最长20位', trigger: 'blur'}
         ],
         status: [
@@ -128,6 +128,25 @@ export default {
   methods: {
     init() {
       this.userNo = this.$store.state.userNo;
+      let userNo = this.userNo;
+      let _this = this;
+      let userType = '学生';
+      _this.$httpAuthority.get('/user/getByUserNo', {params: {userNo, userType}}).then(res => {
+        const result = res.data;
+        _this.editStudentForm.stuName = result.data.stuName;
+        _this.editStudentForm.sex = result.data.sex;
+        _this.editStudentForm.majorNo = result.data.majorNo;
+        _this.editStudentForm.classNo = result.data.classNo;
+        _this.editStudentForm.curGrade = result.data.curGrade;
+        _this.editStudentForm.enterYear = result.data.enterYear;
+        _this.editStudentForm.birthday = result.data.birthday;
+        _this.editStudentForm.id = result.data.id;
+        _this.editStudentForm.status = result.data.status;
+        _this.editStudentForm.nation = result.data.nation;
+        _this.editStudentForm.politicalStatus = result.data.politicalStatus;
+        _this.editStudentForm.sourcePlace = result.data.sourcePlace;
+        console.log(_this.editStudentForm);
+      });
     },
     clearEditStudentForm() {
       this.$refs['editStudentForm'].resetFields();
@@ -141,12 +160,13 @@ export default {
       let _this = this;
       let editUserForm = {
         isStudent: true,
+        userNo: _this.userNo,
         student: this.editStudentForm
       };
       _this.$refs['editStudentForm'].validate((valid) => {
         if (valid) {
-          editUserForm.student.stuNo = _this.userNo;
-          _this.$httpAuthority.post('/user/post', editUserForm).then(res => {
+          console.log(editUserForm);
+          _this.$httpAuthority.post('/user/update', editUserForm).then(res => {
             ElMessage({
               message: '编辑成功',
               duration: 3 * 1000,

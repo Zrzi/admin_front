@@ -13,8 +13,8 @@
       <el-form-item label="电话" prop="phone" :label-width="formLabelWidth">
         <el-input v-model="editTeacherForm.phone" autocomplete="off" />
       </el-form-item>
-      <el-form-item label="身份证件号" prop="IDNo" :label-width="formLabelWidth">
-        <el-input v-model="editTeacherForm.IDNo" autocomplete="off" />
+      <el-form-item label="身份证件号" prop="idNo" :label-width="formLabelWidth">
+        <el-input v-model="editTeacherForm.idNo" autocomplete="off" />
       </el-form-item>
       <el-form-item label="婚姻状况" prop="marriage" :label-width="formLabelWidth">
         <el-input v-model="editTeacherForm.marriage" autocomplete="off" />
@@ -90,7 +90,7 @@ export default {
         sex: '',
         birthday: '',
         phone: '',
-        IDNo: '',
+        idNo: '',
         marriage: '',
         orgType: '',
         staffType: '',
@@ -122,7 +122,7 @@ export default {
         phone: [
           {max: 15, message: '电话长度不超过15个字符', trigger: 'blur'}
         ],
-        IDNo: [
+        idNo: [
           {max: 20, message: '身份证长度不超过20个字符', trigger: 'blur'}
         ],
         marriage: [
@@ -174,6 +174,32 @@ export default {
   methods: {
     init() {
       this.userNo = this.$store.state.userNo;
+      let userNo = this.userNo;
+      let _this = this;
+      let userType = '教师';
+      _this.$httpAuthority.get('/user/getByUserNo', {params: {userNo, userType}}).then(res => {
+        const result = res.data;
+        _this.editTeacherForm.empName = result.data.empName;
+        _this.editTeacherForm.sex = result.data.sex;
+        _this.editTeacherForm.birthday = result.data.birthday;
+        _this.editTeacherForm.phone = result.data.phone;
+        _this.editTeacherForm.idNo = result.data.idNo;
+        _this.editTeacherForm.marriage = result.data.marriage;
+        _this.editTeacherForm.orgType = result.data.orgType;
+        _this.editTeacherForm.staffType = result.data.staffType;
+        _this.editTeacherForm.title = result.data.title;
+        _this.editTeacherForm.degree = result.data.degree;
+        _this.editTeacherForm.titleLevel = result.data.titleLevel;
+        _this.editTeacherForm.teachType = result.data.teachType;
+        _this.editTeacherForm.school = result.data.school;
+        _this.editTeacherForm.enterDate = result.data.enterDate;
+        _this.editTeacherForm.teachDate = result.data.teachDate;
+        _this.editTeacherForm.status = result.data.status;
+        _this.editTeacherForm.rank = result.data.rank;
+        _this.editTeacherForm.tecposition = result.data.tecposition;
+        _this.editTeacherForm.memo = result.data.memo;
+        _this.editTeacherForm.schoolId = result.data.schoolId;
+      });
     },
     clearEditTeacherForm() {
       this.$refs['editTeacherForm'].resetFields();
@@ -187,19 +213,20 @@ export default {
       let _this = this;
       let editUserForm = {
         isStudent: false,
+        userNo: _this.userNo,
         teacher: _this.editTeacherForm
       };
       _this.$refs['editTeacherForm'].validate(valid => {
         if (valid) {
-          editUserForm.teacher.empNo = _this.userNo;
-          _this.$httpAuthority.post('/user/post', editUserForm).then(res => {
+          console.log(editUserForm);
+          _this.$httpAuthority.post('/user/update', editUserForm).then(res => {
             ElMessage({
               message: '编辑成功',
               duration: 3 * 1000,
               center: true,
               type: 'success'
             });
-            _this.$emit('edit_teacher_success');
+            _this.$emit('edit-teacher-success');
             _this.cancelEditTeacher();
           }).catch(message => {
             _this.clearEditTeacherForm();

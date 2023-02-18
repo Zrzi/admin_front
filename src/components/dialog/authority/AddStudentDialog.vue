@@ -26,8 +26,8 @@
         <el-date-picker v-model="addStudentForm.birthday" type="date" placeholder="选择出生日期"
                         value-format="YYYY-MM-DD" :disabled-date="disabledDate" />
       </el-form-item>
-      <el-form-item label="身份证" prop="ID" :label-width="formLabelWidth">
-        <el-input v-model="addStudentForm.ID" autocomplete="off" />
+      <el-form-item label="身份证" prop="id" :label-width="formLabelWidth">
+        <el-input v-model="addStudentForm.id" autocomplete="off" />
       </el-form-item>
       <el-form-item label="在校状态" prop="status" :label-width="formLabelWidth">
         <el-input v-model="addStudentForm.status" autocomplete="off" />
@@ -73,7 +73,7 @@ export default {
         curGrade: '',
         enterYear: '',
         birthday: '',
-        ID: '',
+        id: '',
         status: '',
         nation: '',
         politicalStatus: '',
@@ -111,7 +111,7 @@ export default {
         birthday: [
           {required: true, message: '请输入学生出生日期', trigger: 'blur'},
         ],
-        ID: [
+        id: [
           {max: 20, message: '学生身份证最长20位', trigger: 'blur'}
         ],
         status: [

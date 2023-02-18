@@ -23,9 +23,9 @@
         <el-table-column prop="majorNo" label="专业号" header-align="center" align="center" />
         <el-table-column prop="classNo" label="班号" header-align="center" align="center" />
         <el-table-column prop="curGrade" label="当前所在级" header-align="center" align="center" />
-        <el-table-column prop="entryYear" label="入学年份" header-align="center" align="center" />
+        <el-table-column prop="enterYear" label="入学年份" header-align="center" align="center" />
         <el-table-column prop="birthday" label="出生日期" header-align="center" align="center" />
-        <el-table-column prop="ID" label="身份证件号" header-align="center" align="center" />
+        <el-table-column prop="id" label="身份证件号" header-align="center" align="center" />
         <el-table-column prop="status" label="在校状态" header-align="center" align="center" />
         <el-table-column prop="nation" label="民族" header-align="center" align="center" />
         <el-table-column prop="politicalStatus" label="政治面貌" header-align="center" align="center" />
@@ -51,7 +51,7 @@
         <el-table-column prop="sex" label="性别" header-align="center" align="center" />
         <el-table-column prop="birthday" label="出生日期" header-align="center" align="center" />
         <el-table-column prop="phone" label="电话" header-align="center" align="center" />
-        <el-table-column prop="IDNo" label="身份证件号" header-align="center" align="center" />
+        <el-table-column prop="idNo" label="身份证件号" header-align="center" align="center" />
         <el-table-column prop="marriage" label="婚姻状况" header-align="center" align="center" />
         <el-table-column prop="orgType" label="编制类别" header-align="center" align="center" />
         <el-table-column prop="staffType" label="教职工类别" header-align="center" align="center" />
@@ -65,7 +65,7 @@
         <el-table-column prop="status" label="当前状态" header-align="center" align="center" />
         <el-table-column prop="rank" label="职级" header-align="center" align="center" />
         <el-table-column prop="tecposition" label="技术职务" header-align="center" align="center" />
-        <el-table-column prop="memo" label="备注" show-overflow-tooltip="true" header-align="center" align="center" />
+        <el-table-column prop="memo" label="备注" :show-overflow-tooltip="true" header-align="center" align="center" />
         <el-table-column prop="schoolId" label="单位编号" header-align="center" align="center" />
         <el-table-column label="操作" fixed="right" header-align="center" align="center">
           <template #default="scope">
@@ -107,7 +107,7 @@
     </AddTeacherDialog>
     <EditStudentDialog
         v-model="editStudentFormVisible"
-        @close-edit-student="this.editTeacherFormVisible = false; this.$store.commit('RESET_USER_NO')"
+        @close-edit-student="this.editStudentFormVisible = false; this.$store.commit('RESET_USER_NO')"
         @edit-student-success="this.getData"
     >
     </EditStudentDialog>

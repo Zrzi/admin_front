@@ -16,8 +16,8 @@
       <el-form-item label="电话" prop="phone" :label-width="formLabelWidth">
         <el-input v-model="addTeacherForm.phone" autocomplete="off" />
       </el-form-item>
-      <el-form-item label="身份证件号" prop="IDNo" :label-width="formLabelWidth">
-        <el-input v-model="addTeacherForm.IDNo" autocomplete="off" />
+      <el-form-item label="身份证件号" prop="idNo" :label-width="formLabelWidth">
+        <el-input v-model="addTeacherForm.idNo" autocomplete="off" />
       </el-form-item>
       <el-form-item label="婚姻状况" prop="marriage" :label-width="formLabelWidth">
         <el-input v-model="addTeacherForm.marriage" autocomplete="off" />
@@ -93,7 +93,7 @@ export default {
         sex: '',
         birthday: '',
         phone: '',
-        IDNo: '',
+        idNo: '',
         marriage: '',
         orgType: '',
         staffType: '',
@@ -129,7 +129,7 @@ export default {
         phone: [
           {max: 15, message: '电话长度不超过15个字符', trigger: 'blur'}
         ],
-        IDNo: [
+        idNo: [
           {max: 20, message: '身份证长度不超过20个字符', trigger: 'blur'}
         ],
         marriage: [
