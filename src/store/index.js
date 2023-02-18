@@ -5,6 +5,7 @@ export default createStore({
     token: '',
     roleId: '',
     systemId: '',
+    userNo: '',
     roleChange: false
   },
   getters: {
@@ -28,6 +29,12 @@ export default createStore({
     },
     RESET_ROLE_ID: (state) => {
       state.roleId = '';
+    },
+    SET_USER_NO: (state, userNo) => {
+      state.userNo = userNo;
+    },
+    RESET_USER_NO: (state) => {
+      state.userNo = '';
     },
     SET_ROLE_CHANGE: (state, roleChange) => {
       state.roleChange = roleChange;

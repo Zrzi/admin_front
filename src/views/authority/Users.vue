@@ -32,6 +32,10 @@
         <el-table-column prop="sourcePlace" label="生源所在地" header-align="center" align="center" />
         <el-table-column label="操作" fixed="right" header-align="center" align="center">
           <template #default="scope">
+            <span style="color: #409EFF; margin: 1vmin"
+                  @click="clickEditStudent(scope.row)"
+                  @mouseenter="editMouseEnterStyle"
+                  @mouseleave="editMouseLeaveStyle">编辑</span>
             <span style="color: #D9001B; margin: 1vmin"
                   @click="clickRemoveStudent(scope.row)"
                   @mouseenter="editMouseEnterStyle"
@@ -65,6 +69,10 @@
         <el-table-column prop="schoolId" label="单位编号" header-align="center" align="center" />
         <el-table-column label="操作" fixed="right" header-align="center" align="center">
           <template #default="scope">
+            <span style="color: #409EFF; margin: 1vmin"
+                  @click="clickEditTeacher(scope.row)"
+                  @mouseenter="editMouseEnterStyle"
+                  @mouseleave="editMouseLeaveStyle">编辑</span>
             <span style="color: #D9001B; margin: 1vmin"
                   @click="clickRemoveTeacher(scope.row)"
                   @mouseenter="editMouseEnterStyle"
@@ -97,6 +105,18 @@
         @add_teacher_success="this.getData"
     >
     </AddTeacherDialog>
+    <EditStudentDialog
+        v-model="editStudentFormVisible"
+        @close-edit-student="this.editTeacherFormVisible = false; this.$store.commit('RESET_USER_NO')"
+        @edit-student-success="this.getData"
+    >
+    </EditStudentDialog>
+    <EditTeacherDialog
+        v-model="editTeacherFormVisible"
+        @close-edit-teacher="this.editTeacherFormVisible = false; this.$store.commit('RESET_USER_NO')"
+        @edit-teacher-success="this.getData"
+    >
+    </EditTeacherDialog>
   </div>
 </template>
 
@@ -104,10 +124,12 @@
 import {ElMessage} from "element-plus";
 import AddStudentDialog from "@/components/dialog/authority/AddStudentDialog";
 import AddTeacherDialog from "@/components/dialog/authority/AddTeacherDialog";
+import EditStudentDialog from "@/components/dialog/authority/EditStudentDialog";
+import EditTeacherDialog from "@/components/dialog/authority/EditTeacherDialog";
 
 export default {
   name: "Users",
-  components: {AddStudentDialog, AddTeacherDialog},
+  components: {EditTeacherDialog, EditStudentDialog, AddStudentDialog, AddTeacherDialog},
   data() {
     return {
       showStudent: true,
@@ -118,7 +140,9 @@ export default {
       students: [],
       teachers: [],
       addStudentFormVisible: false,
-      addTeacherFormVisible: false
+      addTeacherFormVisible: false,
+      editStudentFormVisible: false,
+      editTeacherFormVisible: false
     }
   },
   methods: {
@@ -164,6 +188,16 @@ export default {
     },
     clickAddTeacher() {
       this.addTeacherFormVisible = true;
+    },
+    clickEditStudent(row) {
+      let userNoSelected = row.stuNo;
+      this.$store.commit('SET_USER_NO', userNoSelected);
+      this.editStudentFormVisible = true;
+    },
+    clickEditTeacher(row) {
+      let userNoSelected = row.empNo;
+      this.$store.commit('SET_USER_NO', userNoSelected);
+      this.editTeacherFormVisible = true;
     },
     clickRemoveStudent(row) {
       let stuNo = row.stuNo;
