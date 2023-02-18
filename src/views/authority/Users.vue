@@ -16,7 +16,7 @@
       </div>
     </div>
     <div>
-      <el-table :data="this.studentsShow" style="width: 100%" height="280" table-layout="auto" v-if="showStudent">
+      <el-table :data="this.students" style="width: 100%" height="280" table-layout="auto" v-if="showStudent">
         <el-table-column prop="stuNo" label="学号" />
         <el-table-column prop="stuName" label="姓名" />
         <el-table-column prop="sex" label="性别" />
@@ -41,8 +41,8 @@
           </template>
         </el-table-column>
       </el-table>
-      <el-table :data="this.teachersShow" style="width: 100%" height="280" table-layout="auto" v-if="showStudent === false">
-        <el-table-column prop="empNo" label="教工号" />
+      <el-table :data="this.teachers" style="width: 100%" height="280" table-layout="auto" v-if="showStudent === false">
+        <el-table-column prop="empNo" label="教工号" :show-overflow-tooltip="true" />
         <el-table-column prop="empName" label="姓名" />
         <el-table-column prop="sex" label="性别" />
         <el-table-column prop="birthday" label="出生日期" />
@@ -78,15 +78,25 @@
     <div style="display: flex; align-items: center; justify-content: center">
       <el-pagination
           :page-size="this.pageSize"
-          :pager-count="this.pageCount"
           layout="prev, pager, next"
           :total="this.total"
           :current-page="this.currentPage"
           @current-change="handleCurrentChange"
+          @size-change="handleSizeChange"
       />
     </div>
-    <AddStudentDialog v-model="addStudentFormVisible" @close-add-student="this.addStudentFormVisible = false"></AddStudentDialog>
-    <AddTeacherDialog v-model="addTeacherFormVisible" @close-add-teacher="this.addTeacherFormVisible = false"></AddTeacherDialog>
+    <AddStudentDialog
+        v-model="addStudentFormVisible"
+        @close-add-student="this.addStudentFormVisible = false"
+        @add-student-success="this.getData"
+    >
+    </AddStudentDialog>
+    <AddTeacherDialog
+        v-model="addTeacherFormVisible"
+        @close-add-teacher="this.addTeacherFormVisible = false"
+        @add_teacher_success="this.getData"
+    >
+    </AddTeacherDialog>
   </div>
 </template>
 
@@ -103,28 +113,32 @@ export default {
       showStudent: true,
       searchKey: '',
       pageSize: 10,
-      pageCount: 11,
       currentPage: 1,
       total: 0,
       students: [],
-      studentsShow: [],
       teachers: [],
-      teachersShow: [],
       addStudentFormVisible: false,
       addTeacherFormVisible: false
     }
   },
   methods: {
     init() {
+      this.getData();
+    },
+    getData() {
       let _this = this;
-      _this.$httpAuthority.get("/user/get").then(res => {
+      let userType = this.showStudent ? '学生' : '教师';
+      let start = (this.currentPage - 1) * this.pageSize;
+      let pageSize = this.pageSize;
+      _this.$httpAuthority.get('user/get', {params: {userType, start, pageSize}}).then(res => {
         const result = res.data;
-        _this.students = result.data.students;
-        _this.teachers = result.data.teachers;
-        _this.total = this.students.length;
-        _this.studentsShow = this.students.slice(0, this.pageSize);
-        _this.teachersShow = this.teachers.slice(0, this.pageSize);
-      });
+        if (_this.showStudent) {
+          _this.students = result.data.students;
+        } else {
+          _this.teachers = result.data.teachers;
+        }
+        _this.total = result.data.total;
+      })
     },
     editMouseEnterStyle() {
       document.querySelector('body').style.cursor = 'pointer';
@@ -133,30 +147,18 @@ export default {
       document.querySelector('body').style.cursor = 'default';
     },
     clickChange() {
-      if (this.showStudent) {
-        this.total = this.teachers.length;
-        this.currentPage = 1;
-        this.showStudent = false;
-      } else {
-        this.total = this.students.length;
-        this.currentPage = 1;
-        this.showStudent = true;
-      }
+      this.showStudent = !this.showStudent;
+      this.currentPage = 1;
       this.changeList();
     },
     changeList() {
-      let start = (this.currentPage - 1) * this.pageSize;
-      let end = (this.currentPage) * this.pageSize;
-      if (this.showStudent) {
-        this.studentsShow = this.students.slice(start, end);
-      } else {
-        this.teachersShow = this.teachers.slice(start, end);
-      }
+      this.getData();
     },
     handleCurrentChange(val) {
       this.currentPage = val;
       this.changeList();
     },
+    handleSizeChange(val) {},
     clickAddStudent() {
       this.addStudentFormVisible = true;
     },
@@ -166,33 +168,39 @@ export default {
     clickRemoveStudent(row) {
       let stuNo = row.stuNo;
       let _this = this;
-      _this.$httpAuthority.post("/user/delete", stuNo).then(res => {
-        _this.students = this.students.filter(student => {
-          return student.stuNo !== stuNo;
-        });
-        _this.changeList();
+      let deleteUserForm = {
+        userNo: stuNo
+      };
+      _this.$httpAuthority.post("/user/delete", deleteUserForm).then(res => {
         ElMessage({
           message: '删除成功',
           duration: 3 * 1000,
           center: true,
           type: 'success'
         });
+        if (_this.students.length === 1) {
+          _this.currentPage = _this.currentPage === 1 ? 1 : _this.currentPage - 1;
+        }
+        _this.changeList();
       });
     },
     clickRemoveTeacher(row) {
       let empNo = row.empNo;
       let _this = this;
-      _this.$httpAuthority.post("/user/delete", empNo).then(res => {
-        _this.teachers = this.teachers.filter(teacher => {
-          return teacher.empNo !== empNo;
-        });
-        this.changeList();
+      let deleteUserForm = {
+        userNo: empNo
+      };
+      _this.$httpAuthority.post("/user/delete", deleteUserForm).then(res => {
         ElMessage({
           message: '删除成功',
           duration: 3 * 1000,
           center: true,
           type: 'success'
         });
+        if (_this.teachers.length === 1) {
+          _this.currentPage = _this.currentPage === 1 ? 1 : _this.currentPage - 1;
+        }
+        _this.changeList();
       });
     }
   },

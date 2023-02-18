@@ -4,8 +4,8 @@
       <el-form-item label="角色名称" prop="roleName" :label-width="formLabelWidth">
         <el-input v-model="addRoleForm.roleName" autocomplete="off" />
       </el-form-item>
-      <el-form-item label="所属系统" prop="systemName" :label-width="formLabelWidth">
-        <el-select v-model="addRoleForm.systemName">
+      <el-form-item label="所属系统" prop="systemId" :label-width="formLabelWidth">
+        <el-select v-model="addRoleForm.systemId">
           <el-option
               v-for="system in systems"
               :key="system.systemId"
@@ -53,14 +53,17 @@ export default {
   methods: {
     init() {
       let _this = this;
-      _this.$httpAuthorty.get('/system/get').then(res => {
+      _this.$httpAuthority.get('/system/get').then(res => {
         const result = res.data;
         _this.systems = result.data;
       }).catch(message => {});
     },
-    cancelAddRoleForm() {
-      this.addRoleFormVisible = false;
+    clearAddRoleForm() {
       this.$refs['addRoleForm'].resetFields();
+    },
+    cancelAddRoleForm() {
+      this.clearAddRoleForm();
+      this.addRoleFormVisible = false;
       this.$emit('close-add-role');
     },
     addRole() {
@@ -75,7 +78,11 @@ export default {
               center: true,
               type: 'success'
             });
-          }).catch(message => {});
+            _this.$emit('add-role-success');
+            _this.cancelAddRoleForm();
+          }).catch(message => {
+            _this.clearAddRoleForm();
+          });
         } else {
           ElMessage({
             message: '输入错误',
@@ -83,8 +90,8 @@ export default {
             center: true,
             type: 'error'
           });
+          _this.clearAddRoleForm();
         }
-        _this.cancelAddRoleForm();
       });
     }
   },

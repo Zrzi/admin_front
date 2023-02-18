@@ -39,7 +39,7 @@ const routes = [
         },
         children: [
           {
-            path: ':id',
+            path: 'role',
             name: 'role',
             component: Role
           }

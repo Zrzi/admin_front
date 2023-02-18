@@ -10,11 +10,11 @@
                 @mouseleave="editMouseLeaveStyle">+新增角色</span>
         </div>
         <el-scrollbar height="80vh">
-          <el-collapse>
-            <el-collapse-item v-for="system in systems" :title="system.systemName" style="margin: 1vw">
+          <el-collapse style="border: none">
+            <el-collapse-item v-for="system in systems" :title="system.systemName" style="margin: 1vw; border: none">
               <el-row v-for="role in system.roles" style="margin-top: 1vmin; margin-bottom: 1vmin">
                 <el-col :span="3" />
-                <el-col :span="6"
+                <el-col :span="15" style="text-align: left"
                         @click="clickRole(role.roleId)"
                         @mouseenter="editMouseEnterStyle"
                         @mouseleave="editMouseLeaveStyle">
@@ -31,7 +31,9 @@
     </el-container>
     <AddRoleDialog
         v-model="addRoleFormVisible"
-        @close-add-role="this.addRoleFormVisible=false">
+        @close-add-role="this.addRoleFormVisible=false"
+        @add-role-success="init"
+    >
     </AddRoleDialog>
   </div>
 </template>
@@ -50,15 +52,30 @@ export default {
       formLabelWidth: '140px'
     }
   },
+  computed: {
+    roleDeleted() {
+      return this.$store.state.roleDeleted;
+    }
+  },
+  watch: {
+    roleDeleted: {
+      handler(newVal, oldVal) {
+        if (newVal === true) {
+          this.init();
+          this.$store.commit('RESET_ROLE_DELETED');
+        }
+      }
+    }
+  },
   methods: {
-    async init() {
-      // let _this = this;
-      let res = await this.$httpAuthority.get('/role/get');
-      this.systems = res.data.data;
-      // _this.$httpAuthority.get('/role/get').then(res => {
-      //   const result = res.result;
-      //   _this.systems = result.data;
-      // }).catch(message => {});
+    init() {
+      let _this = this;
+      // let res = await this.$httpAuthority.get('/role/get');
+      // this.systems = res.data.data;
+      _this.$httpAuthority.get('/role/get').then(res => {
+        const result = res.data;
+        _this.systems = result.data;
+      }).catch(message => {});
     },
     editMouseEnterStyle() {
       document.querySelector('body').style.cursor = 'pointer';
@@ -70,7 +87,8 @@ export default {
       this.addRoleFormVisible = true;
     },
     clickRole(roleId) {
-      this.$router.push({path: '/home/roles/' + roleId});
+      this.$store.commit("SET_ROLE_ID", roleId);
+      this.$router.push({path: '/home/roles/role'});
     }
   },
   mounted() {

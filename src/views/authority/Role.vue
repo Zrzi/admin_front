@@ -21,9 +21,9 @@
     </div>
     <div>
       <el-table :data="this.users" style="width: 100%" height="280" table-layout="auto">
-        <el-table-column prop="userNo" label="用户名" />
+        <el-table-column prop="userNo" label="用户名" :show-overflow-tooltip="true" />
         <el-table-column prop="username" label="姓名" />
-        <el-table-column label="角色编码">
+        <el-table-column label="角色编码" :show-overflow-tooltip="true">
           <template #default>
             <span>{{ roleId }}</span>
           </template>
@@ -38,8 +38,8 @@
             <span>{{ systemName }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="updatedDate" label="修改时间" />
-        <el-table-column prop="updatedBy" label="操作人" />
+        <el-table-column prop="updatedDate" label="修改时间" :show-overflow-tooltip="true" />
+        <el-table-column prop="updatedBy" label="操作人" :show-overflow-tooltip="true" />
         <el-table-column label="操作" fixed="right">
           <template #default="scope">
             <span style="color: #D9001B; margin: 1vmin"
@@ -59,7 +59,7 @@
           :total="this.total"
           :current-page="this.currentPage"
           @current-change="handleCurrentChange"
-          @update:page-size="handleUpdatePageSize"
+          @size-change="handleUpdatePageSize"
       />
     </div>
     <EditRoleDialog
@@ -83,15 +83,15 @@ import AddMemberDialog from "@/components/dialog/authority/AddMemberDialog";
 import AuthenticateDialog from "@/components/dialog/authority/AuthenticateDialog";
 import EditRoleDialog from "@/components/dialog/authority/EditRoleDialog";
 import {ElMessage} from "element-plus";
+import qs from 'qs';
 
 export default {
   name: "Role",
   components: {EditRoleDialog, AuthenticateDialog, AddMemberDialog},
   data() {
     return {
-      roleId: -1,
       roleName: '',
-      systemId: -1,
+      systemId: '',
       systemName: '',
       users: [],
       searchKey: '',
@@ -102,6 +102,19 @@ export default {
       editRoleFormVisible: false,
       authenticateFormVisible: false,
       addMemberFormVisible: false,
+    }
+  },
+  computed: {
+    roleId() {
+      return this.$store.state.roleId;
+    }
+  },
+  watch: {
+    roleId: {
+      handler(newVal, oldVal) {
+        this.init();
+      },
+      immediate: true
     }
   },
   methods: {
@@ -120,7 +133,9 @@ export default {
         _this.systemId = result.data.systemId;
         _this.$store.commit("SET_SYSTEM_ID", _this.systemId);
         _this.systemName = result.data.systemName;
-      }).catch(message => {});
+      }).catch(message => {
+        this.$router.push({path: '/home/roles'});
+      });
       _this.getUsers();
     },
     getUsers() {
@@ -146,16 +161,20 @@ export default {
       let userNo = row.userNo;
       let _this = this;
       let roleId = this.roleId;
-      _this.$httpAuthority('/memberRole/deleteMemberRole', {params: {roleId, userNo}}).then(res => {
+      let deleteMemberRoleForm = {
+        roleId: roleId,
+        userNo: userNo
+      }
+      _this.$httpAuthority.post('/memberRole/deleteMemberRole', deleteMemberRoleForm).then(res => {
         ElMessage({
           message: '删除成功',
           duration: 3 * 1000,
           center: true,
           type: 'success'
         });
-        _this.users = _this.users.filter((user) => {
-          return user.userNo !== userNo;
-        });
+        if (_this.users.length === 1) {
+          _this.currentPage = _this.currentPage === 1 ? 1 : _this.currentPage - 1;
+        }
         _this.changeList();
       }).catch(message => {});
     },
@@ -172,26 +191,29 @@ export default {
     clickRemoveRole() {
       let roleId = this.roleId;
       let _this = this;
-      _this.$httpAuthority('/role/delete', roleId).then(res => {
+      let deleteRoleForm = {
+        roleId: roleId
+      };
+      _this.$httpAuthority.post('/role/delete', deleteRoleForm).then(res => {
         ElMessage({
           message: '删除成功',
           duration: 3 * 1000,
           center: true,
           type: 'success'
         });
+        _this.$store.commit('SET_ROLE_DELETED', true);
         _this.$router.push({path: '/home/roles'})
       }).catch(message => {});
     },
   },
-  beforeRouteUpdate(to, from) {
-    this.roleId = to.params.id;
-    this.$store.commit("SET_ROLE_ID", this.roleId);
-    this.init();
-  },
+  // beforeRouteUpdate(to, from) {
+  //   this.roleId = to.params.id;
+  //   this.$store.commit("SET_ROLE_ID", this.roleId);
+  //   this.init();
+  // },
   mounted() {
-    this.roleId = this.$route.params.id;
-    this.$store.commit("SET_ROLE_ID", this.roleId);
-    this.init();
+    // this.roleId = this.$store.state.roleId;
+    // this.init();
   }
 }
 </script>

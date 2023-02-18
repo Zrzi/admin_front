@@ -175,9 +175,12 @@ export default {
     }
   },
   methods: {
-    cancelAddTeacher() {
-      this.addTeacherFormVisible = false;
+    clearAddTeacherForm() {
       this.refs['addTeacherForm'].resetFields();
+    },
+    cancelAddTeacher() {
+      this.clearAddTeacherForm();
+      this.addTeacherFormVisible = false;
       this.$emit('close-add-teacher');
     },
     addTeacher() {
@@ -195,7 +198,11 @@ export default {
               center: true,
               type: 'success'
             });
-          }).catch(message => {});
+            _this.$emit('add_teacher_success');
+            _this.cancelAddTeacher();
+          }).catch(message => {
+            _this.clearAddTeacherForm();
+          });
         } else {
           ElMessage({
             message: '输入错误',
@@ -203,8 +210,8 @@ export default {
             center: true,
             type: 'error'
           });
+          _this.clearAddTeacherForm();
         }
-        _this.cancelAddTeacher();
       })
     }
   }

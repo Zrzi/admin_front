@@ -31,6 +31,7 @@
           :total="this.total"
           :current-page="this.currentPage"
           @current-change="handleCurrentChange"
+          @size-change="handleUpdatePageSize"
       />
     </div>
     <template #footer>
@@ -92,6 +93,7 @@ export default {
       this.currentPage = val;
       this.changeList();
     },
+    handleUpdatePageSize(val) {},
     handleSelectionChange(array) {
       this.resourcesSelected = array.map(resource => {
         return resource.resourceId;

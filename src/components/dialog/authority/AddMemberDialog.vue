@@ -24,6 +24,7 @@
           :total="this.total"
           :current-page="this.currentPage"
           @current-change="handleCurrentChange"
+          @size-change="handleUpdatePageSize"
       />
     </div>
     <template #footer>
@@ -42,7 +43,6 @@ export default {
   name: "AddMemberDialog",
   data() {
     return {
-      roleId: '',
       addMemberFormVisible: false,
       searchKey: '',
       // 用于添加成员时查询到的用户，注意查询到的用户都是不具有该角色的
@@ -54,12 +54,17 @@ export default {
       currentPage: 1
     }
   },
+  computed: {
+    roleId() {
+      return this.$store.state.roleId;
+    }
+  },
   methods: {
     init() {
       this.currentPage = 1;
-      this.roleId = this.$store.state.roleId;
+      let roleId = this.roleId;
       let _this = this;
-      _this.$httpAuthority.get('/memberRole/getUnaddedUser', _this.roleId).then(res => {
+      _this.$httpAuthority.get('/memberRole/getUnaddedUser', {params: {roleId}}).then(res => {
         const result = res.data;
         _this.usersSelected = result.data;
         _this.usersSelectedShow = _this.usersSelected.slice(0, this.pageSize);
@@ -70,6 +75,7 @@ export default {
       this.currentPage = val;
       this.changeList();
     },
+    handleUpdatePageSize(val) {},
     changeList() {
       let start = (this.currentPage - 1) * this.pageSize;
       let end = (this.currentPage) * this.pageSize;

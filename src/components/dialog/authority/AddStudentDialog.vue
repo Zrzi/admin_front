@@ -132,9 +132,12 @@ export default {
     // dateDisables(time) {
     //   return time.getTime() > Date.now();
     // },
-    cancelAddStudent() {
-      this.addStudentFormVisible = false;
+    clearAddStudentForm() {
       this.refs['addStudentForm'].resetFields();
+    },
+    cancelAddStudent() {
+      this.clearAddStudentForm();
+      this.addStudentFormVisible = false;
       this.$emit('close-add-student');
     },
     addStudent() {
@@ -152,7 +155,11 @@ export default {
               center: true,
               type: 'success'
             });
-          }).catch(message => {});
+            _this.$emit('add-student-success');
+            _this.cancelAddStudent();
+          }).catch(message => {
+            _this.clearAddStudentForm();
+          });
         } else {
           ElMessage({
             message: '输入错误',
@@ -160,8 +167,8 @@ export default {
             center: true,
             type: 'error'
           });
+          _this.clearAddStudentForm();
         }
-        _this.cancelAddStudent();
       });
     }
   }

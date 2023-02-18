@@ -5,6 +5,7 @@ export default createStore({
     token: '',
     roleId: '',
     systemId: '',
+    roleDeleted: false
   },
   getters: {
   },
@@ -27,6 +28,12 @@ export default createStore({
     },
     RESET_ROLE_ID: (state) => {
       state.roleId = '';
+    },
+    SET_ROLE_DELETED: (state, roleDeleted) => {
+      state.roleDeleted = roleDeleted;
+    },
+    RESET_ROLE_DELETED: (state) => {
+      state.roleDeleted = false;
     }
   },
   actions: {

@@ -328,16 +328,19 @@ export default {
     clickRemoveResource(row) {
       let resourceId = row.resourceId;
       let _this = this;
-      _this.$httpAuthority.post('/resource/delete', resourceId).then(res => {
+      let deleteResourceForm = {
+        resourceId: resourceId
+      }
+      _this.$httpAuthority.post('/resource/delete', deleteResourceForm).then(res => {
         ElMessage({
           message: '删除成功',
           duration: 3 * 1000,
           center: true,
           type: 'success'
         });
-        _this.resources = _this.resources.filter(resource => {
-          return resource.resourceId !== resourceId;
-        });
+        if (_this.resources.length === 1) {
+          _this.currentPage = _this.currentPage === 1 ? 1 : _this.currentPage - 1;
+        }
         _this.changeList();
       }).catch(message => {});
     }
