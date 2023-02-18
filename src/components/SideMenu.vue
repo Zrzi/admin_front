@@ -5,7 +5,7 @@
       class="el-menu-vertical-demo">
     <el-sub-menu v-for="system in systems" :index="system.systemId">
       <template #title>
-        <el-icon><Setting /></el-icon>
+        <el-icon><Location /></el-icon>
         <span>{{ system.systemName}}</span>
       </template>
       <el-menu-item v-for="menu in system.menus" :index="menu.path" @click="handleClick">

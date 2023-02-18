@@ -21,26 +21,26 @@
     </div>
     <div>
       <el-table :data="this.users" style="width: 100%" height="280" table-layout="auto">
-        <el-table-column prop="userNo" label="用户名" :show-overflow-tooltip="true" />
-        <el-table-column prop="username" label="姓名" />
-        <el-table-column label="角色编码" :show-overflow-tooltip="true">
+        <el-table-column prop="userNo" label="用户名" :show-overflow-tooltip="true" header-align="center" align="center" />
+        <el-table-column prop="username" label="姓名" header-align="center" align="center" />
+        <el-table-column label="角色编码" :show-overflow-tooltip="true" header-align="center" align="center" >
           <template #default>
             <span>{{ roleId }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="角色名称">
+        <el-table-column label="角色名称" header-align="center" align="center" >
           <template #default>
             <span>{{ roleName }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="所属系统">
+        <el-table-column label="所属系统" header-align="center" align="center" >
           <template #default>
             <span>{{ systemName }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="updatedDate" label="修改时间" :show-overflow-tooltip="true" />
-        <el-table-column prop="updatedBy" label="操作人" :show-overflow-tooltip="true" />
-        <el-table-column label="操作" fixed="right">
+        <el-table-column prop="updatedDate" label="修改时间" :show-overflow-tooltip="true" header-align="center" align="center" />
+        <el-table-column prop="updatedBy" label="操作人" :show-overflow-tooltip="true" header-align="center" align="center" />
+        <el-table-column label="操作" fixed="right" header-align="center" align="center" >
           <template #default="scope">
             <span style="color: #D9001B; margin: 1vmin"
                   @click="clickRemoveUser(scope.row)"

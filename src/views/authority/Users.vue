@@ -17,20 +17,20 @@
     </div>
     <div>
       <el-table :data="this.students" style="width: 100%" height="280" table-layout="auto" v-if="showStudent">
-        <el-table-column prop="stuNo" label="学号" />
-        <el-table-column prop="stuName" label="姓名" />
-        <el-table-column prop="sex" label="性别" />
-        <el-table-column prop="majorNo" label="专业号" />
-        <el-table-column prop="classNo" label="班号" />
-        <el-table-column prop="curGrade" label="当前所在级" />
-        <el-table-column prop="entryYear" label="入学年份" />
-        <el-table-column prop="birthday" label="出生日期" />
-        <el-table-column prop="ID" label="身份证件号" />
-        <el-table-column prop="status" label="在校状态" />
-        <el-table-column prop="nation" label="民族" />
-        <el-table-column prop="politicalStatus" label="政治面貌" />
-        <el-table-column prop="sourcePlace" label="生源所在地" />
-        <el-table-column label="操作" fixed="right">
+        <el-table-column prop="stuNo" label="学号" header-align="center" align="center" />
+        <el-table-column prop="stuName" label="姓名" header-align="center" align="center" />
+        <el-table-column prop="sex" label="性别" header-align="center" align="center" />
+        <el-table-column prop="majorNo" label="专业号" header-align="center" align="center" />
+        <el-table-column prop="classNo" label="班号" header-align="center" align="center" />
+        <el-table-column prop="curGrade" label="当前所在级" header-align="center" align="center" />
+        <el-table-column prop="entryYear" label="入学年份" header-align="center" align="center" />
+        <el-table-column prop="birthday" label="出生日期" header-align="center" align="center" />
+        <el-table-column prop="ID" label="身份证件号" header-align="center" align="center" />
+        <el-table-column prop="status" label="在校状态" header-align="center" align="center" />
+        <el-table-column prop="nation" label="民族" header-align="center" align="center" />
+        <el-table-column prop="politicalStatus" label="政治面貌" header-align="center" align="center" />
+        <el-table-column prop="sourcePlace" label="生源所在地" header-align="center" align="center" />
+        <el-table-column label="操作" fixed="right" header-align="center" align="center">
           <template #default="scope">
             <span style="color: #D9001B; margin: 1vmin"
                   @click="clickRemoveStudent(scope.row)"
@@ -42,28 +42,28 @@
         </el-table-column>
       </el-table>
       <el-table :data="this.teachers" style="width: 100%" height="280" table-layout="auto" v-if="showStudent === false">
-        <el-table-column prop="empNo" label="教工号" :show-overflow-tooltip="true" />
-        <el-table-column prop="empName" label="姓名" />
-        <el-table-column prop="sex" label="性别" />
-        <el-table-column prop="birthday" label="出生日期" />
-        <el-table-column prop="phone" label="电话" />
-        <el-table-column prop="IDNo" label="身份证件号" />
-        <el-table-column prop="marriage" label="婚姻状况" />
-        <el-table-column prop="orgType" label="编制类别" />
-        <el-table-column prop="staffType" label="教职工类别" />
-        <el-table-column prop="title" label="教师职称" />
-        <el-table-column prop="degree" label="文化程度" />
-        <el-table-column prop="titleLevel" label="职业等级" />
-        <el-table-column prop="teachType" label="教师类别" />
-        <el-table-column prop="school" label="教师所属单位" />
-        <el-table-column prop="enterDate" label="来校日期" />
-        <el-table-column prop="teachDate" label="从教年月" />
-        <el-table-column prop="status" label="当前状态" />
-        <el-table-column prop="rank" label="职级" />
-        <el-table-column prop="tecposition" label="技术职务" />
-        <el-table-column prop="memo" label="备注" show-overflow-tooltip="true" />
-        <el-table-column prop="schoolId" label="单位编号" />
-        <el-table-column label="操作" fixed="right">
+        <el-table-column prop="empNo" label="教工号" header-align="center" align="center" />
+        <el-table-column prop="empName" label="姓名" header-align="center" align="center" />
+        <el-table-column prop="sex" label="性别" header-align="center" align="center" />
+        <el-table-column prop="birthday" label="出生日期" header-align="center" align="center" />
+        <el-table-column prop="phone" label="电话" header-align="center" align="center" />
+        <el-table-column prop="IDNo" label="身份证件号" header-align="center" align="center" />
+        <el-table-column prop="marriage" label="婚姻状况" header-align="center" align="center" />
+        <el-table-column prop="orgType" label="编制类别" header-align="center" align="center" />
+        <el-table-column prop="staffType" label="教职工类别" header-align="center" align="center" />
+        <el-table-column prop="title" label="教师职称" header-align="center" align="center" />
+        <el-table-column prop="degree" label="文化程度" header-align="center" align="center" />
+        <el-table-column prop="titleLevel" label="职业等级" header-align="center" align="center" />
+        <el-table-column prop="teachType" label="教师类别" header-align="center" align="center" />
+        <el-table-column prop="school" label="教师所属单位" header-align="center" align="center" />
+        <el-table-column prop="enterDate" label="来校日期" header-align="center" align="center" />
+        <el-table-column prop="teachDate" label="从教年月" header-align="center" align="center" />
+        <el-table-column prop="status" label="当前状态" header-align="center" align="center" />
+        <el-table-column prop="rank" label="职级" header-align="center" align="center" />
+        <el-table-column prop="tecposition" label="技术职务" header-align="center" align="center" />
+        <el-table-column prop="memo" label="备注" show-overflow-tooltip="true" header-align="center" align="center" />
+        <el-table-column prop="schoolId" label="单位编号" header-align="center" align="center" />
+        <el-table-column label="操作" fixed="right" header-align="center" align="center">
           <template #default="scope">
             <span style="color: #D9001B; margin: 1vmin"
                   @click="clickRemoveTeacher(scope.row)"
@@ -130,7 +130,7 @@ export default {
       let userType = this.showStudent ? '学生' : '教师';
       let start = (this.currentPage - 1) * this.pageSize;
       let pageSize = this.pageSize;
-      _this.$httpAuthority.get('user/get', {params: {userType, start, pageSize}}).then(res => {
+      _this.$httpAuthority.get('/user/get', {params: {userType, start, pageSize}}).then(res => {
         const result = res.data;
         if (_this.showStudent) {
           _this.students = result.data.students;

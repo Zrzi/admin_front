@@ -72,6 +72,7 @@ export default {
   color: #FFFFFF;
   text-align: center;
   line-height: 60px;
+  width: 100vw;
 }
 
 .el-aside {

@@ -17,14 +17,14 @@
         <el-input v-model="addStudentForm.classNo" autocomplete="off" />
       </el-form-item>
       <el-form-item label="所在级" prop="curGrade" :label-width="formLabelWidth">
-        <el-input v-model="addStudentForm.curGrade.number" autocomplete="off" />
+        <el-input v-model.number="addStudentForm.curGrade" autocomplete="off" />
       </el-form-item>
       <el-form-item label="入学年份" prop="enterYear" :label-width="formLabelWidth">
-        <el-input v-model="addStudentForm.enterYear.number" autocomplete="off" />
+        <el-input v-model.number="addStudentForm.enterYear" autocomplete="off" />
       </el-form-item>
       <el-form-item label="出生日期" prop="birthday" :label-width="formLabelWidth">
         <el-date-picker v-model="addStudentForm.birthday" type="date" placeholder="选择出生日期"
-                        value-format="YYYY-MM-DD" />
+                        value-format="YYYY-MM-DD" :disabled-date="disabledDate" />
       </el-form-item>
       <el-form-item label="身份证" prop="ID" :label-width="formLabelWidth">
         <el-input v-model="addStudentForm.ID" autocomplete="off" />
@@ -57,7 +57,11 @@ import {ElMessage} from "element-plus";
 export default {
   name: "AddUserDialog",
   data() {
+    const disabledDate = (time) => {
+      return time.getTime() > Date.now()
+    };
     return {
+      disabledDate: disabledDate,
       formLabelWidth: '140px',
       addStudentFormVisible: false,
       addStudentForm: {
@@ -129,9 +133,6 @@ export default {
     }
   },
   methods: {
-    // dateDisables(time) {
-    //   return time.getTime() > Date.now();
-    // },
     clearAddStudentForm() {
       this.$refs['addStudentForm'].resetFields();
     },
@@ -146,7 +147,7 @@ export default {
         isStudent: true,
         student: this.addStudentForm
       };
-      _this.refs['addStudentForm'].validate((valid) => {
+      _this.$refs['addStudentForm'].validate((valid) => {
         if (valid) {
           _this.$httpAuthority.post('/user/post', addUserForm).then(res => {
             ElMessage({

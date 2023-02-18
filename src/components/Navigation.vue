@@ -6,7 +6,7 @@
     </div>
     <div class="navigation-right">
       <div style="padding-right: 5px">
-        <el-avatar size="default">user</el-avatar>
+        <el-avatar size="default"><el-icon><UserFilled /></el-icon></el-avatar>
       </div>
       <el-dropdown trigger="hover">
         <span class="el-dropdown-link">用户菜单</span>
@@ -21,13 +21,13 @@
     <el-dialog v-model="formVisible" title="修改密码">
       <el-form :model="resetPasswordForm" :rules="rules" ref="resetPasswordForm">
         <el-form-item label="原密码" prop="oldPassword" :label-width="formLabelWidth">
-          <el-input v-model="resetPasswordForm.oldPassword" autocomplete="off" />
+          <el-input type="password" v-model="resetPasswordForm.oldPassword" autocomplete="off" show-password />
         </el-form-item>
         <el-form-item label="新密码" prop="newPassword1" :label-width="formLabelWidth">
-          <el-input type="password" v-model="resetPasswordForm.newPassword1" autocomplete="off" />
+          <el-input type="password" v-model="resetPasswordForm.newPassword1" autocomplete="off" show-password />
         </el-form-item>
         <el-form-item label="请再次输入新密码" prop="newPassword2" :label-width="formLabelWidth">
-          <el-input type="password" v-model="resetPasswordForm.newPassword2" autocomplete="off" />
+          <el-input type="password" v-model="resetPasswordForm.newPassword2" autocomplete="off" show-password />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -100,10 +100,11 @@ export default {
       this.formVisible = false;
     },
     resetPassword() {
+      let resetPasswordForm = this.resetPasswordForm;
+      resetPasswordForm.newPassword = resetPasswordForm.newPassword1;
+      let _this = this;
       this.$refs['resetPasswordForm'].validate((valid) => {
         if (valid) {
-          let resetPasswordForm = this.resetPasswordForm;
-          let _this = this;
           _this.$httpAuthority.post('/resetPassword', resetPasswordForm).then(res => {
             ElMessage({
               message: '修改成功',

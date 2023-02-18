@@ -11,7 +11,7 @@
         <el-input v-model="addTeacherForm.sex" autocomplete="off" />
       </el-form-item>
       <el-form-item label="出生日期" prop="birthday" :label-width="formLabelWidth">
-        <el-date-picker v-model="addTeacherForm.birthday" type="date" placeholder="选择出生日期" format="YYYY-MM-DD" />
+        <el-date-picker v-model="addTeacherForm.birthday" type="date" placeholder="选择出生日期" format="YYYY-MM-DD" :disabled-date="disabledDate" />
       </el-form-item>
       <el-form-item label="电话" prop="phone" :label-width="formLabelWidth">
         <el-input v-model="addTeacherForm.phone" autocomplete="off" />
@@ -44,7 +44,7 @@
         <el-input v-model="addTeacherForm.school" autocomplete="off" />
       </el-form-item>
       <el-form-item label="来校日期" prop="enterDate" :label-width="formLabelWidth">
-        <el-date-picker v-model="addTeacherForm.enterDate" type="date" placeholder="选择来校日期" format="YYYY-MM-DD" />
+        <el-date-picker v-model="addTeacherForm.enterDate" type="date" placeholder="选择来校日期" format="YYYY-MM-DD" :disabled-date="disabledDate" />
       </el-form-item>
       <el-form-item label="从教年月" prop="teachDate" :label-width="formLabelWidth">
         <el-input v-model="addTeacherForm.teachDate" autocomplete="off" />
@@ -53,7 +53,7 @@
         <el-input v-model="addTeacherForm.status" autocomplete="off" />
       </el-form-item>
       <el-form-item label="职级" prop="rank" :label-width="formLabelWidth">
-        <el-input v-model="addTeacherForm.rank.number" autocomplete="off" />
+        <el-input v-model.number="addTeacherForm.rank" autocomplete="off" />
       </el-form-item>
       <el-form-item label="技术职务" prop="tecposition" :label-width="formLabelWidth">
         <el-input v-model="addTeacherForm.tecposition" autocomplete="off" />
@@ -62,7 +62,7 @@
         <el-input v-model="addTeacherForm.memo" type="textarea" autocomplete="off" />
       </el-form-item>
       <el-form-item label="单位编号" prop="schoolId" :label-width="formLabelWidth">
-        <el-input v-model="addTeacherForm.schoolId.number" autocomplete="off" />
+        <el-input v-model.number="addTeacherForm.schoolId" autocomplete="off" />
       </el-form-item>
     </el-form>
     <template #footer>
@@ -80,7 +80,11 @@ import {ElMessage} from "element-plus";
 export default {
   name: "AddTeacherDialog",
   data() {
+    const disabledDate = (time) => {
+      return time.getTime() > Date.now()
+    };
     return {
+      disabledDate: disabledDate,
       formLabelWidth: '140px',
       addTeacherFormVisible: false,
       addTeacherForm: {
@@ -189,7 +193,7 @@ export default {
         isStudent: false,
         teacher: _this.addTeacherForm
       };
-      _this.refs['addTeacherForm'].validate(valid => {
+      _this.$refs['addTeacherForm'].validate(valid => {
         if (valid) {
           _this.$httpAuthority.post('/user/post', addUserForm).then(res => {
             ElMessage({

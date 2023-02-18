@@ -48,7 +48,7 @@ export default {
       // 用于添加成员时查询到的用户，注意查询到的用户都是不具有该角色的
       usersSelected: [],
       usersSelectedShow: [],
-      usersId: [],
+      userNos: [],
       pageSize: 5,
       total: 0,
       currentPage: 1
@@ -83,7 +83,7 @@ export default {
     },
     clearAddMemberForm() {
       this.$refs['usersTable'].clearSelection();
-      this.usersId = [];
+      this.userNos = [];
     },
     cancelAddMember() {
       this.clearAddMemberForm();
@@ -91,7 +91,7 @@ export default {
       this.$emit('close-add-member')
     },
     addMember() {
-      if (this.usersId.length === 0) {
+      if (this.userNos.length === 0) {
         ElMessage({
           message: '没有选择用户',
           duration: 3 * 1000,
@@ -102,8 +102,8 @@ export default {
       } else {
         let _this = this;
         let addMemberRoleForm = {
-          roleId: this.roleId,
-          userNos: _this.usersId
+          roleId: _this.roleId,
+          userNos: _this.userNos
         }
         _this.$httpAuthority.post('/memberRole/addMemberRole', addMemberRoleForm).then(res => {
           ElMessage({
@@ -120,8 +120,8 @@ export default {
       }
     },
     handleSelectionChange(array) {
-      this.usersId = array.map(user => {
-        return user.userId;
+      this.userNos = array.map(user => {
+        return user.userNo;
       });
     }
   },

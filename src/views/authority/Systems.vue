@@ -10,9 +10,10 @@
               style="margin-top: 2vh; margin-bottom: 5vh; height: 15vh">
         <el-col v-for="col in this.numsPerRow" :span="5" style="width: 18vw">
           <el-card shadow="always" v-if="this.numsPerRow * (row - 1) + col - 1 < this.systemsNum">
-            <div style="text-align: left; font-size: medium"><b>{{ this.systems[this.numsPerRow * (row - 1) + col - 1].systemName }}</b></div>
-<!--            <div style="text-align: left; font-size: smaller">系统编码: {{ this.systems[this.numsPerRow * (row - 1) + col - 1].systemId}}</div>-->
-            <div style="display: flex; align-items: center; justify-content: space-between">
+            <div style="text-align: left; font-size: medium; margin-bottom: 1vh">
+              <b>{{ this.systems[this.numsPerRow * (row - 1) + col - 1].systemName }}</b>
+            </div>
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 1vh">
               <span style="font-size: small; color: #409EFF"
                     @click="clickResources(this.numsPerRow * (row - 1) + col - 1)"
                     @mouseenter="editMouseEnterStyle"
