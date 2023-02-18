@@ -41,7 +41,7 @@
           layout="prev, pager, next"
           :total="this.total"
           :current-page="this.currentPage"
-          @current-change="handleCurrentChange"
+          @update:current-page="handleCurrentChange"
           @update:page-size="handleUpdatePageSize"
       />
     </div>
@@ -83,10 +83,10 @@
       <el-form :model="editResourceForm" :rules="editResourceRules" ref="editResourceForm">
         <el-form-item label="资源类型" prop="resourceType" :label-width="formLabelWidth">
           <el-radio-group v-model="editResourceForm.resourceType">
-            <el-radio label="operation">功能操作</el-radio>
-            <el-radio label="menu">菜单</el-radio>
-            <el-radio label="element">页面元素</el-radio>
-            <el-radio label="file">文件资源</el-radio>
+            <el-radio label="功能操作">功能操作</el-radio>
+            <el-radio label="菜单">菜单</el-radio>
+            <el-radio label="页面元素">页面元素</el-radio>
+            <el-radio label="文件资源">文件资源</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="资源名称" prop="resourceName" :label-width="formLabelWidth">
@@ -96,7 +96,7 @@
           <el-input v-model="editResourceForm.resourceUrl" autocomplete="off" />
         </el-form-item>
         <el-form-item label="父资源" prop="parentResource" :label-width="formLabelWidth">
-          <el-select v-model="addResourceForm.parentResource" default-first-option>
+          <el-select v-model="editResourceForm.parentResource" default-first-option>
             <el-option key="" label="（无父资源）" value="" />
             <el-option
                 v-for="resource in resources"
@@ -122,38 +122,6 @@ import {ElMessage} from "element-plus";
 export default {
   name: "Resources",
   data() {
-    let checkAddParentResource = (rule, value, callback) => {
-      if (value === '') {
-        return callback();
-      }
-      let parentType = '';
-      this.resources.forEach(resource => {
-        if (resource.resourceId === value) {
-          parentType = resource.resourceType;
-        }
-      });
-      if (parentType === '') {
-        return callback(new Error('父资源不存在'));
-      } else {
-        return parentType === this.addResourceForm.resourceType ? callback() : callback(new Error('父资源类型错误'));
-      }
-    };
-    let checkEditParentResource = (rule, value, callback) => {
-      if (value === '') {
-        return callback();
-      }
-      let parentType = '';
-      this.resources.forEach(resource => {
-        if (resource.resourceId === value) {
-          parentType = resource.resourceType;
-        }
-      });
-      if (parentType === '') {
-        return callback(new Error('父资源不存在'));
-      } else {
-        return parentType === this.editResourceForm.resourceType ? callback() : callback(new Error('父资源类型错误'));
-      }
-    };
     return {
       systemId: '',
       searchKey: '',
@@ -180,9 +148,7 @@ export default {
         resourceUrl: [
           {required: true, message: '请输入资源路径', trigger: 'blur'}
         ],
-        parentResource: [
-          {validator: checkAddParentResource, trigger: 'blur'}
-        ]
+        parentResource: []
       },
       editResourceSelectedId: '',
       editResourceFormVisible: false,
@@ -203,9 +169,7 @@ export default {
         resourceUrl: [
           {required: true, message: '请输入资源路径', trigger: 'blur'}
         ],
-        parentResource: [
-          {validator: checkEditParentResource, trigger: 'blur'}
-        ]
+        parentResource: []
       }
     }
   },
@@ -300,6 +264,7 @@ export default {
     editResource() {
       let _this = this;
       let resourceForm = this.editResourceForm;
+      resourceForm.resourceId = this.editResourceSelectedId;
       _this.$refs['editResourceForm'].validate((valid) => {
         if (valid) {
           this.$httpAuthority.post('/resource/update', resourceForm).then(res => {

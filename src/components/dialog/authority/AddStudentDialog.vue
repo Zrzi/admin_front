@@ -133,7 +133,7 @@ export default {
     //   return time.getTime() > Date.now();
     // },
     clearAddStudentForm() {
-      this.refs['addStudentForm'].resetFields();
+      this.$refs['addStudentForm'].resetFields();
     },
     cancelAddStudent() {
       this.clearAddStudentForm();

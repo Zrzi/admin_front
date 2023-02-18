@@ -53,16 +53,16 @@ export default {
     }
   },
   computed: {
-    roleDeleted() {
-      return this.$store.state.roleDeleted;
+    roleChange() {
+      return this.$store.state.roleChange;
     }
   },
   watch: {
-    roleDeleted: {
+    roleChange: {
       handler(newVal, oldVal) {
         if (newVal === true) {
           this.init();
-          this.$store.commit('RESET_ROLE_DELETED');
+          this.$store.commit('RESET_ROLE_CHANGE');
         }
       }
     }
@@ -75,7 +75,9 @@ export default {
       _this.$httpAuthority.get('/role/get').then(res => {
         const result = res.data;
         _this.systems = result.data;
-      }).catch(message => {});
+      }).catch(message => {
+
+      });
     },
     editMouseEnterStyle() {
       document.querySelector('body').style.cursor = 'pointer';

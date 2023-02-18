@@ -81,8 +81,8 @@
           layout="prev, pager, next"
           :total="this.total"
           :current-page="this.currentPage"
-          @current-change="handleCurrentChange"
-          @size-change="handleSizeChange"
+          @update:current-page="handleCurrentChange"
+          @update:page-size="handleUpdatePageSize"
       />
     </div>
     <AddStudentDialog
@@ -158,7 +158,7 @@ export default {
       this.currentPage = val;
       this.changeList();
     },
-    handleSizeChange(val) {},
+    handleUpdatePageSize(val) {},
     clickAddStudent() {
       this.addStudentFormVisible = true;
     },

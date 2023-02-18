@@ -5,7 +5,7 @@ export default createStore({
     token: '',
     roleId: '',
     systemId: '',
-    roleDeleted: false
+    roleChange: false
   },
   getters: {
   },
@@ -14,7 +14,7 @@ export default createStore({
       state.token = token;
       localStorage.setItem("token", token);
     },
-    RESET_STATE: (state) => {
+    RESET_TOKEN: (state) => {
       state.token = '';
     },
     SET_SYSTEM_ID: (state, systemId) => {
@@ -29,10 +29,16 @@ export default createStore({
     RESET_ROLE_ID: (state) => {
       state.roleId = '';
     },
-    SET_ROLE_DELETED: (state, roleDeleted) => {
-      state.roleDeleted = roleDeleted;
+    SET_ROLE_CHANGE: (state, roleChange) => {
+      state.roleChange = roleChange;
     },
-    RESET_ROLE_DELETED: (state) => {
+    RESET_ROLE_CHANGE: (state) => {
+      state.roleChange = false;
+    },
+    RESET_STATE: (state) => {
+      state.token = '';
+      state.roleId = '';
+      state.systemId = '';
       state.roleDeleted = false;
     }
   },

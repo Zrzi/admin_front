@@ -58,13 +58,15 @@
           layout="prev, pager, next"
           :total="this.total"
           :current-page="this.currentPage"
-          @current-change="handleCurrentChange"
-          @size-change="handleUpdatePageSize"
+          @update:current-page="handleCurrentChange"
+          @update:page-size="handleUpdatePageSize"
       />
     </div>
     <EditRoleDialog
         v-model="editRoleFormVisible"
-        @close-edit-role="this.editRoleFormVisible = false">
+        @close-edit-role="this.editRoleFormVisible = false"
+        @edit-role-success="this.handleEditRoleSuccess"
+    >
     </EditRoleDialog>
     <AuthenticateDialog
         v-model="authenticateFormVisible"
@@ -83,7 +85,6 @@ import AddMemberDialog from "@/components/dialog/authority/AddMemberDialog";
 import AuthenticateDialog from "@/components/dialog/authority/AuthenticateDialog";
 import EditRoleDialog from "@/components/dialog/authority/EditRoleDialog";
 import {ElMessage} from "element-plus";
-import qs from 'qs';
 
 export default {
   name: "Role",
@@ -125,6 +126,10 @@ export default {
       document.querySelector('body').style.cursor = 'default';
     },
     init() {
+      this.getRole();
+      this.getUsers();
+    },
+    getRole() {
       let roleId = this.roleId;
       let _this = this;
       _this.$httpAuthority.get('/role/getByRoleId', {params: {roleId}}).then(res => {
@@ -134,9 +139,8 @@ export default {
         _this.$store.commit("SET_SYSTEM_ID", _this.systemId);
         _this.systemName = result.data.systemName;
       }).catch(message => {
-        this.$router.push({path: '/home/roles'});
+        _this.$router.push({path: '/home/roles'});
       });
-      _this.getUsers();
     },
     getUsers() {
       let _this = this;
@@ -146,7 +150,7 @@ export default {
       _this.$httpAuthority.get('/memberRole/get', {params: {roleId, start, pageSize}}).then(res => {
         const result = res.data;
         _this.users = result.data.users;
-        _this.total = result.data.total;
+        _this.total = result.data.count;
       }).catch(message => {});
     },
     changeList() {
@@ -156,7 +160,13 @@ export default {
       this.currentPage = val;
       this.changeList();
     },
-    handleUpdatePageSize(val) {},
+    handleUpdatePageSize(val) {
+
+    },
+    handleEditRoleSuccess() {
+      this.getRole();
+      this.$store.commit('SET_ROLE_CHANGE', true);
+    },
     clickRemoveUser(row) {
       let userNo = row.userNo;
       let _this = this;
@@ -201,7 +211,7 @@ export default {
           center: true,
           type: 'success'
         });
-        _this.$store.commit('SET_ROLE_DELETED', true);
+        _this.$store.commit('SET_ROLE_CHANGE', true);
         _this.$router.push({path: '/home/roles'})
       }).catch(message => {});
     },

@@ -60,9 +60,10 @@ export default {
               center: true,
               type: 'success'
             });
-            this.cancelEditRole();
+            _this.$emit('edit-role-success');
+            _this.cancelEditRole();
           }).catch(message => {
-            this.clearEditRoleForm();
+            _this.clearEditRoleForm();
           });
         } else {
           ElMessage({
@@ -71,7 +72,7 @@ export default {
             center: true,
             type: 'error'
           });
-          this.clearEditRoleForm();
+          _this.clearEditRoleForm();
         }
       });
     },

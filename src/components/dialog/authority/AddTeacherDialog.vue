@@ -176,7 +176,7 @@ export default {
   },
   methods: {
     clearAddTeacherForm() {
-      this.refs['addTeacherForm'].resetFields();
+      this.$refs['addTeacherForm'].resetFields();
     },
     cancelAddTeacher() {
       this.clearAddTeacherForm();

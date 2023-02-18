@@ -30,8 +30,8 @@
           layout="prev, pager, next"
           :total="this.total"
           :current-page="this.currentPage"
-          @current-change="handleCurrentChange"
-          @size-change="handleUpdatePageSize"
+          @update:current-page="handleCurrentChange"
+          @update:page-size="handleUpdatePageSize"
       />
     </div>
     <template #footer>
