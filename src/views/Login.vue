@@ -58,7 +58,7 @@ export default {
           _this.$httpAuthority.post('/login', loginForm).then(res => {
             const jwt = res.data.data.token;
             this.$store.commit("SET_TOKENS", jwt);
-            this.$router.push({path: '/home/roles'});
+            this.$router.push({path: '/home'});
           }).catch(message => {});
         } else {
           ElMessage({

@@ -9,33 +9,43 @@ import Excels from '@/views/excels/Excels';
 import Excel from '@/views/excels/Excel';
 import Resources from "@/views/authority/Resources";
 
+import store from "@/store/index"
+
 const routes = [
   {
     path: '/login',
     name: 'login',
-    component: Login
+    component: Login,
+    meta: {
+      title: '登录',
+      requireAuth: false
+    }
   },
   {
     path: '/home',
     name: 'home',
     component: Home,
+    meta: {
+      title: '首页',
+      requireAuth: true
+    },
     children: [
       {
         path: 'users',
         name: 'users',
         component: Users,
         meta: {
-          title: '用户管理'
-        },
-        children: [
-        ]
+          title: '用户管理',
+          requireAuth: true
+        }
       },
       {
         path: 'roles',
         name: 'roles',
         component: Roles,
         meta: {
-          title: '角色管理'
+          title: '角色管理',
+          requireAuth: true
         },
         children: [
           {
@@ -50,7 +60,8 @@ const routes = [
         name: 'systems',
         component: Systems,
         meta: {
-          title: '系统管理'
+          title: '系统管理',
+          requireAuth: true
         }
       },
       {
@@ -58,13 +69,17 @@ const routes = [
         name: 'excels',
         component: Excels,
         meta: {
-          title: 'excel映射管理'
+          title: 'excel映射管理',
+          requireAuth: true
         },
         children: [
           {
             path: ':id',
             name: 'excel',
-            component: Excel
+            component: Excel,
+            meta: {
+              requireAuth: true
+            }
           }
         ]
       }
@@ -75,12 +90,13 @@ const routes = [
     name: 'resources',
     component: Resources,
     meta: {
-      title: '资源管理'
+      title: '资源管理',
+      requireAuth: true
     }
   },
   {
     path: '',
-    redirect: 'home'
+    redirect: 'login'
   }
 ]
 
@@ -90,7 +106,19 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  next()
-})
+  if (to.meta.requireAuth) {
+    if (store.state.token) {
+      next();
+    } else {
+      next({path: '/login'})
+    }
+  } else {
+    if (store.state.token) {
+      next({path: '/home'})
+    } else {
+      next();
+    }
+  }
+});
 
 export default router
