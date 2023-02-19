@@ -202,6 +202,7 @@ export default {
     },
     cancelEditSystem() {
       this.clearEditSystem();
+      this.systemSelected = null;
       this.editSystemFormVisible = false;
     },
     editSystem() {
