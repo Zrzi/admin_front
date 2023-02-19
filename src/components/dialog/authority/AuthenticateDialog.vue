@@ -20,7 +20,7 @@
         <el-table-column prop="resourceName" label="资源名称" header-align="center" :show-overflow-tooltip="true" />
         <el-table-column prop="systemName" label="所属系统" header-align="center" :show-overflow-tooltip="true" />
         <el-table-column prop="resourceUrl" label="资源路径" header-align="center" :show-overflow-tooltip="true" />
-        <el-table-column prop="parentResource" label="父资源" header-align="center" :show-overflow-tooltip="true" />
+<!--        <el-table-column prop="parentResource" label="父资源" header-align="center" :show-overflow-tooltip="true" />-->
         <el-table-column prop="resourceType" label="资源类型" header-align="center" />
       </el-table>
     </div>
