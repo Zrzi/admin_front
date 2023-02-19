@@ -3,8 +3,8 @@
     <div style="display: flex; align-items: center; justify-content: space-between; width: 78vw; margin: auto">
       <h1>用户管理</h1>
       <div style="display: flex; align-items: center; justify-content: right">
-        <el-button type="primary" @click="clickAddStudent">添加学生</el-button>
-        <el-button type="primary" @click="clickAddTeacher">添加教师</el-button>
+        <el-button type="primary" @click="clickAddStudent" v-if="addStudentButton">添加学生</el-button>
+        <el-button type="primary" @click="clickAddTeacher" v-if="addTeacherButton">添加教师</el-button>
         <!--      <el-button type="primary" @click="clickChange">切换学生/教师</el-button>-->
         <el-switch v-model="showStudent" inline-prompt active-text="学生" inactive-text="教师" size="large"
                    @change="handleChange"
@@ -22,7 +22,7 @@
       </div>
     </div>
     <div>
-      <el-table :data="this.students" style="width: 100%" height="280" table-layout="auto" v-if="showStudent">
+      <el-table :data="this.students" style="width: 100%" height="280" table-layout="auto" v-show="showStudent">
         <el-table-column prop="stuNo" label="学号" header-align="center" align="center" />
         <el-table-column prop="stuName" label="姓名" header-align="center" align="center" />
         <el-table-column prop="sex" label="性别" header-align="center" align="center" />
@@ -51,7 +51,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <el-table :data="this.teachers" style="width: 100%" height="280" table-layout="auto" v-if="showStudent === false">
+      <el-table :data="this.teachers" style="width: 100%" height="280" table-layout="auto" v-show="showStudent === false">
         <el-table-column prop="empNo" label="教工号" header-align="center" align="center" />
         <el-table-column prop="empName" label="姓名" header-align="center" align="center" />
         <el-table-column prop="sex" label="性别" header-align="center" align="center" />
@@ -132,6 +132,7 @@ import AddStudentDialog from "@/components/dialog/authority/AddStudentDialog";
 import AddTeacherDialog from "@/components/dialog/authority/AddTeacherDialog";
 import EditStudentDialog from "@/components/dialog/authority/EditStudentDialog";
 import EditTeacherDialog from "@/components/dialog/authority/EditTeacherDialog";
+import checkAuthority from "@/utils/checkAuthority";
 
 export default {
   name: "Users",
@@ -148,10 +149,28 @@ export default {
       addStudentFormVisible: false,
       addTeacherFormVisible: false,
       editStudentFormVisible: false,
-      editTeacherFormVisible: false
+      editTeacherFormVisible: false,
+      addStudentButton: false,
+      addTeacherButton: false
     }
   },
   methods: {
+    checkAddStudentButtonAuthority() {
+      checkAuthority('Re3416db616fe42908a358f7c674e3f60').then(res => {
+        const result = res.data;
+        this.addStudentButton = result.data;
+      }).catch(message => {
+        this.addStudentButton = false;
+      });
+    },
+    checkAddTeacherButtonAuthority() {
+      checkAuthority('Rb1735029edfc486d8d92ae3a450e8444').then(res => {
+        const result = res.data;
+        this.addTeacherButton = result.data;
+      }).catch(message => {
+        this.addTeacherButton = false;
+      });
+    },
     init() {
       this.getData();
     },
@@ -254,6 +273,8 @@ export default {
   },
   created() {
     this.init();
+    this.checkAddStudentButtonAuthority();
+    this.checkAddTeacherButtonAuthority();
   }
 }
 </script>

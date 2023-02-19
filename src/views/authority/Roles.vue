@@ -7,7 +7,10 @@
           <span style="float: right; padding-right: 1px; color: #409EFF"
                 @click="clickAddRole()"
                 @mouseenter="editMouseEnterStyle"
-                @mouseleave="editMouseLeaveStyle">+新增角色</span>
+                @mouseleave="editMouseLeaveStyle"
+                v-if="addRoleButton">
+            +新增角色
+          </span>
         </div>
         <el-scrollbar height="80vh">
           <el-collapse style="border: none">
@@ -40,6 +43,7 @@
 
 <script>
 import AddRoleDialog from "@/components/dialog/authority/AddRoleDialog";
+import checkAuthority from "@/utils/checkAuthority";
 
 export default {
   name: "Role",
@@ -49,7 +53,8 @@ export default {
       systems: [],
       show: false,
       addRoleFormVisible: false,
-      formLabelWidth: '140px'
+      formLabelWidth: '140px',
+      addRoleButton: false
     }
   },
   computed: {
@@ -68,6 +73,14 @@ export default {
     }
   },
   methods: {
+    checkAddRoleButtonAuthority() {
+      checkAuthority('R0388abd789d54dabab2f7eb7a83a5e42').then(res => {
+        const result = res.data;
+        this.addRoleButton = result.data;
+      }).catch(message => {
+        this.addRoleButton = false;
+      });
+    },
     init() {
       let _this = this;
       // let res = await this.$httpAuthority.get('/role/get');
@@ -95,6 +108,7 @@ export default {
   },
   mounted() {
     this.init();
+    this.checkAddRoleButtonAuthority();
   }
 }
 </script>

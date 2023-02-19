@@ -2,7 +2,7 @@
   <el-container width="90vw">
     <el-header style="display: flex; align-items: center; justify-content: space-between; width: 80vw; margin: auto">
       <h2>系统管理</h2>
-      <el-button type="primary" @click="clickAddSystem">+添加系统</el-button>
+      <el-button type="primary" @click="clickAddSystem" v-if="addSystemButton">+添加系统</el-button>
     </el-header>
     <el-divider />
     <el-main>
@@ -17,11 +17,16 @@
               <span style="font-size: small; color: #409EFF"
                     @click="clickResources(this.numsPerRow * (row - 1) + col - 1)"
                     @mouseenter="editMouseEnterStyle"
-                    @mouseleave="editMouseLeaveStyle">资源管理</span>
+                    @mouseleave="editMouseLeaveStyle">
+                资源管理
+              </span>
               <span style="font-size: small; color: #409EFF"
                     @click="clickEditSystem(this.numsPerRow * (row - 1) + col - 1)"
                     @mouseenter="editMouseEnterStyle"
-                    @mouseleave="editMouseLeaveStyle">编辑应用</span>
+                    @mouseleave="editMouseLeaveStyle"
+                    v-if="editSystemButton">
+                编辑系统
+              </span>
             </div>
           </el-card>
         </el-col>
@@ -58,6 +63,7 @@
 
 <script>
 import {ElMessage} from "element-plus";
+import checkAuthority from "@/utils/checkAuthority";
 
 export default {
   name: "System",
@@ -89,10 +95,28 @@ export default {
           {max: 16, message: '系统名称长度不超过16个字符', trigger: 'blur'}
         ]
       },
-      formLabelWidth: '140px'
+      formLabelWidth: '140px',
+      addSystemButton: false,
+      editSystemButton: false
     }
   },
   methods: {
+    checkAddSystemButtonAuthority() {
+      checkAuthority('R681d2ec8e6ed438497570b021a989a25').then(res => {
+        const result = res.data;
+        this.addSystemButton = result.data;
+      }).catch(message => {
+        this.addSystemButton = false;
+      });
+    },
+    checkEditSystemButtonAuthority() {
+      checkAuthority('R25b04ab19eb24a32a470fbcaed4e3b53').then(res => {
+        const result = res.data;
+        this.editSystemButton = result.data;
+      }).catch(message => {
+        this.editSystemButton = false;
+      });
+    },
     init() {
       let _this = this;
       _this.$httpAuthority.get('/system/get').then(res => {
@@ -212,6 +236,8 @@ export default {
   },
   created() {
     this.init();
+    this.checkAddSystemButtonAuthority();
+    this.checkEditSystemButtonAuthority();
   }
 }
 </script>

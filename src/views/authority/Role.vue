@@ -3,10 +3,10 @@
     <div style="display: flex; align-items: center; justify-content: space-between">
       <span style="padding-left: 1px; padding-right: 5px">{{ this.roleName }}</span>
       <div>
-        <el-button type="primary" @click="clickEditRole">编辑角色</el-button>
-        <el-button type="primary" @click="clickAuthenticate">角色授权</el-button>
-        <el-button type="primary" @click="clickAddMember">添加成员</el-button>
-        <el-button type="danger" @click="clickRemoveRole">删除角色</el-button>
+        <el-button type="primary" @click="clickEditRole" v-if="editRoleButton">编辑角色</el-button>
+        <el-button type="primary" @click="clickAuthenticate" v-if="authenticateButton">角色授权</el-button>
+        <el-button type="primary" @click="clickAddMember" v-if="addMemberButton">添加成员</el-button>
+        <el-button type="danger" @click="clickRemoveRole" v-if="deleteRoleButton">删除角色</el-button>
       </div>
     </div>
     <el-divider />
@@ -85,6 +85,7 @@ import AddMemberDialog from "@/components/dialog/authority/AddMemberDialog";
 import AuthenticateDialog from "@/components/dialog/authority/AuthenticateDialog";
 import EditRoleDialog from "@/components/dialog/authority/EditRoleDialog";
 import {ElMessage} from "element-plus";
+import checkAuthority from "@/utils/checkAuthority";
 
 export default {
   name: "Role",
@@ -103,6 +104,10 @@ export default {
       editRoleFormVisible: false,
       authenticateFormVisible: false,
       addMemberFormVisible: false,
+      editRoleButton: false,
+      authenticateButton: false,
+      addMemberButton: false,
+      deleteRoleButton: false
     }
   },
   computed: {
@@ -119,6 +124,38 @@ export default {
     }
   },
   methods: {
+    checkEditRoleButtonAuthority() {
+      checkAuthority('Rb203469630844162994e8e0f8811f4f9').then(res => {
+        const result = res.data;
+        this.editRoleButton = result.data;
+      }).catch(message => {
+        this.editRoleButton = false;
+      });
+    },
+    checkAuthenticateButtonAuthority() {
+      checkAuthority('R2e6d823f53734807951d0170259928b6').then(res => {
+        const result = res.data;
+        this.authenticateButton = result.data;
+      }).catch(message => {
+        this.authenticateButton = false;
+      });
+    },
+    checkAddMemberButtonAuthority() {
+      checkAuthority('Rd695f531f161493f81cb99d31add8251').then(res => {
+        const result = res.data;
+        this.addMemberButton = result.data;
+      }).catch(message => {
+        this.addMemberButton = false;
+      });
+    },
+    checkDeleteRoleButtonAuthority() {
+      checkAuthority('R6455af277e32456c9a78de255292e42a').then(res => {
+        const result = res.data;
+        this.deleteRoleButton = result.data;
+      }).catch(message => {
+        this.deleteRoleButton = false;
+      });
+    },
     editMouseEnterStyle() {
       document.querySelector('body').style.cursor = 'pointer';
     },
@@ -227,6 +264,12 @@ export default {
   mounted() {
     // this.roleId = this.$store.state.roleId;
     // this.init();
+  },
+  created() {
+    this.checkEditRoleButtonAuthority();
+    this.checkAuthenticateButtonAuthority();
+    this.checkAddMemberButtonAuthority();
+    this.checkDeleteRoleButtonAuthority();
   }
 }
 </script>

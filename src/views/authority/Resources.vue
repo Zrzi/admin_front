@@ -10,7 +10,7 @@
       </div>
     </div>
     <div style="display: flex; align-items: center; justify-content: right; padding-bottom: 2vh">
-      <el-button type="primary" @click="clickAddResource">添加资源</el-button>
+      <el-button type="primary" @click="clickAddResource" v-if="addResourceButton">添加资源</el-button>
     </div>
     <div>
       <el-table :data="this.resources" style="width: 100%" height="400" ref="resourcesTable">
@@ -118,6 +118,7 @@
 
 <script>
 import {ElMessage} from "element-plus";
+import checkAuthority from "@/utils/checkAuthority";
 
 export default {
   name: "Resources",
@@ -170,10 +171,19 @@ export default {
           {required: true, message: '请输入资源路径', trigger: 'blur'}
         ],
         // parentResource: []
-      }
+      },
+      addResourceButton: false
     }
   },
   methods: {
+    checkAddResourceButtonAuthority() {
+      checkAuthority('Rc4a57f3e530141468bacda5408a6798a').then(res => {
+        const result = res.data;
+        this.addResourceButton = result.data;
+      }).catch(message => {
+        this.addResourceButton = false;
+      });
+    },
     init() {
       this.getData();
     },
@@ -331,6 +341,7 @@ export default {
     this.systemId = this.$route.query.systemId;
     this.currentPage = 1;
     this.init();
+    this.checkAddResourceButtonAuthority();
   }
 }
 </script>
