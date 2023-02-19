@@ -1,12 +1,15 @@
 <template>
   <div style="width: 80vw; height: 75vh; margin-top: 1vh">
-    <div style="display: flex; align-items: center; justify-content: right">
-      <el-button type="primary" @click="clickAddStudent">添加学生</el-button>
-      <el-button type="primary" @click="clickAddTeacher">添加教师</el-button>
-<!--      <el-button type="primary" @click="clickChange">切换学生/教师</el-button>-->
-      <el-switch v-model="showStudent" inline-prompt active-text="学生" inactive-text="教师" size="large"
-                 @change="handleChange"
-                 style="margin-left: 1vw" />
+    <div style="display: flex; align-items: center; justify-content: space-between; width: 78vw; margin: auto">
+      <h1>用户管理</h1>
+      <div style="display: flex; align-items: center; justify-content: right">
+        <el-button type="primary" @click="clickAddStudent">添加学生</el-button>
+        <el-button type="primary" @click="clickAddTeacher">添加教师</el-button>
+        <!--      <el-button type="primary" @click="clickChange">切换学生/教师</el-button>-->
+        <el-switch v-model="showStudent" inline-prompt active-text="学生" inactive-text="教师" size="large"
+                   @change="handleChange"
+                   style="margin-left: 1vw" />
+      </div>
     </div>
     <el-divider />
     <div style="display: flex; align-items: center; justify-content: space-between">
