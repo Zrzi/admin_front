@@ -151,7 +151,10 @@ export default {
         const result = res.data;
         _this.users = result.data.users;
         _this.total = result.data.count;
-      }).catch(message => {});
+      }).catch(message => {
+        _this.users = [];
+        _this.total = 0;
+      });
     },
     changeList() {
       this.getUsers();

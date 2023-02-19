@@ -82,6 +82,10 @@ export default {
             _this.$refs.authenticateTable.toggleRowSelection(row, row.has);
           });
         });
+      }).catch(message => {
+        _this.resources = [];
+        _this.resourcesShow = [];
+        _this.total = 0;
       });
     },
     changeList() {

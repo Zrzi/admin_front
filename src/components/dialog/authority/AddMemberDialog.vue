@@ -69,7 +69,11 @@ export default {
         _this.usersSelected = result.data;
         _this.usersSelectedShow = _this.usersSelected.slice(0, this.pageSize);
         _this.total = _this.usersSelected.length;
-      }).catch(message => {});
+      }).catch(message => {
+        _this.usersSelected = [];
+        _this.usersSelectedShow = [];
+        _this.total = 0;
+      });
     },
     handleCurrentChange(val) {
       this.currentPage = val;

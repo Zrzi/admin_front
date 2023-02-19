@@ -38,6 +38,12 @@ export default {
   methods: {
     init() {
       this.roleId = this.$store.state.roleId;
+      let roleId = this.roleId;
+      let _this = this;
+      _this.$httpAuthority.get('/role/getByRoleId', {params: {roleId}}).then(res => {
+        const result = res.data;
+        _this.editRoleForm.roleName = result.data.roleName;
+      }).catch(message => {});
     },
     clearEditRoleForm() {
       this.$refs['editRoleForm'].resetFields();

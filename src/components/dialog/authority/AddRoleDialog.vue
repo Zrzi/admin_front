@@ -56,7 +56,9 @@ export default {
       _this.$httpAuthority.get('/system/get').then(res => {
         const result = res.data;
         _this.systems = result.data;
-      }).catch(message => {});
+      }).catch(message => {
+        _this.systems = [];
+      });
     },
     clearAddRoleForm() {
       this.$refs['addRoleForm'].resetFields();

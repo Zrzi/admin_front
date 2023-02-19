@@ -100,8 +100,21 @@ export default {
         _this.systems = result.data;
         _this.systemsNum = _this.systems.length;
         _this.rows = Math.ceil(_this.systemsNum / _this.numsPerRow);
-      }).catch(message => {});
+      }).catch(message => {
+        _this.systems = [];
+        _this.systemsNum = 0;
+        _this.rows = 0;
+      });
     },
+    // initEditSystem() {
+    //   let systemId = this.systemSelected.systemId;
+    //   let _this = this;
+    //   _this.$httpAuthority.get('/system/getById', {params: {systemId}}).then(res => {
+    //     const result = res.data;
+    //     _this.editSystemForm.systemId = systemId;
+    //     _this.editSystemForm.systemName = result.data.systemName;
+    //   }).catch(message => {});
+    // },
     editMouseEnterStyle() {
       document.querySelector('body').style.cursor = 'pointer';
     },
@@ -125,8 +138,11 @@ export default {
       this.editSystemForm.systemName = this.systemSelected.systemName;
       this.editSystemFormVisible = true;
     },
-    cancelAddSystem() {
+    clearAddSystem() {
       this.$refs['addSystemForm'].resetFields();
+    },
+    cancelAddSystem() {
+      this.clearAddSystem();
       this.addSystemFormVisible = false;
     },
     addSystem() {
@@ -142,7 +158,10 @@ export default {
               type: 'success'
             });
             _this.init();
-          }).catch(message => {});
+            _this.cancelAddSystem();
+          }).catch(message => {
+            _this.clearAddSystem();
+          });
         } else {
           ElMessage({
             message: '输入错误',
@@ -150,12 +169,15 @@ export default {
             center: true,
             type: 'error'
           });
+          _this.clearAddSystem();
         }
-        _this.cancelAddSystem();
       });
     },
-    cancelEditSystem() {
+    clearEditSystem() {
       this.$refs['editSystemForm'].resetFields();
+    },
+    cancelEditSystem() {
+      this.clearEditSystem();
       this.editSystemFormVisible = false;
     },
     editSystem() {
@@ -172,7 +194,10 @@ export default {
               type: 'success'
             });
             _this.init();
-          }).catch(message => {});
+            _this.cancelEditSystem();
+          }).catch(message => {
+            _this.clearEditSystem();
+          });
         } else {
           ElMessage({
             message: '输入错误',
@@ -180,8 +205,8 @@ export default {
             center: true,
             type: 'error'
           });
+          _this.clearEditSystem();
         }
-        _this.cancelEditSystem();
       });
     }
   },

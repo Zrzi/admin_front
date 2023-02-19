@@ -76,7 +76,7 @@ export default {
         const result = res.data;
         _this.systems = result.data;
       }).catch(message => {
-
+        _this.systems = [];
       });
     },
     editMouseEnterStyle() {

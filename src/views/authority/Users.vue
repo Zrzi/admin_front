@@ -3,7 +3,10 @@
     <div style="display: flex; align-items: center; justify-content: right">
       <el-button type="primary" @click="clickAddStudent">添加学生</el-button>
       <el-button type="primary" @click="clickAddTeacher">添加教师</el-button>
-      <el-button type="primary" @click="clickChange">切换学生/教师</el-button>
+<!--      <el-button type="primary" @click="clickChange">切换学生/教师</el-button>-->
+      <el-switch v-model="showStudent" inline-prompt active-text="学生" inactive-text="教师" size="large"
+                 @change="handleChange"
+                 style="margin-left: 1vw" />
     </div>
     <el-divider />
     <div style="display: flex; align-items: center; justify-content: space-between">
@@ -162,7 +165,11 @@ export default {
           _this.teachers = result.data.teachers;
         }
         _this.total = result.data.total;
-      })
+      }).catch(message => {
+        _this.students = [];
+        _this.teachers = [];
+        _this.total = 0;
+      });
     },
     editMouseEnterStyle() {
       document.querySelector('body').style.cursor = 'pointer';
@@ -170,11 +177,11 @@ export default {
     editMouseLeaveStyle() {
       document.querySelector('body').style.cursor = 'default';
     },
-    clickChange() {
-      this.showStudent = !this.showStudent;
-      this.currentPage = 1;
-      this.changeList();
-    },
+    // clickChange() {
+    //   this.showStudent = !this.showStudent;
+    //   this.currentPage = 1;
+    //   this.changeList();
+    // },
     changeList() {
       this.getData();
     },
@@ -183,6 +190,10 @@ export default {
       this.changeList();
     },
     handleUpdatePageSize(val) {},
+    handleChange(val) {
+      this.currentPage = 1;
+      this.getData();
+    },
     clickAddStudent() {
       this.addStudentFormVisible = true;
     },
@@ -216,7 +227,7 @@ export default {
           _this.currentPage = _this.currentPage === 1 ? 1 : _this.currentPage - 1;
         }
         _this.changeList();
-      });
+      }).catch(message => {});
     },
     clickRemoveTeacher(row) {
       let empNo = row.empNo;
@@ -235,7 +246,7 @@ export default {
           _this.currentPage = _this.currentPage === 1 ? 1 : _this.currentPage - 1;
         }
         _this.changeList();
-      });
+      }).catch(message => {});
     }
   },
   created() {

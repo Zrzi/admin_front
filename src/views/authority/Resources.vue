@@ -14,14 +14,14 @@
     </div>
     <div>
       <el-table :data="this.resources" style="width: 100%" height="400" ref="resourcesTable">
-        <el-table-column prop="resourceId" label="资源编码" :show-overflow-tooltip="true" />
-        <el-table-column prop="resourceName" label="资源名称" />
-        <el-table-column prop="systemName" label="所属系统" />
-        <el-table-column prop="resourceUrl" label="资源路径" />
-        <el-table-column prop="parentResource" label="父资源" />
-        <el-table-column prop="resourceType" label="资源类型" />
-        <el-table-column prop="updatedDate" label="修改时间" :show-overflow-tooltip="true" />
-        <el-table-column fixed="right" label="操作">
+        <el-table-column prop="resourceId" label="资源编码" :show-overflow-tooltip="true" header-align="center" align="center" />
+        <el-table-column prop="resourceName" label="资源名称" header-align="center" align="center" />
+        <el-table-column prop="systemName" label="所属系统" header-align="center" align="center" />
+        <el-table-column prop="resourceUrl" label="资源路径" :show-overflow-tooltip="true" header-align="center" align="center" />
+<!--        <el-table-column prop="parentResource" label="父资源" />-->
+        <el-table-column prop="resourceType" label="资源类型" header-align="center" align="center" />
+        <el-table-column prop="updatedDate" label="修改时间" :show-overflow-tooltip="true" header-align="center" align="center" />
+        <el-table-column fixed="right" label="操作" header-align="center" align="center">
           <template #default="scope">
             <span style="color: #409EFF; margin: 1vmin"
                   @click="clickEditResource(scope.row)"
@@ -61,16 +61,16 @@
         <el-form-item label="资源路径" prop="resourceUrl" :label-width="formLabelWidth">
           <el-input v-model="addResourceForm.resourceUrl" autocomplete="off" />
         </el-form-item>
-        <el-form-item label="父资源" prop="parentResource" :label-width="formLabelWidth">
-          <el-select v-model="addResourceForm.parentResource" default-first-option>
-            <el-option key="" label="（无父资源）" value="" />
-            <el-option
-                v-for="resource in resources"
-                :key="resource.resourceId"
-                :label="resource.resourceName"
-                :value="resource.resourceId" />
-          </el-select>
-        </el-form-item>
+<!--        <el-form-item label="父资源" prop="parentResource" :label-width="formLabelWidth">-->
+<!--          <el-select v-model="addResourceForm.parentResource" default-first-option>-->
+<!--            <el-option key="" label="（无父资源）" value="" />-->
+<!--            <el-option-->
+<!--                v-for="resource in resources"-->
+<!--                :key="resource.resourceId"-->
+<!--                :label="resource.resourceName"-->
+<!--                :value="resource.resourceId" />-->
+<!--          </el-select>-->
+<!--        </el-form-item>-->
       </el-form>
       <template #footer>
         <span class="dialog-footer">
@@ -79,7 +79,7 @@
         </span>
       </template>
     </el-dialog>
-    <el-dialog v-model="editResourceFormVisible" title="编辑资源" @close="cancelEditResource">
+    <el-dialog v-model="editResourceFormVisible" title="编辑资源" @opened="initEditResource" @close="cancelEditResource">
       <el-form :model="editResourceForm" :rules="editResourceRules" ref="editResourceForm">
         <el-form-item label="资源类型" prop="resourceType" :label-width="formLabelWidth">
           <el-radio-group v-model="editResourceForm.resourceType">
@@ -95,16 +95,16 @@
         <el-form-item label="资源路径" prop="resourceUrl" :label-width="formLabelWidth">
           <el-input v-model="editResourceForm.resourceUrl" autocomplete="off" />
         </el-form-item>
-        <el-form-item label="父资源" prop="parentResource" :label-width="formLabelWidth">
-          <el-select v-model="editResourceForm.parentResource" default-first-option>
-            <el-option key="" label="（无父资源）" value="" />
-            <el-option
-                v-for="resource in resources"
-                :key="resource.resourceId"
-                :label="resource.resourceName"
-                :value="resource.resourceId" />
-          </el-select>
-        </el-form-item>
+<!--        <el-form-item label="父资源" prop="parentResource" :label-width="formLabelWidth">-->
+<!--          <el-select v-model="editResourceForm.parentResource" default-first-option>-->
+<!--            <el-option key="" label="（无父资源）" value="" />-->
+<!--            <el-option-->
+<!--                v-for="resource in resources"-->
+<!--                :key="resource.resourceId"-->
+<!--                :label="resource.resourceName"-->
+<!--                :value="resource.resourceId" />-->
+<!--          </el-select>-->
+<!--        </el-form-item>-->
       </el-form>
       <template #footer>
         <span class="dialog-footer">
@@ -135,7 +135,7 @@ export default {
         resourceType: '',
         resourceName: '',
         resourceUrl: '',
-        parentResource: '',
+        // parentResource: '',
         systemId: ''
       },
       addResourceRules: {
@@ -148,7 +148,7 @@ export default {
         resourceUrl: [
           {required: true, message: '请输入资源路径', trigger: 'blur'}
         ],
-        parentResource: []
+        // parentResource: []
       },
       editResourceSelectedId: '',
       editResourceFormVisible: false,
@@ -157,7 +157,7 @@ export default {
         resourceId: '',
         resourceName: '',
         resourceUrl: '',
-        parentResource: ''
+        // parentResource: ''
       },
       editResourceRules: {
         resourceType: [
@@ -169,13 +169,34 @@ export default {
         resourceUrl: [
           {required: true, message: '请输入资源路径', trigger: 'blur'}
         ],
-        parentResource: []
+        // parentResource: []
       }
     }
   },
   methods: {
     init() {
       this.getData();
+    },
+    initEditResource() {
+      let resourceId = this.editResourceSelectedId;
+      if (resourceId) {
+        let _this = this;
+        _this.$httpAuthority.get('/resource/getById', {params: {resourceId}}).then(res => {
+          const result = res.data;
+          _this.editResourceForm.resourceId = result.data.resourceId;
+          _this.editResourceForm.resourceType = result.data.resourceType;
+          _this.editResourceForm.resourceName = result.data.resourceName;
+          _this.editResourceForm.resourceUrl = result.data.resourceUrl;
+          // _this.editResourceForm.parentResource = result.data.parentResource;
+        }).catch(message => {
+          _this.editResourceForm = {
+            resourceType: '',
+            resourceId: '',
+            resourceName: '',
+            resourceUrl: '',
+          };
+        });
+      }
     },
     getData() {
       let _this = this;
@@ -186,15 +207,10 @@ export default {
         const result = res.data;
         _this.resources = result.data.resources;
         _this.total = result.data.total;
-      }).catch(message => {});
-    },
-    getTotal() {
-      let _this = this;
-      let systemId = _this.systemId;
-      _this.$httpAuthority.get("/resource/count", {params: {systemId}}).then(res => {
-        const result = res.data;
-        _this.total = result.total;
-      }).catch(message => {});
+      }).catch(message => {
+        _this.resources = [];
+        _this.total = 0;
+      });
     },
     editMouseEnterStyle() {
       document.querySelector('body').style.cursor = 'pointer';
@@ -274,6 +290,7 @@ export default {
               center: true,
               type: 'success'
             });
+            _this.editResourceSelectedId = '';
             _this.cancelEditResource();
             _this.getData();
           }).catch(message => {
