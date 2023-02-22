@@ -6,7 +6,8 @@ export default createStore({
     roleId: '',
     systemId: '',
     userNo: '',
-    roleChange: false
+    roleChange: false,
+    publicKey: ''
   },
   getters: {
   },
@@ -42,11 +43,18 @@ export default createStore({
     RESET_ROLE_CHANGE: (state) => {
       state.roleChange = false;
     },
+    SET_PUBLIC_KEY: (state, publicKey) => {
+      state.publicKey = publicKey;
+    },
+    RESET_PUBLIC_KEY: (state) => {
+      state.publicKey = '';
+    },
     RESET_STATE: (state) => {
       state.token = '';
       state.roleId = '';
       state.systemId = '';
       state.roleDeleted = false;
+      state.publicKey = '';
     }
   },
   actions: {
