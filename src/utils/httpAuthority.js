@@ -2,26 +2,44 @@ import axios from "axios";
 import router from "../router";
 import { ElMessage } from 'element-plus';
 
-// 本地测试
-// const httpAuthority = axios.create({
-//     baseURL: 'http://localhost:8000',
-//     timeout: 10 * 60 * 1000,
-//     headers: {
-//         "Content-Type": "application/json; charset=utf-8"
-//     }
-// });
+import getPublicKey from "@/utils/getPublicKey";
+import {getKey, aesEncrypt} from "@/utils/aesEncrypt";
+import {rsaEncrypt} from "@/utils/rsaEncrypt";
 
-// 线上测试
+// 本地测试
 const httpAuthority = axios.create({
-    baseURL: 'http://101.200.134.20:8080/authority',
+    baseURL: 'http://localhost:8000',
     timeout: 10 * 60 * 1000,
     headers: {
         "Content-Type": "application/json; charset=utf-8"
     }
 });
 
-httpAuthority.interceptors.request.use(config => {
+// 线上测试
+// const httpAuthority = axios.create({
+//     baseURL: 'http://101.200.134.20:8080/authority',
+//     timeout: 10 * 60 * 1000,
+//     headers: {
+//         "Content-Type": "application/json; charset=utf-8"
+//     }
+// });
+
+httpAuthority.interceptors.request.use(async config => {
     config.headers['Authorization'] = localStorage.getItem("token");
+    if (config.method !== 'post') {
+        return config;
+    }
+    if (!config.headers['encrypted']) {
+        return config;
+    }
+    const publicKey = await getPublicKey();
+    let key = getKey();
+    let encryptedKey = rsaEncrypt(publicKey, key);
+    let data = aesEncrypt(key, JSON.stringify(config.data));
+    config.data = {
+        data: data,
+        key: encryptedKey
+    }
     return config;
 })
 

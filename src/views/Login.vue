@@ -55,7 +55,7 @@ export default {
       let _this = this;
       this.$refs['loginForm'].validate((valid) => {
         if (valid) {
-          _this.$httpAuthority.post('/login', loginForm).then(res => {
+          _this.$httpAuthority.post('/login', loginForm, {headers: {encrypted: 1}}).then(res => {
             const jwt = res.data.data.token;
             this.$store.commit("SET_TOKENS", jwt);
             this.$router.push({path: '/home'});

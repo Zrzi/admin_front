@@ -3,7 +3,7 @@ import store from "@/store/index"
 
 export default async function() {
     if (store.state.publicKey && store.state.publicKey !== '') {
-        return store.state.publicKey;
+        return Promise.resolve(store.state.publicKey);
     }
     let publicKey = '';
     try {
@@ -13,5 +13,5 @@ export default async function() {
     } catch (e) {
         publicKey = '';
     }
-    return publicKey;
+    return Promise.resolve(publicKey);
 };

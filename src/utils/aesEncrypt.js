@@ -3,10 +3,11 @@ import CryptoJS from 'crypto-js';
 /**
  * 随机生成16位aes密钥
  */
+const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+const length = chars.length;
+
 export function getKey() {
     let key = '';
-    let chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
-    let length = chars.length;
     for (let i=0; i<16; ++i) {
         key += chars.charAt(Math.floor(Math.random() * length));
     }
@@ -14,9 +15,10 @@ export function getKey() {
 }
 
 // 加密
-export function encrypt(key, data) {
-    key = CryptoJS.enc.Hex.parse(key);
-    let encrypted = CryptoJS.AES.encrypt(data, key, {
+export function aesEncrypt(key, data) {
+    key = CryptoJS.enc.Utf8.parse(key);
+    let srcs = CryptoJS.enc.Utf8.parse(data);
+    let encrypted = CryptoJS.AES.encrypt(srcs, key, {
         mode: CryptoJS.mode.ECB,
         padding: CryptoJS.pad.Pkcs7
     });
@@ -24,7 +26,8 @@ export function encrypt(key, data) {
 }
 
 // 解密
-export function decrypt(key, word) {
+export function aesDecrypt(key, word) {
+    key = CryptoJS.enc.Utf8.parse(key);
     let decrypt = CryptoJS.AES.decrypt(word, key, {
         mode: CryptoJS.mode.ECB,
         padding: CryptoJS.pad.Pkcs7
