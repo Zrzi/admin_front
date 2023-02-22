@@ -2,8 +2,18 @@ import axios from "axios";
 import router from "../router";
 import { ElMessage } from 'element-plus';
 
+// 本地测试
+// const httpAuthority = axios.create({
+//     baseURL: 'http://localhost:8000',
+//     timeout: 10 * 60 * 1000,
+//     headers: {
+//         "Content-Type": "application/json; charset=utf-8"
+//     }
+// });
+
+// 线上测试
 const httpAuthority = axios.create({
-    baseURL: 'http://localhost:8000',
+    baseURL: 'http://101.200.134.20:8080/authority',
     timeout: 10 * 60 * 1000,
     headers: {
         "Content-Type": "application/json; charset=utf-8"
@@ -27,7 +37,7 @@ httpAuthority.interceptors.response.use(response => {
                 center: true
             });
             router.push("/login");
-            return Promise.reject(response.data.message)
+            return Promise.reject(response.data.message);
         } else if (res.code === 800003) {
             ElMessage({
                 message: '用户无权限',
@@ -35,7 +45,7 @@ httpAuthority.interceptors.response.use(response => {
                 type: 'error',
                 center: true
             });
-            return Promise.reject(response.data.message)
+            return Promise.reject(response.data.message);
         } else {
             ElMessage({
                 message: res.message ? res.message : '系统异常',
@@ -43,7 +53,7 @@ httpAuthority.interceptors.response.use(response => {
                 type: 'error',
                 center: true
             });
-            return Promise.reject(response.data.message)
+            return Promise.reject(response.data.message);
         }
     },
     error => {

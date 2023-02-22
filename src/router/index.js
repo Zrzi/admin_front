@@ -11,6 +11,7 @@ import Resources from "@/views/authority/Resources";
 
 import store from "@/store/index";
 import httpAuthority from "@/utils/httpAuthority";
+import {ElMessage} from "element-plus";
 
 const routes = [
   {
@@ -139,6 +140,12 @@ router.beforeEach((to, from, next) => {
           document.title = to.meta.title || document.title;
           next();
         } else {
+          ElMessage({
+            message: '无权限',
+            duration: 3 * 1000,
+            center: true,
+            type: 'error'
+          });
           next(false);
         }
       }).catch(message => {
