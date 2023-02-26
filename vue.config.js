@@ -6,9 +6,9 @@ const { ElementPlusResolver } = require('unplugin-vue-components/resolvers')
 module.exports = defineConfig({
   transpileDependencies: true,
 
-  // chainWebpack: config => {
-  //   // config.plugin('webpack-bundle-analyzer').use(require('webpack-bundle-analyzer').BundleAnalyzerPlugin);
-  // },
+  chainWebpack: config => {
+    // config.plugin('webpack-bundle-analyzer').use(require('webpack-bundle-analyzer').BundleAnalyzerPlugin);
+  },
 
   configureWebpack: {
     plugins: [
