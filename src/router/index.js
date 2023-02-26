@@ -1,17 +1,18 @@
 import {createRouter, createWebHashHistory} from 'vue-router';
-import Login from '@/views/Login';
-import Home from '@/views/Home';
-import Users from '@/views/authority/Users';
-import Roles from '@/views/authority/Roles';
-import Role from '@/views/authority/Role';
-import Systems from '@/views/authority/Systems';
-import Excels from '@/views/excels/Excels';
-import Excel from '@/views/excels/Excel';
-import Resources from "@/views/authority/Resources";
 
 import store from "@/store/index";
 import httpAuthority from "@/utils/httpAuthority";
 import {ElMessage} from "element-plus";
+
+const Login = () => import('../views/Login');
+const Home = () => import('../views/Home');
+const Users = () => import('../views/authority/Users');
+const Roles = () => import('../views/authority/Roles');
+const Role = () => import('../views/authority/Role');
+const Systems = () => import('../views/authority/Systems');
+const Excels = () => import('../views/excels/Excels');
+const Excel = () => import('../views/excels/Excel');
+const Resources = () => import('../views/authority/Resources');
 
 const routes = [
   {
