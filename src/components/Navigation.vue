@@ -105,7 +105,7 @@ export default {
       let _this = this;
       this.$refs['resetPasswordForm'].validate((valid) => {
         if (valid) {
-          _this.$httpAuthority.post('/resetPassword', resetPasswordForm).then(res => {
+          _this.$httpAuthority.post('/resetPassword', resetPasswordForm, {headers: {encrypted: 1}}).then(res => {
             ElMessage({
               message: '修改成功',
               duration: 3 * 1000,
