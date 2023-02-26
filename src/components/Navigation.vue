@@ -41,7 +41,9 @@
 </template>
 
 <script>
-import { ElMessage } from 'element-plus'
+import { ElMessage } from 'element-plus';
+import { ElementPlus, UserFilled } from '@element-plus/icons-vue';
+
 export default {
   name: "Navigation",
   data() {

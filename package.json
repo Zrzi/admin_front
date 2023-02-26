@@ -24,6 +24,9 @@
     "@vue/cli-plugin-router": "~5.0.0",
     "@vue/cli-plugin-vuex": "~5.0.0",
     "@vue/cli-service": "~5.0.0",
+    "unplugin-auto-import": "^0.15.0",
+    "unplugin-icons": "^0.15.3",
+    "unplugin-vue-components": "^0.24.0",
     "webpack-bundle-analyzer": "^4.8.0"
   },
   "browserslist": [
