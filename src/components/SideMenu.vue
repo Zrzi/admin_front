@@ -16,8 +16,6 @@
 </template>
 
 <script>
-import { Location } from '@element-plus/icons-vue';
-
 export default {
   name: "SideMenu",
   data() {

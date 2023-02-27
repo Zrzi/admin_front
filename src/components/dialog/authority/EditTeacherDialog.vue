@@ -229,7 +229,7 @@ export default {
             _this.$emit('edit-teacher-success');
             _this.cancelEditTeacher();
           }).catch(message => {
-            _this.clearEditTeacherForm();
+            // _this.clearEditTeacherForm();
           });
         } else {
           ElMessage({

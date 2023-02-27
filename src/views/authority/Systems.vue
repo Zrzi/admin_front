@@ -184,7 +184,7 @@ export default {
             _this.init();
             _this.cancelAddSystem();
           }).catch(message => {
-            _this.clearAddSystem();
+            // _this.clearAddSystem();
           });
         } else {
           ElMessage({
@@ -221,7 +221,7 @@ export default {
             _this.init();
             _this.cancelEditSystem();
           }).catch(message => {
-            _this.clearEditSystem();
+            // _this.clearEditSystem();
           });
         } else {
           ElMessage({

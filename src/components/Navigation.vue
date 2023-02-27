@@ -42,7 +42,6 @@
 
 <script>
 import { ElMessage } from 'element-plus';
-import { ElementPlus, UserFilled } from '@element-plus/icons-vue';
 
 export default {
   name: "Navigation",
@@ -116,7 +115,7 @@ export default {
             });
             _this.cancel();
           }).catch(message => {
-            _this.clear();
+            // _this.clear();
           });
         } else {
           ElMessage({

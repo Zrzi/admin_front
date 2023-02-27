@@ -176,7 +176,7 @@ export default {
             _this.$emit('edit-student-success');
             _this.cancelEditStudent();
           }).catch(message => {
-            _this.clearEditStudentForm();
+            // _this.clearEditStudentForm();
           });
         } else {
           ElMessage({

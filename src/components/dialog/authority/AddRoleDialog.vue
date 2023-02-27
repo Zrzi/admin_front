@@ -83,7 +83,7 @@ export default {
             _this.$emit('add-role-success');
             _this.cancelAddRoleForm();
           }).catch(message => {
-            _this.clearAddRoleForm();
+            // _this.clearAddRoleForm();
           });
         } else {
           ElMessage({

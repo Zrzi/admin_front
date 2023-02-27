@@ -69,7 +69,7 @@ export default {
             _this.$emit('edit-role-success');
             _this.cancelEditRole();
           }).catch(message => {
-            _this.clearEditRoleForm();
+            // _this.clearEditRoleForm();
           });
         } else {
           ElMessage({

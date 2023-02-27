@@ -263,7 +263,7 @@ export default {
             _this.cancelAddResource();
             _this.getData();
           }).catch(message => {
-            _this.clearAddResourceForm();
+            // _this.clearAddResourceForm();
           });
         } else {
           ElMessage({
@@ -304,7 +304,7 @@ export default {
             _this.cancelEditResource();
             _this.getData();
           }).catch(message => {
-            _this.clearEditResourceForm();
+            // _this.clearEditResourceForm();
           });
         } else {
           ElMessage({

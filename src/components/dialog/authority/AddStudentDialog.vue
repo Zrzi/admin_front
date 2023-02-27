@@ -159,7 +159,7 @@ export default {
             _this.$emit('add-student-success');
             _this.cancelAddStudent();
           }).catch(message => {
-            _this.clearAddStudentForm();
+            // _this.clearAddStudentForm();
           });
         } else {
           ElMessage({

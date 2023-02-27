@@ -205,7 +205,7 @@ export default {
             _this.$emit('add_teacher_success');
             _this.cancelAddTeacher();
           }).catch(message => {
-            _this.clearAddTeacherForm();
+            // _this.clearAddTeacherForm();
           });
         } else {
           ElMessage({
