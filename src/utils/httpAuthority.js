@@ -1,5 +1,6 @@
 import axios from "axios";
 import router from "../router";
+import store from "../store"
 import { ElMessage } from 'element-plus';
 
 import getPublicKey from "@/utils/getPublicKey";
@@ -63,6 +64,16 @@ httpAuthority.interceptors.response.use(response => {
                 type: 'error',
                 center: true
             });
+            return Promise.reject(response.data.message);
+        } else if (res.code === 800006) {
+            ElMessage({
+                message: res.message,
+                duration: 3 * 1000,
+                type: 'error',
+                center: true
+            });
+            store.commit("RESET_STATE");
+            router.push({path: '/login'});
             return Promise.reject(response.data.message);
         } else {
             ElMessage({
