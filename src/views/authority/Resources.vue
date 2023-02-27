@@ -71,6 +71,12 @@
 <!--                :value="resource.resourceId" />-->
 <!--          </el-select>-->
 <!--        </el-form-item>-->
+        <el-form-item label="是否是导航页面" prop="isMenu" :label-width="formLabelWidth" v-show="addResourceForm.resourceType === '菜单'">
+          <el-radio-group v-model="addResourceForm.isMenu">
+            <el-radio :label="true">是</el-radio>
+            <el-radio :label="false">否</el-radio>
+          </el-radio-group>
+        </el-form-item>
       </el-form>
       <template #footer>
         <span class="dialog-footer">
@@ -105,6 +111,12 @@
 <!--                :value="resource.resourceId" />-->
 <!--          </el-select>-->
 <!--        </el-form-item>-->
+        <el-form-item label="是否是导航页面" prop="isMenu" :label-width="formLabelWidth" v-show="editResourceForm.resourceType === '菜单'">
+          <el-radio-group v-model="editResourceForm.isMenu">
+            <el-radio :label="true">是</el-radio>
+            <el-radio :label="false">否</el-radio>
+          </el-radio-group>
+        </el-form-item>
       </el-form>
       <template #footer>
         <span class="dialog-footer">
@@ -137,6 +149,7 @@ export default {
         resourceName: '',
         resourceUrl: '',
         // parentResource: '',
+        isMenu: false,
         systemId: ''
       },
       addResourceRules: {
@@ -158,7 +171,8 @@ export default {
         resourceId: '',
         resourceName: '',
         resourceUrl: '',
-        // parentResource: ''
+        // parentResource: '',
+        isMenu: false
       },
       editResourceRules: {
         resourceType: [
@@ -197,6 +211,7 @@ export default {
           _this.editResourceForm.resourceType = result.data.resourceType;
           _this.editResourceForm.resourceName = result.data.resourceName;
           _this.editResourceForm.resourceUrl = result.data.resourceUrl;
+          _this.editResourceForm.isMenu = result.data.isMenu;
           // _this.editResourceForm.parentResource = result.data.parentResource;
         }).catch(message => {
           _this.editResourceForm = {
@@ -204,6 +219,7 @@ export default {
             resourceId: '',
             resourceName: '',
             resourceUrl: '',
+            isMenu: false
           };
         });
       }
@@ -248,6 +264,7 @@ export default {
     },
     addResource() {
       let resourceForm = this.addResourceForm;
+      console.log(resourceForm);
       resourceForm.systemId = this.systemId;
       let _this = this;
       _this.$refs['addResourceForm'].validate((valid) => {
