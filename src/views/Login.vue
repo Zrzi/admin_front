@@ -56,8 +56,10 @@ export default {
       this.$refs['loginForm'].validate((valid) => {
         if (valid) {
           _this.$httpAuthority.post('/login', loginForm, {headers: {encrypted: 1}}).then(res => {
-            const jwt = res.data.data.token;
-            this.$store.commit("SET_TOKENS", jwt);
+            const response = res.data;
+            let token = response.data.token;
+            let refreshToken = response.data.refreshToken;
+            this.$store.commit("SET_TOKENS", token, refreshToken);
             this.$router.push({path: '/home'});
           }).catch(message => {});
         } else {

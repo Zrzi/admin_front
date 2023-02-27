@@ -3,6 +3,7 @@ import { createStore } from 'vuex'
 export default createStore({
   state: {
     token: '',
+    refreshToken: '',
     roleId: '',
     systemId: '',
     userNo: '',
@@ -12,12 +13,15 @@ export default createStore({
   getters: {
   },
   mutations: {
-    SET_TOKENS: (state, token) => {
+    SET_TOKENS: (state, token, refreshToken) => {
       state.token = token;
+      state.refreshToken = refreshToken;
       localStorage.setItem("token", token);
+      localStorage.setItem("refreshToken", refreshToken);
     },
     RESET_TOKEN: (state) => {
       state.token = '';
+      state.refreshToken = '';
     },
     SET_SYSTEM_ID: (state, systemId) => {
       state.systemId = systemId;
