@@ -62,7 +62,6 @@ export default {
       let _this = this;
       _this.$httpAuthority.get('/getMenus').then(res => {
         const response = res.data;
-        console.log(response);
         _this.systems = response.data;
       });
     }

@@ -264,7 +264,6 @@ export default {
     },
     addResource() {
       let resourceForm = this.addResourceForm;
-      console.log(resourceForm);
       resourceForm.systemId = this.systemId;
       let _this = this;
       _this.$refs['addResourceForm'].validate((valid) => {

@@ -13,14 +13,18 @@ export default createStore({
   getters: {
   },
   mutations: {
-    SET_TOKENS: (state, token, refreshToken) => {
+    SET_TOKENS: (state, token) => {
       state.token = token;
-      state.refreshToken = refreshToken;
       localStorage.setItem("token", token);
-      localStorage.setItem("refreshToken", refreshToken);
     },
     RESET_TOKEN: (state) => {
       state.token = '';
+    },
+    SET_REFRESH_TOKEN: (state, refreshToken) => {
+      state.refreshToken = refreshToken;
+      localStorage.setItem("refreshToken", refreshToken);
+    },
+    RESET_REFRESH_TOKEN: (state) => {
       state.refreshToken = '';
     },
     SET_SYSTEM_ID: (state, systemId) => {
@@ -55,6 +59,7 @@ export default createStore({
     },
     RESET_STATE: (state) => {
       state.token = '';
+      state.refreshToken = '';
       state.roleId = '';
       state.systemId = '';
       state.roleDeleted = false;

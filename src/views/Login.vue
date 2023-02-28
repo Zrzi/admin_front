@@ -59,7 +59,8 @@ export default {
             const response = res.data;
             let token = response.data.token;
             let refreshToken = response.data.refreshToken;
-            this.$store.commit("SET_TOKENS", token, refreshToken);
+            this.$store.commit("SET_TOKENS", token);
+            this.$store.commit("SET_REFRESH_TOKEN", refreshToken);
             this.$router.push({path: '/home'});
           }).catch(message => {});
         } else {

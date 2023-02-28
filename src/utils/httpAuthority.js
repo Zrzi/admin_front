@@ -8,22 +8,22 @@ import {getKey, aesEncrypt} from "@/utils/aesEncrypt";
 import {rsaEncrypt} from "@/utils/rsaEncrypt";
 
 // 本地测试
-// const httpAuthority = axios.create({
-//     baseURL: 'http://localhost:8000',
-//     timeout: 10 * 60 * 1000,
-//     headers: {
-//         "Content-Type": "application/json; charset=utf-8"
-//     }
-// });
-
-// 线上测试
 const httpAuthority = axios.create({
-    baseURL: 'http://101.200.134.20:8080/authority',
+    baseURL: 'http://localhost:8000',
     timeout: 10 * 60 * 1000,
     headers: {
         "Content-Type": "application/json; charset=utf-8"
     }
 });
+
+// 线上测试
+// const httpAuthority = axios.create({
+//     baseURL: 'http://101.200.134.20:8080/authority',
+//     timeout: 10 * 60 * 1000,
+//     headers: {
+//         "Content-Type": "application/json; charset=utf-8"
+//     }
+// });
 
 // 是否正在刷新token
 let isRefreshing = false;
@@ -94,20 +94,27 @@ httpAuthority.interceptors.response.use(response => {
                 requests.push((token) => {
                     config.headers['Authorization'] = token;
                     resolve(httpAuthority(config));
-                })
+                });
             });
         } else {
             isRefreshing = true;
-            let refreshToken = store.state.refreshToken | localStorage.getItem("refreshToken");
-            httpAuthority.post('/refreshToken', {params: {refreshToken: refreshToken}}).then(res => {
+            let refreshToken = store.state.refreshToken;
+            if (!refreshToken) {
+                refreshToken = localStorage.getItem("refreshToken");
+            }
+            let refreshTokenForm = {
+                refreshToken: refreshToken
+            }
+            httpAuthority.post('/refreshToken', refreshTokenForm).then(res => {
                 const response = res.data;
                 // 其它情况，系统没能刷新token
                 if (response.code === 200) {
                     let token = response.data.token;
                     let refreshToken = response.data.refreshToken;
-                    store.commit('SET_TOKENS', token, refreshToken);
+                    store.commit('SET_TOKENS', token);
+                    store.commit('SET_REFRESH_TOKEN', refreshToken);
                     config.headers['Authorization'] = token;
-                    requests.forEach(request => request(token));
+                    requests.map(request => request(token));
                     requests = [];
                     return httpAuthority(config);
                 }
