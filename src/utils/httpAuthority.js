@@ -49,7 +49,7 @@ httpAuthority.interceptors.request.use(async config => {
     return config;
 })
 
-httpAuthority.interceptors.response.use(response => {
+httpAuthority.interceptors.response.use(async response => {
     let res = response.data;
     if (res.code === 200) {
         return Promise.resolve(response);
@@ -105,7 +105,8 @@ httpAuthority.interceptors.response.use(response => {
             let refreshTokenForm = {
                 refreshToken: refreshToken
             }
-            httpAuthority.post('/refreshToken', refreshTokenForm).then(res => {
+            try {
+                const res = await httpAuthority.post('/refreshToken', refreshTokenForm);
                 const response = res.data;
                 // 其它情况，系统没能刷新token
                 if (response.code === 200) {
@@ -114,13 +115,18 @@ httpAuthority.interceptors.response.use(response => {
                     store.commit('SET_TOKENS', token);
                     store.commit('SET_REFRESH_TOKEN', refreshToken);
                     config.headers['Authorization'] = token;
-                    requests.map(request => request(token));
+                    requests.forEach(cb => cb(token));
                     requests = [];
-                    return httpAuthority(config);
+                    try {
+                        const tempResponse = await httpAuthority(config);
+                        return Promise.resolve(tempResponse);
+                    } catch (message) {
+                        return Promise.reject(message);
+                    }
                 }
-            }).finally(() => {
+            } finally {
                 isRefreshing = false;
-            });
+            }
         }
     } else {
         ElMessage({
