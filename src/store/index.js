@@ -62,7 +62,7 @@ export default createStore({
       state.refreshToken = '';
       state.roleId = '';
       state.systemId = '';
-      state.roleDeleted = false;
+      state.roleChange = false;
       state.publicKey = '';
     }
   },

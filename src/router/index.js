@@ -11,7 +11,6 @@ const Roles = () => import('../views/authority/Roles');
 const Role = () => import('../views/authority/Role');
 const Systems = () => import('../views/authority/Systems');
 const Excels = () => import('../views/excels/Excels');
-const Excel = () => import('../views/excels/Excel');
 const Resources = () => import('../views/authority/Resources');
 
 const routes = [
@@ -79,20 +78,9 @@ const routes = [
         component: Excels,
         meta: {
           title: 'excel映射管理',
-          requireAuth: true,
+          requireAuth: false,
           resourceId: ''
-        },
-        children: [
-          {
-            path: ':id',
-            name: 'excel',
-            component: Excel,
-            meta: {
-              requireAuth: true,
-              resourceId: ''
-            }
-          }
-        ]
+        }
       }
     ]
   },

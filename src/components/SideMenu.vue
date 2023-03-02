@@ -3,6 +3,15 @@
       active-text-color="#ffd04b"
       background-color="#FFFFFF"
       class="el-menu-vertical-demo">
+<!--    <el-sub-menu index="S01">-->
+<!--      <template #title>-->
+<!--        <el-icon><Location /></el-icon>-->
+<!--        <span>excel</span>-->
+<!--        <el-menu-item index="/home/excels" @click="handleClick">-->
+<!--          excel管理-->
+<!--        </el-menu-item>-->
+<!--      </template>-->
+<!--    </el-sub-menu>-->
     <el-sub-menu v-for="system in systems" :index="system.systemId">
       <template #title>
         <el-icon><Location /></el-icon>
