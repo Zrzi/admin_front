@@ -17,12 +17,12 @@
       </el-row>
       <el-row v-for="(item, index) in this.addExcelForm.rows">
         <el-col :span="10">
-          <el-form-item label="请输入excel列名" prop="excelColumn" :label-width="inputFormLabelWidth">
+          <el-form-item label="请输入excel列名" :prop="'addExcelForm.rows.' + index + '.excelColumn'" :label-width="inputFormLabelWidth">
             <el-input v-model="item.excelColumn" />
           </el-form-item>
         </el-col>
         <el-col :span="9">
-          <el-form-item prop="sqlColumn" :label-width="selectFormLabelWidth">
+          <el-form-item :prop="'addExcelForm.rows.' + index + '.sqlColumn'" :label-width="selectFormLabelWidth">
             <el-select v-model="item.sqlColumn" placeholder="请选择sql列名" no-data-text="请选择sql表">
               <el-option v-for="column in sqlColumns" :value="column"></el-option>
             </el-select>
