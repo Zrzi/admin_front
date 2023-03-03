@@ -6,7 +6,7 @@
         <el-col :span="10">
           <span>请输入excel表格名称</span>
           <el-form-item prop="excelName">
-            <el-input v-model="editExcelForm.excelName" />
+            <el-input :readonly="true" v-model="editExcelForm.excelName" />
           </el-form-item>
         </el-col>
         <el-col :span="2"></el-col>
@@ -70,7 +70,12 @@ export default {
   data() {
     return {
       editExcelFormVisible: false,
-      editExcelForm: {},
+      editExcelForm: {
+        excelId: '',
+        excelName: '',
+        sqlName: '',
+        rows: []
+      },
       editExcelRules: {
         excelName: [
           {required: true, message: '请输入excel表格名', trigger: 'blur'},

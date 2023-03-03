@@ -6,7 +6,6 @@
         <el-button type="primary" @click="clickUploadExcel" v-if="uploadExcelButton">上传excel</el-button>
         <el-button type="primary" @click="clickAddExcel" v-if="addExcelButton">+添加Excel映射</el-button>
       </div>
-
     </el-header>
     <el-divider />
     <el-space wrap :size="15">
