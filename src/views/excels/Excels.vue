@@ -2,37 +2,36 @@
   <el-container width="90vw">
     <el-header style="display: flex; align-items: center; justify-content: space-between; width: 80vw; margin: auto">
       <h2>Excel映射管理</h2>
-      <el-button type="primary" @click="clickAddExcel" v-if="addExcelButton">+添加Excel映射</el-button>
+      <div style="display: flex; align-items: center; justify-content: right">
+        <el-button type="primary" @click="clickUploadExcel" v-if="uploadExcelButton">上传excel</el-button>
+        <el-button type="primary" @click="clickAddExcel" v-if="addExcelButton">+添加Excel映射</el-button>
+      </div>
+
     </el-header>
     <el-divider />
-    <el-main>
-      <el-row v-for="row in rows" :gutter="30" justify="center" align="middle"
-              style="margin-top: 2vh; margin-bottom: 5vh; height: 15vh">
-        <el-col v-for="col in this.numsPerRow" :span="5" style="width: 18vw">
-          <el-card shadow="always" v-if="this.numsPerRow * (row - 1) + col - 1 < this.excelsNum">
-            <div style="text-align: left; font-size: medium; margin-bottom: 1vh">
-              <b>{{ this.excels[this.numsPerRow * (row - 1) + col - 1].excelName }}</b>
-            </div>
-            <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 1vh">
-              <span style="font-size: small; color: #409EFF"
-                    @click="clickEditExcel(this.numsPerRow * (row - 1) + col - 1)"
+    <el-space wrap :size="15">
+      <el-card shadow="hover" v-for="(excel) in excels" style="width: 15vw">
+        <div style="text-align: left; font-size: medium; margin-bottom: 1vh">
+          <b>{{ excel.excelName }}</b>
+        </div>
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 1vh">
+          <span style="font-size: small; color: #409EFF"
+                    @click="clickEditExcel(excel.excelId)"
                     @mouseenter="editMouseEnterStyle"
                     @mouseleave="editMouseLeaveStyle"
                     v-if="editExcelButton">
-                编辑映射
-              </span>
-              <span style="font-size: small; color: #D9001B"
-                    @click="clickDeleteExcel(this.numsPerRow * (row - 1) + col - 1)"
-                    @mouseenter="editMouseEnterStyle"
-                    @mouseleave="editMouseLeaveStyle"
-                    v-if="deleteExcelButton">
-                删除映射
-              </span>
-            </div>
-          </el-card>
-        </el-col>
-      </el-row>
-    </el-main>
+            编辑映射
+          </span>
+          <span style="font-size: small; color: #D9001B"
+                @click="clickDeleteExcel(excel.excelId)"
+                @mouseenter="editMouseEnterStyle"
+                @mouseleave="editMouseLeaveStyle"
+                v-if="deleteExcelButton">
+            删除映射
+          </span>
+        </div>
+      </el-card>
+    </el-space>
     <AddExcelDialog
         v-model="addExcelFormVisible"
         @close-add-excel="this.addExcelFormVisible = false"
@@ -58,9 +57,11 @@ export default {
     return {
       addExcelFormVisible: false,
       editExcelFormVisible: false,
+      uploadExcelFormVisible: false,
       addExcelButton: false,
       editExcelButton: false,
       deleteExcelButton: false,
+      uploadExcelButton: false,
       excelsNum: 0,
       numsPerRow: 4,
       rows: 0,
@@ -122,14 +123,26 @@ export default {
       //   this.deleteExcelButton = false;
       // });
     },
+    checkUploadExcelButtonAuthority() {
+      this.uploadExcelButton = true;
+      // checkAuthority('R681d2ec8e6ed438497570b021a989a25').then(res => {
+      //   const result = res.data;
+      //   this.deleteExcelButton = result.data;
+      // }).catch(message => {
+      //   this.deleteExcelButton = false;
+      // });
+    },
     clickAddExcel() {
       this.addExcelFormVisible = true;
     },
     clickEditExcel() {
       this.editExcelFormVisible = true;
     },
-    clickDeleteExcel() {
-
+    clickDeleteExcel(excelId) {
+      console.log(excelId);
+    },
+    clickUploadExcel() {
+      this.uploadExcelFormVisible = true;
     }
   },
   created() {
@@ -137,6 +150,7 @@ export default {
     this.checkAddExcelButtonAuthority();
     this.checkEditExcelButtonAuthority();
     this.checkDeleteExcelButtonAuthority();
+    this.checkUploadExcelButtonAuthority();
   }
 }
 </script>

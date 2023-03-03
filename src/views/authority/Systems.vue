@@ -5,33 +5,28 @@
       <el-button type="primary" @click="clickAddSystem" v-if="addSystemButton">+添加系统</el-button>
     </el-header>
     <el-divider />
-    <el-main>
-      <el-row v-for="row in rows" :gutter="30" justify="center" align="middle"
-              style="margin-top: 2vh; margin-bottom: 5vh; height: 15vh">
-        <el-col v-for="col in this.numsPerRow" :span="5" style="width: 18vw">
-          <el-card shadow="always" v-if="this.numsPerRow * (row - 1) + col - 1 < this.systemsNum">
-            <div style="text-align: left; font-size: medium; margin-bottom: 1vh">
-              <b>{{ this.systems[this.numsPerRow * (row - 1) + col - 1].systemName }}</b>
-            </div>
-            <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 1vh">
-              <span style="font-size: small; color: #409EFF"
-                    @click="clickResources(this.numsPerRow * (row - 1) + col - 1)"
-                    @mouseenter="editMouseEnterStyle"
-                    @mouseleave="editMouseLeaveStyle">
-                资源管理
-              </span>
-              <span style="font-size: small; color: #409EFF"
-                    @click="clickEditSystem(this.numsPerRow * (row - 1) + col - 1)"
-                    @mouseenter="editMouseEnterStyle"
-                    @mouseleave="editMouseLeaveStyle"
-                    v-if="editSystemButton">
-                编辑系统
-              </span>
-            </div>
-          </el-card>
-        </el-col>
-      </el-row>
-    </el-main>
+    <el-space wrap :size="15">
+      <el-card shadow="hover" v-for="(system, index) in systems" style="width: 15vw">
+        <div style="text-align: left; font-size: medium; margin-bottom: 1vh">
+          <b>{{ system.systemName }}</b>
+        </div>
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 1vh">
+          <span style="font-size: small; color: #409EFF"
+                @click="clickResources(index)"
+                @mouseenter="editMouseEnterStyle"
+                @mouseleave="editMouseLeaveStyle">
+            资源管理
+          </span>
+          <span style="font-size: small; color: #409EFF"
+                @click="clickEditSystem(index)"
+                @mouseenter="editMouseEnterStyle"
+                @mouseleave="editMouseLeaveStyle"
+                v-if="editSystemButton">
+            编辑系统
+          </span>
+        </div>
+      </el-card>
+    </el-space>
     <el-dialog v-model="addSystemFormVisible" title="添加系统">
       <el-form :model="addSystemForm" :rules="addSystemRules" ref="addSystemForm">
         <el-form-item label="系统名称" prop="systemName" :label-width="formLabelWidth">
