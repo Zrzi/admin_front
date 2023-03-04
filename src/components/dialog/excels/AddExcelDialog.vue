@@ -65,6 +65,8 @@
 </template>
 
 <script>
+import {ElMessage} from "element-plus";
+
 export default {
   name: "AddExcelDialog",
   data() {
@@ -99,16 +101,25 @@ export default {
       this.insertRow();
     },
     getSqlTables() {
-      this.sqlTables = [
-        'Table1', 'Table2', 'Table3', 'Table4'
-      ];
+      let _this = this;
+      _this.$httpExcel.get('/excel/getSqlTables').then(res => {
+        const result = res.data;
+        _this.sqlTables = result.data;
+      }).catch(message => {
+        _this.sqlTables = [];
+      });
     },
     getSqlColumns() {
       this.addExcelForm.rows = [];
       this.insertRow();
-      this.sqlColumns = [
-        'Column1', 'Column2', 'Column3', 'Column4'
-      ];
+      let _this = this;
+      let sqlTableName = this.addExcelForm.sqlName;
+      _this.$httpExcel.get('/excel/getSqlColumns', {params: {sqlTableName: sqlTableName}}).then(res => {
+        const result = res.data;
+        _this.sqlColumns = result.data;
+      }).catch(message => {
+        _this.sqlColumns = [];
+      });
     },
     clearAddExcelForm() {
       this.$refs['addExcelForm'].resetFields();
@@ -117,11 +128,32 @@ export default {
     cancelAddExcel() {
       this.clearAddExcelForm();
       this.addExcelFormVisible = true;
-      this.$emit('close-add-excel');
-      this.$emit('add-excel-success');
     },
     addExcel() {
-      this.cancelAddExcel();
+      let _this = this;
+      let addExcelForm = this.addExcelForm;
+      _this.$refs['addExcelForm'].validate(valid => {
+        if (valid) {
+          _this.$httpExcel.post('/excel/add', addExcelForm).then(res => {
+            ElMessage({
+              message: '添加成功',
+              duration: 3 * 1000,
+              center: true,
+              type: 'success'
+            });
+            _this.$emit('close-add-excel');
+            _this.$emit('add-excel-success');
+            _this.cancelAddExcel();
+          });
+        } else {
+          ElMessage({
+            message: '输入错误',
+            duration: 3 * 1000,
+            center: true,
+            type: 'error'
+          });
+        }
+      });
     },
     insertRow() {
       this.addExcelForm.rows.push({

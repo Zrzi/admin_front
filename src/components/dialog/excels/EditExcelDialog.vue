@@ -65,10 +65,13 @@
 </template>
 
 <script>
+import {ElMessage} from "element-plus";
+
 export default {
   name: "EditExcelDialog",
   data() {
     return {
+      excelId: '',
       editExcelFormVisible: false,
       editExcelForm: {
         excelId: '',
@@ -94,33 +97,45 @@ export default {
   },
   methods: {
     init() {
+      this.excelId = this.$store.state.excelId;
       this.getExcelInfo();
       this.getSqlTables();
     },
     getExcelInfo() {
-      this.editExcelForm = {
-        excelName: 'aaaa',
-        sqlName: 'aaaa',
-        rows: [
-          {
-            excelColumn: 'aaaaaaa',
-            sqlColumn: 'aaaaaaa',
-            isPrimaryKey: true
-          }
-        ]
-      }
+      let _this = this;
+      let excelId = this.excelId;
+      _this.$httpExcel.get('/excel/getExcelByExcelId', {params: {excelId: excelId}}).then(res => {
+        const result = res.data;
+        _this.editExcelForm = result.data;
+      }).catch(message => {
+        _this.editExcelForm = {
+          excelId: '',
+          excelName: '',
+          sqlName: '',
+          rows: []
+        };
+      });
     },
     getSqlTables() {
-      this.sqlTables = [
-        'Table1', 'Table2', 'Table3', 'Table4'
-      ];
+      let _this = this;
+      _this.$httpExcel.get('/excel/getSqlTables').then(res => {
+        const result = res.data;
+        _this.sqlTables = result.data;
+      }).catch(message => {
+        _this.sqlTables = [];
+      });
     },
     getSqlColumns() {
       this.editExcelForm.rows = [];
       this.insertRow();
-      this.sqlColumns = [
-        'Column1', 'Column2', 'Column3', 'Column4'
-      ];
+      let _this = this;
+      let sqlTableName = this.editExcelForm.sqlName;
+      _this.$httpExcel.get('/excel/getSqlColumns', {params: {sqlTableName: sqlTableName}}).then(res => {
+        const result = res.data;
+        _this.sqlColumns = result.data;
+      }).catch(message => {
+        _this.sqlColumns = [];
+      });
     },
     clearEditExcelForm() {
       this.$refs['editExcelForm'].resetFields();
@@ -128,10 +143,33 @@ export default {
     cancelEditExcel() {
       this.clearEditExcelForm();
       this.editExcelFormVisible = false;
-      this.$emit('close-edit-excel');
-      this.$emit('edit-excel-success');
     },
-    editExcel() {},
+    editExcel() {
+      let _this = this;
+      let editExcelForm = this.editExcelForm;
+      _this.$refs['editExcelForm'].validate(valid => {
+        if (valid) {
+          _this.$httpExcel.post('/excel/update', editExcelForm).then(res => {
+            ElMessage({
+              message: '编辑成功',
+              duration: 3 * 1000,
+              center: true,
+              type: 'success'
+            });
+            _this.$emit('close-edit-excel');
+            _this.$emit('edit-excel-success');
+            _this.cancelEditExcel();
+          });
+        } else {
+          ElMessage({
+            message: '输入错误',
+            duration: 3 * 1000,
+            center: true,
+            type: 'error'
+          });
+        }
+      });
+    },
     insertRow() {
       this.editExcelForm.rows.push({
         excelColumn: '',

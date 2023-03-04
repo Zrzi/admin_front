@@ -33,13 +33,13 @@
     </el-space>
     <AddExcelDialog
         v-model="addExcelFormVisible"
-        @close-add-excel="this.addExcelFormVisible = false"
-        @add-excel-success="">
+        @close-add-excel="handleCloseAddExcel"
+        @add-excel-success="handleAddExcelSuccess">
     </AddExcelDialog>
     <EditExcelDialog
         v-model="editExcelFormVisible"
-        @close-edit-excel="this.editExcelFormVisible = false"
-        @edit-excel-success="">
+        @close-edit-excel="handleCloseEditExcel"
+        @edit-excel-success="handleEditExcelSuccess">
     </EditExcelDialog>
   </el-container>
 </template>
@@ -61,33 +61,18 @@ export default {
       editExcelButton: false,
       deleteExcelButton: false,
       uploadExcelButton: false,
-      excelsNum: 0,
-      numsPerRow: 4,
-      rows: 0,
       excels: []
     }
   },
   methods: {
     init() {
-      // let _this = this;
-      // _this.$httpExcel.get('/excel/get').then(res => {
-      //   const result = res.data;
-      //   _this.excels = result.data;
-      //   _this.excelsNum = _this.excels.length;
-      //   _this.rows = Math.ceil(_this.excelsNum / _this.numsPerRow);
-      // }).catch(message => {
-      //   _this.excels = [];
-      //   _this.excelsNum = 0;
-      //   _this.rows = 0;
-      // });
-      this.excels = [
-        {
-          excelId: 'E01',
-          excelName: '表格1'
-        }
-      ];
-      this.excelsNum = this.excels.length;
-      this.rows = Math.ceil(this.excelsNum / this.numsPerRow);
+      let _this = this;
+      _this.$httpExcel.get('/excel/getExcels').then(res => {
+        const result = res.data;
+        _this.excels = result.data;
+      }).catch(message => {
+        _this.excels = [];
+      });
     },
     editMouseEnterStyle() {
       document.querySelector('body').style.cursor = 'pointer';
@@ -134,14 +119,35 @@ export default {
     clickAddExcel() {
       this.addExcelFormVisible = true;
     },
-    clickEditExcel() {
+    clickEditExcel(excelId) {
+      this.$store.commit('SET_EXCEL_ID', excelId);
       this.editExcelFormVisible = true;
     },
     clickDeleteExcel(excelId) {
       console.log(excelId);
+      let _this = this;
+      let deleteExcelForm = {
+        excelId: excelId
+      };
+      _this.$httpExcel.post('/excel/delete', deleteExcelForm).then(res => {
+        _this.init();
+      });
     },
     clickUploadExcel() {
       this.uploadExcelFormVisible = true;
+    },
+    handleCloseAddExcel() {
+      this.addExcelFormVisible = false;
+    },
+    handleCloseEditExcel() {
+      this.editExcelFormVisible = false;
+      this.$store.commit('RESET_EXCEL_ID');
+    },
+    handleAddExcelSuccess() {
+      this.init();
+    },
+    handleEditExcelSuccess() {
+      this.init();
     }
   },
   created() {
