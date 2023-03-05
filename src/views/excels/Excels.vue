@@ -81,40 +81,36 @@ export default {
       document.querySelector('body').style.cursor = 'default';
     },
     checkAddExcelButtonAuthority() {
-      this.addExcelButton = true;
-      // checkAuthority('R681d2ec8e6ed438497570b021a989a25').then(res => {
-      //   const result = res.data;
-      //   this.addExcelButton = result.data;
-      // }).catch(message => {
-      //   this.addExcelButton = false;
-      // });
+      checkAuthority('Rf4d8ed869b8c4b7db6794d3530f44051').then(res => {
+        const result = res.data;
+        this.addExcelButton = result.data;
+      }).catch(message => {
+        this.addExcelButton = false;
+      });
     },
     checkEditExcelButtonAuthority() {
-      this.editExcelButton = true;
-      // checkAuthority('R681d2ec8e6ed438497570b021a989a25').then(res => {
-      //   const result = res.data;
-      //   this.editExcelButton = result.data;
-      // }).catch(message => {
-      //   this.editExcelButton = false;
-      // });
+      checkAuthority('R7567cf8ff9c34c489a4c3ffd69154132').then(res => {
+        const result = res.data;
+        this.editExcelButton = result.data;
+      }).catch(message => {
+        this.editExcelButton = false;
+      });
     },
     checkDeleteExcelButtonAuthority() {
-      this.deleteExcelButton = true;
-      // checkAuthority('R681d2ec8e6ed438497570b021a989a25').then(res => {
-      //   const result = res.data;
-      //   this.deleteExcelButton = result.data;
-      // }).catch(message => {
-      //   this.deleteExcelButton = false;
-      // });
+      checkAuthority('R60d15fcdc81547ed9883c33bd820878b').then(res => {
+        const result = res.data;
+        this.deleteExcelButton = result.data;
+      }).catch(message => {
+        this.deleteExcelButton = false;
+      });
     },
     checkUploadExcelButtonAuthority() {
-      this.uploadExcelButton = true;
-      // checkAuthority('R681d2ec8e6ed438497570b021a989a25').then(res => {
-      //   const result = res.data;
-      //   this.deleteExcelButton = result.data;
-      // }).catch(message => {
-      //   this.deleteExcelButton = false;
-      // });
+      checkAuthority('R8801ffac20684b5084e3930aaecb97cb').then(res => {
+        const result = res.data;
+        this.deleteExcelButton = result.data;
+      }).catch(message => {
+        this.deleteExcelButton = false;
+      });
     },
     clickAddExcel() {
       this.addExcelFormVisible = true;

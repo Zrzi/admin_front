@@ -178,7 +178,6 @@ export default {
               center: true,
               type: 'success'
             });
-            _this.$emit('close-edit-excel');
             _this.$emit('edit-excel-success');
             _this.cancelEditExcel();
           });

@@ -156,7 +156,6 @@ export default {
               center: true,
               type: 'success'
             });
-            _this.$emit('close-add-excel');
             _this.$emit('add-excel-success');
             _this.cancelAddExcel();
           });
