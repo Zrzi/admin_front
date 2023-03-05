@@ -10,7 +10,7 @@ import 'element-plus/theme-chalk/index.css';
 import { Location, ElementPlus, UserFilled, Plus, Minus } from '@element-plus/icons-vue';
 
 import httpAuthority from './utils/httpAuthority';
-import httpExcel from "./utils/httpExcel";
+// import httpExcel from "@/utils/httpExcel";
 
 const app = createApp(App);
 app.use(router).use(store);
@@ -27,4 +27,4 @@ app.component("Location", Location)
 // }
 
 app.config.globalProperties.$httpAuthority = httpAuthority;
-app.config.globalProperties.$httpExcel = httpExcel;
+// app.config.globalProperties.$httpExcel = httpExcel;

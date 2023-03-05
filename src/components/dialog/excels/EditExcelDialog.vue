@@ -1,6 +1,6 @@
 <template>
   <el-dialog v-model="editExcelFormVisible" title="编辑Excel映射" @opened="init" @close="cancelEditExcel">
-    <el-form :model="editExcelForm" :rules="editExcelRules" ref="editExcelForm">
+    <el-form :model="editExcelForm" :rules="editExcelRules" ref="editExcelForm" style="text-align: left">
       <el-row>
         <el-col :span="2"></el-col>
         <el-col :span="10">
@@ -54,6 +54,18 @@
           </el-col>
         </el-row>
       </el-scrollbar>
+      <el-row>
+        <el-col :span="2"></el-col>
+        <el-col :span="10">
+          <span>插入数据出现重复时，是否覆盖</span>
+          <el-form-item prop="isCover">
+            <el-radio-group v-model="this.editExcelForm.isCover">
+              <el-radio :label="true">是</el-radio>
+              <el-radio :label="false">否</el-radio>
+            </el-radio-group>
+          </el-form-item>
+        </el-col>
+      </el-row>
     </el-form>
     <template #footer>
         <span class="dialog-footer">
@@ -77,7 +89,8 @@ export default {
         excelId: '',
         excelName: '',
         sqlName: '',
-        rows: []
+        rows: [],
+        isCover: false
       },
       editExcelRules: {
         excelName: [
@@ -89,7 +102,8 @@ export default {
           {max: 16, message: '名称最长16个字符', trigger: 'blur'}
         ],
         sqlColumn: [],
-        isPrimaryKey: []
+        isPrimaryKey: [],
+        isCover: []
       },
       sqlTables: [],
       sqlColumns: []
@@ -98,27 +112,31 @@ export default {
   methods: {
     init() {
       this.excelId = this.$store.state.excelId;
-      this.getExcelInfo();
-      this.getSqlTables();
+      let sqlNamePromise = this.getExcelInfo();
+      sqlNamePromise.then(res => {
+        this.getSqlTables();
+        this.getSqlColumnsInit();
+      })
     },
-    getExcelInfo() {
+    async getExcelInfo() {
       let _this = this;
       let excelId = this.excelId;
-      _this.$httpExcel.get('/excel/getExcelByExcelId', {params: {excelId: excelId}}).then(res => {
+      try {
+        const res = await _this.$httpAuthority.get('/excel/getExcelByExcelId', {params: {excelId: excelId}});
         const result = res.data;
-        _this.editExcelForm = result.data;
-      }).catch(message => {
-        _this.editExcelForm = {
+        this.editExcelForm = result.data;
+      } catch (message) {
+        this.editExcelForm = {
           excelId: '',
           excelName: '',
           sqlName: '',
           rows: []
         };
-      });
+      }
     },
     getSqlTables() {
       let _this = this;
-      _this.$httpExcel.get('/excel/getSqlTables').then(res => {
+      _this.$httpAuthority.get('/excel/getSqlTables').then(res => {
         const result = res.data;
         _this.sqlTables = result.data;
       }).catch(message => {
@@ -128,9 +146,12 @@ export default {
     getSqlColumns() {
       this.editExcelForm.rows = [];
       this.insertRow();
+      this.getSqlColumnsInit();
+    },
+    getSqlColumnsInit() {
       let _this = this;
       let sqlTableName = this.editExcelForm.sqlName;
-      _this.$httpExcel.get('/excel/getSqlColumns', {params: {sqlTableName: sqlTableName}}).then(res => {
+      _this.$httpAuthority.get('/excel/getSqlColumns', {params: {sqlTableName: sqlTableName}}).then(res => {
         const result = res.data;
         _this.sqlColumns = result.data;
       }).catch(message => {
@@ -143,13 +164,14 @@ export default {
     cancelEditExcel() {
       this.clearEditExcelForm();
       this.editExcelFormVisible = false;
+      this.$emit('close-edit-excel');
     },
     editExcel() {
       let _this = this;
       let editExcelForm = this.editExcelForm;
       _this.$refs['editExcelForm'].validate(valid => {
         if (valid) {
-          _this.$httpExcel.post('/excel/update', editExcelForm).then(res => {
+          _this.$httpAuthority.post('/excel/update', editExcelForm).then(res => {
             ElMessage({
               message: '编辑成功',
               duration: 3 * 1000,

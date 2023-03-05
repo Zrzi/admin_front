@@ -1,6 +1,6 @@
 <template>
   <el-dialog v-model="addExcelFormVisible" title="添加Excel映射" @opened="init" @close="cancelAddExcel" style="width: 60vw">
-    <el-form :model="addExcelForm" :rules="addExcelRules" ref="addExcelForm">
+    <el-form :model="addExcelForm" :rules="addExcelRules" ref="addExcelForm" style="text-align: left">
       <el-row>
         <el-col :span="2"></el-col>
         <el-col :span="10">
@@ -54,6 +54,18 @@
           </el-col>
         </el-row>
       </el-scrollbar>
+      <el-row>
+        <el-col :span="2"></el-col>
+        <el-col :span="10">
+          <span>插入数据出现重复时，是否覆盖</span>
+          <el-form-item prop="isCover">
+            <el-radio-group v-model="this.addExcelForm.isCover">
+              <el-radio :label="true">是</el-radio>
+              <el-radio :label="false">否</el-radio>
+            </el-radio-group>
+          </el-form-item>
+        </el-col>
+      </el-row>
     </el-form>
     <template #footer>
         <span class="dialog-footer">
@@ -75,7 +87,8 @@ export default {
       addExcelForm: {
         excelName: '',
         sqlName: '',
-        rows: []
+        rows: [],
+        isCover: false
       },
       addExcelRules: {
         excelName: [
@@ -87,7 +100,8 @@ export default {
           {max: 16, message: '名称最长16个字符', trigger: 'blur'}
         ],
         sqlColumn: [],
-        isPrimaryKey: []
+        isPrimaryKey: [],
+        isCover: []
       },
       sqlTables: [],
       sqlColumns: [],
@@ -102,7 +116,7 @@ export default {
     },
     getSqlTables() {
       let _this = this;
-      _this.$httpExcel.get('/excel/getSqlTables').then(res => {
+      _this.$httpAuthority.get('/excel/getSqlTables').then(res => {
         const result = res.data;
         _this.sqlTables = result.data;
       }).catch(message => {
@@ -114,7 +128,7 @@ export default {
       this.insertRow();
       let _this = this;
       let sqlTableName = this.addExcelForm.sqlName;
-      _this.$httpExcel.get('/excel/getSqlColumns', {params: {sqlTableName: sqlTableName}}).then(res => {
+      _this.$httpAuthority.get('/excel/getSqlColumns', {params: {sqlTableName: sqlTableName}}).then(res => {
         const result = res.data;
         _this.sqlColumns = result.data;
       }).catch(message => {
@@ -128,13 +142,14 @@ export default {
     cancelAddExcel() {
       this.clearAddExcelForm();
       this.addExcelFormVisible = true;
+      this.$emit('close-add-excel');
     },
     addExcel() {
       let _this = this;
       let addExcelForm = this.addExcelForm;
       _this.$refs['addExcelForm'].validate(valid => {
         if (valid) {
-          _this.$httpExcel.post('/excel/add', addExcelForm).then(res => {
+          _this.$httpAuthority.post('/excel/add', addExcelForm).then(res => {
             ElMessage({
               message: '添加成功',
               duration: 3 * 1000,
