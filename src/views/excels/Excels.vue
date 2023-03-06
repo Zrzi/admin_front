@@ -41,6 +41,10 @@
         @close-edit-excel="handleCloseEditExcel"
         @edit-excel-success="handleEditExcelSuccess">
     </EditExcelDialog>
+    <UploadExcelDialog
+        v-model="uploadExcelFormVisible"
+        @close-upload-excel="handleUploadExcel">
+    </UploadExcelDialog>
   </el-container>
 </template>
 
@@ -48,10 +52,11 @@
 import checkAuthority from "@/utils/checkAuthority";
 import AddExcelDialog from "@/components/dialog/excels/AddExcelDialog";
 import EditExcelDialog from "@/components/dialog/excels/EditExcelDialog";
+import UploadExcelDialog from "@/components/dialog/excels/UploadExcelDialog";
 
 export default {
   name: 'Excels',
-  components: {EditExcelDialog, AddExcelDialog},
+  components: {UploadExcelDialog, EditExcelDialog, AddExcelDialog},
   data() {
     return {
       addExcelFormVisible: false,
@@ -107,7 +112,7 @@ export default {
     checkUploadExcelButtonAuthority() {
       checkAuthority('R8801ffac20684b5084e3930aaecb97cb').then(res => {
         const result = res.data;
-        this.deleteExcelButton = result.data;
+        this.uploadExcelButton = result.data;
       }).catch(message => {
         this.deleteExcelButton = false;
       });
@@ -140,10 +145,15 @@ export default {
       this.$store.commit('RESET_EXCEL_ID');
     },
     handleAddExcelSuccess() {
+      this.addExcelFormVisible = false;
       this.init();
     },
     handleEditExcelSuccess() {
+      this.editExcelFormVisible = false;
       this.init();
+    },
+    handleUploadExcel() {
+      this.uploadExcelFormVisible = false;
     }
   },
   created() {

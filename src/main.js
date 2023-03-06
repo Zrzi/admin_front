@@ -7,7 +7,7 @@ import store from './store';
 import 'element-plus/theme-chalk/index.css';
 // import locale from 'element-plus/lib/locale/lang/zh-cn';
 // import * as ElementPlusIconsVue from '@element-plus/icons-vue';
-import { Location, ElementPlus, UserFilled, Plus, Minus } from '@element-plus/icons-vue';
+import { Location, ElementPlus, UserFilled, Plus, Minus, UploadFilled } from '@element-plus/icons-vue';
 
 import httpAuthority from './utils/httpAuthority';
 // import httpExcel from "@/utils/httpExcel";
@@ -20,7 +20,8 @@ app.component("Location", Location)
     .component("ElementPlus", ElementPlus)
     .component("UserFilled", UserFilled)
     .component("Plus", Plus)
-    .component("Minus", Minus);
+    .component("Minus", Minus)
+    .component("UploadFilled", UploadFilled);
 
 // for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 //     app.component(key, component)
