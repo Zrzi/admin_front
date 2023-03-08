@@ -60,6 +60,8 @@ export default {
     init() {},
     cancelUploadExcel() {
       this.fileList = [];
+      this.errorMessages = [];
+      this.show = true;
       this.uploadExcelFormVisible = false;
       this.$emit('close-upload-excel');
     },
@@ -120,6 +122,7 @@ export default {
           if (status === 1) {
             // 任务成功且没有异常信息
             _this.loading = true;
+            _this.errorMessages = ['文件上传成功'];
             clearInterval(interval);
             ElMessage({
               message: '文件上传成功',
