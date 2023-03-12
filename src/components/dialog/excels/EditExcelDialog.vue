@@ -33,22 +33,16 @@
             <span>请选择sql列名</span>
             <el-form-item :prop="'editExcelForm.rows.' + index + '.sqlColumn'">
               <el-select v-model="item.sqlColumn" placeholder="请选择sql列名" no-data-text="请选择sql表">
-                <el-option v-for="column in sqlColumns" :value="column"></el-option>
+                <el-option v-for="column in nullableList" :value="column"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="1"></el-col>
-          <el-col :span="3">
-            <span>是否是主键</span>
-            <el-form-item :prop="'addExcelForm.rows.' + index + '.isPrimaryKey'">
-              <el-switch v-model="item.isPrimaryKey" active-text="是" inactive-text="否"></el-switch>
-            </el-form-item>
-          </el-col>
           <el-col :span="3" style="align-items: center; display: flex; justify-content: center">
-            <el-button type="primary" v-if="index === 0" @click="insertRow" circle>
+            <el-button type="primary" v-if="index === 0" @click="insertRow('', '', true)" circle>
               <el-icon><Plus /></el-icon>
             </el-button>
-            <el-button type="danger" v-if="index !== 0" @click="deleteRow(index)" circle>
+            <el-button type="danger" v-if="index !== 0 && item.nullable" @click="deleteRow(index)" circle>
               <el-icon><Minus /></el-icon>
             </el-button>
           </el-col>
@@ -102,11 +96,11 @@ export default {
           {max: 16, message: '名称最长16个字符', trigger: 'blur'}
         ],
         sqlColumn: [],
-        isPrimaryKey: [],
         isCover: []
       },
       sqlTables: [],
-      sqlColumns: []
+      nonNullList: [],
+      nullableList: []
     }
   },
   methods: {
@@ -124,7 +118,23 @@ export default {
       try {
         const res = await _this.$httpAuthority.get('/excel/getExcelByExcelId', {params: {excelId: excelId}});
         const result = res.data;
-        this.editExcelForm = result.data;
+        const data = result.data;
+        this.editExcelForm.excelId = data.excelId;
+        this.editExcelForm.excelName = data.excelName;
+        this.editExcelForm.sqlName = data.sqlName;
+        this.editExcelForm.isCover = data.isCover;
+        let tempNonNullList = data.nonNullList;
+        for (let i=0; i<tempNonNullList.length; ++i) {
+          let info = tempNonNullList[i];
+          this.insertRow(info.excelColumn, info.sqlColumn, true);
+          this.nonNullList.push(info.sqlColumn)
+        }
+        let tempNullableList = data.nullableList;
+        for (let i=0; i<tempNullableList.length; ++i) {
+          let info = tempNullableList[i];
+          this.insertRow(info.excelColumn, info.sqlColumn, false);
+          this.nullableList.push(info.sqlColumn)
+        }
       } catch (message) {
         this.editExcelForm = {
           excelId: '',
@@ -132,6 +142,8 @@ export default {
           sqlName: '',
           rows: []
         };
+        this.nullableList = [];
+        this.nonNullList = [];
       }
     },
     getSqlTables() {
@@ -145,17 +157,31 @@ export default {
     },
     getSqlColumns() {
       this.editExcelForm.rows = [];
-      this.insertRow();
-      this.getSqlColumnsInit();
+      let _this = this;
+      let sqlTableName = this.editExcelForm.sqlName;
+      _this.$httpAuthority.get('/excel/getSqlColumns', {params: {sqlTableName: sqlTableName}}).then(res => {
+        const result = res.data;
+        const data = result.data;
+        _this.nonNullList = data.nonNullList;
+        for (let i=0; i<_this.nonNullList.length; ++i) {
+          _this.insertRow('', _this.nonNullList[i], false);
+        }
+        _this.nullableList = data.nullableList;
+      }).catch(message => {
+        _this.nonNullList = [];
+        _this.nullableList = [];
+      });
     },
     getSqlColumnsInit() {
       let _this = this;
       let sqlTableName = this.editExcelForm.sqlName;
       _this.$httpAuthority.get('/excel/getSqlColumns', {params: {sqlTableName: sqlTableName}}).then(res => {
         const result = res.data;
-        _this.sqlColumns = result.data;
+        const data = result.data;
+        _this.nullableList = data.nullableList;
       }).catch(message => {
-        _this.sqlColumns = [];
+        _this.nonNullList = [];
+        _this.nullableList = [];
       });
     },
     clearEditExcelForm() {
@@ -191,11 +217,11 @@ export default {
         }
       });
     },
-    insertRow() {
+    insertRow(excelColumn, sqlColumn, nullable) {
       this.editExcelForm.rows.push({
-        excelColumn: '',
-        sqlColumn: '',
-        isPrimaryKey: false
+        excelColumn: excelColumn,
+        sqlColumn: sqlColumn,
+        nullable: nullable
       });
     },
     deleteRow(index) {

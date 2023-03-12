@@ -33,22 +33,16 @@
             <span>请选择sql列名</span>
             <el-form-item :prop="'addExcelForm.rows.' + index + '.sqlColumn'">
               <el-select v-model="item.sqlColumn" placeholder="请选择sql列名" no-data-text="请选择sql表">
-                <el-option v-for="column in sqlColumns" :value="column"></el-option>
+                <el-option v-for="column in nullableList" :value="column"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="1"></el-col>
-          <el-col :span="3">
-            <span>是否是主键</span>
-            <el-form-item :prop="'addExcelForm.rows.' + index + '.isPrimaryKey'">
-              <el-switch v-model="item.isPrimaryKey" active-text="是" inactive-text="否"></el-switch>
-            </el-form-item>
-          </el-col>
           <el-col :span="3" style="align-items: center; display: flex; justify-content: center">
-            <el-button type="primary" v-if="index === 0" @click="insertRow" circle>
+            <el-button type="primary" v-if="index === 0" @click="insertRow('', true)" circle>
               <el-icon><Plus /></el-icon>
             </el-button>
-            <el-button type="danger" v-if="index !== 0" @click="deleteRow(index)" circle>
+            <el-button type="danger" v-if="index !== 0 && item.nullable" @click="deleteRow(index)" circle>
               <el-icon><Minus /></el-icon>
             </el-button>
           </el-col>
@@ -100,11 +94,11 @@ export default {
           {max: 16, message: '名称最长16个字符', trigger: 'blur'}
         ],
         sqlColumn: [],
-        isPrimaryKey: [],
         isCover: []
       },
       sqlTables: [],
-      sqlColumns: [],
+      nonNullList: [],
+      nullableList: [],
       inputFormLabelWidth: '160',
       selectFormLabelWidth: '70'
     }
@@ -112,7 +106,6 @@ export default {
   methods: {
     init() {
       this.getSqlTables();
-      this.insertRow();
     },
     getSqlTables() {
       let _this = this;
@@ -125,14 +118,19 @@ export default {
     },
     getSqlColumns() {
       this.addExcelForm.rows = [];
-      this.insertRow();
       let _this = this;
       let sqlTableName = this.addExcelForm.sqlName;
       _this.$httpAuthority.get('/excel/getSqlColumns', {params: {sqlTableName: sqlTableName}}).then(res => {
         const result = res.data;
-        _this.sqlColumns = result.data;
+        const data = result.data;
+        _this.nonNullList = data.nonNullList;
+        for (let i=0; i<_this.nonNullList.length; ++i) {
+          _this.insertRow(_this.nonNullList[i], false);
+        }
+        _this.nullableList = data.nullableList;
       }).catch(message => {
-        _this.sqlColumns = [];
+        _this.nonNullList = [];
+        _this.nullableList = [];
       });
     },
     clearAddExcelForm() {
@@ -169,11 +167,11 @@ export default {
         }
       });
     },
-    insertRow() {
+    insertRow(sqlColumn, nullable) {
       this.addExcelForm.rows.push({
         excelColumn: '',
-        sqlColumn: '',
-        isPrimaryKey: false
+        sqlColumn: sqlColumn,
+        nullable: nullable
       });
     },
     deleteRow(index) {

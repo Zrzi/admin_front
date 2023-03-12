@@ -157,11 +157,11 @@ export default {
     }
   },
   created() {
-    this.init();
     this.checkAddExcelButtonAuthority();
     this.checkEditExcelButtonAuthority();
     this.checkDeleteExcelButtonAuthority();
     this.checkUploadExcelButtonAuthority();
+    this.init();
   }
 }
 </script>
