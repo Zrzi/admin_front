@@ -3,14 +3,14 @@
     <el-form :model="addExcelForm" :rules="addExcelRules" ref="addExcelForm" style="text-align: left">
       <el-row>
         <el-col :span="2"></el-col>
-        <el-col :span="10">
+        <el-col :span="8">
           <span>请输入excel表格名称</span>
           <el-form-item prop="excelName">
             <el-input v-model="addExcelForm.excelName" />
           </el-form-item>
         </el-col>
         <el-col :span="2"></el-col>
-        <el-col :span="10">
+        <el-col :span="8">
           <span style="text-align: left">请选择sql表格名</span>
           <el-form-item prop="sqlName">
             <el-select v-model="addExcelForm.sqlName" placeholder="请选择sql表格名" @change="getSqlColumns">
@@ -22,14 +22,14 @@
       <el-scrollbar max-height="40vh">
         <el-row v-for="(item, index) in this.addExcelForm.rows">
           <el-col :span="2"></el-col>
-          <el-col :span="7">
+          <el-col :span="8">
             <span>请输入excel列名</span>
             <el-form-item :prop="'addExcelForm.rows.' + index + '.excelColumn'">
               <el-input v-model="item.excelColumn" />
             </el-form-item>
           </el-col>
-          <el-col :span="1"></el-col>
-          <el-col :span="6">
+          <el-col :span="2"></el-col>
+          <el-col :span="8">
             <span>请选择sql列名</span>
             <el-form-item :prop="'addExcelForm.rows.' + index + '.sqlColumn'">
               <el-select v-model="item.sqlColumn" placeholder="请选择sql列名" no-data-text="请选择sql表">
@@ -136,6 +136,8 @@ export default {
     clearAddExcelForm() {
       this.$refs['addExcelForm'].resetFields();
       this.addExcelForm.rows = [];
+      this.nonNullList = [];
+      this.nullableList = [];
     },
     cancelAddExcel() {
       this.clearAddExcelForm();

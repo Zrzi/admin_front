@@ -3,14 +3,14 @@
     <el-form :model="editExcelForm" :rules="editExcelRules" ref="editExcelForm" style="text-align: left">
       <el-row>
         <el-col :span="2"></el-col>
-        <el-col :span="10">
+        <el-col :span="8">
           <span>请输入excel表格名称</span>
           <el-form-item prop="excelName">
             <el-input :readonly="true" v-model="editExcelForm.excelName" />
           </el-form-item>
         </el-col>
         <el-col :span="2"></el-col>
-        <el-col :span="10">
+        <el-col :span="8">
           <span style="text-align: left">请选择sql表格名</span>
           <el-form-item prop="sqlName">
             <el-select v-model="editExcelForm.sqlName" placeholder="请选择sql表格名" @change="getSqlColumns">
@@ -22,14 +22,14 @@
       <el-scrollbar max-height="40vh">
         <el-row v-for="(item, index) in this.editExcelForm.rows">
           <el-col :span="2"></el-col>
-          <el-col :span="7">
+          <el-col :span="8">
             <span>请输入excel列名</span>
             <el-form-item :prop="'editExcelForm.rows.' + index + '.excelColumn'">
               <el-input v-model="item.excelColumn" />
             </el-form-item>
           </el-col>
-          <el-col :span="1"></el-col>
-          <el-col :span="6">
+          <el-col :span="2"></el-col>
+          <el-col :span="8">
             <span>请选择sql列名</span>
             <el-form-item :prop="'editExcelForm.rows.' + index + '.sqlColumn'">
               <el-select v-model="item.sqlColumn" placeholder="请选择sql列名" no-data-text="请选择sql表">
@@ -126,13 +126,13 @@ export default {
         let tempNonNullList = data.nonNullList;
         for (let i=0; i<tempNonNullList.length; ++i) {
           let info = tempNonNullList[i];
-          this.insertRow(info.excelColumn, info.sqlColumn, true);
+          this.insertRow(info.excelColumn, info.sqlColumn, false);
           this.nonNullList.push(info.sqlColumn)
         }
         let tempNullableList = data.nullableList;
         for (let i=0; i<tempNullableList.length; ++i) {
           let info = tempNullableList[i];
-          this.insertRow(info.excelColumn, info.sqlColumn, false);
+          this.insertRow(info.excelColumn, info.sqlColumn, true);
           this.nullableList.push(info.sqlColumn)
         }
       } catch (message) {
@@ -186,6 +186,9 @@ export default {
     },
     clearEditExcelForm() {
       this.$refs['editExcelForm'].resetFields();
+      this.editExcelForm.rows = [];
+      this.nonNullList = [];
+      this.nullableList = [];
     },
     cancelEditExcel() {
       this.clearEditExcelForm();
