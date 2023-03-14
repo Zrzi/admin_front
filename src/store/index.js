@@ -7,6 +7,7 @@ export default createStore({
     roleId: '',
     systemId: '',
     userNo: '',
+    excelId: '',
     roleChange: false,
     publicKey: ''
   },
@@ -45,6 +46,12 @@ export default createStore({
     RESET_USER_NO: (state) => {
       state.userNo = '';
     },
+    SET_EXCEL_ID: (state, excelId) => {
+      state.excelId = excelId;
+    },
+    RESET_EXCEL_ID: (state) => {
+      state.excelId = '';
+    },
     SET_ROLE_CHANGE: (state, roleChange) => {
       state.roleChange = roleChange;
     },
@@ -62,7 +69,9 @@ export default createStore({
       state.refreshToken = '';
       state.roleId = '';
       state.systemId = '';
-      state.roleDeleted = false;
+      state.userNo = '';
+      state.excelId = '';
+      state.roleChange = false;
       state.publicKey = '';
     }
   },

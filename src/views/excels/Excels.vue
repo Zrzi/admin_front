@@ -1,64 +1,83 @@
 <template>
-  <div>
-    <el-container>
-      <el-aside style="width: 15vw; height: 100%; margin-left: 1vw; margin-right: 1vw">
-        <div style="display: flex; align-items: center; justify-content: space-between; height: 5vh">
-          <span style="float: left">excel表格</span>
-          <span style="float: right; color: #409EFF"
-                @click="clickAddExcel"
-                @mouseenter="editMouseEnterStyle"
-                @mouseleave="editMouseLeaveStyle">+新增excel</span>
+  <el-container width="90vw">
+    <el-header style="display: flex; align-items: center; justify-content: space-between; width: 80vw; margin: auto">
+      <h2>Excel映射管理</h2>
+      <div style="display: flex; align-items: center; justify-content: right">
+        <el-button type="primary" @click="clickUploadExcel" v-if="uploadExcelButton">上传excel</el-button>
+        <el-button type="primary" @click="clickAddExcel" v-if="addExcelButton">+添加Excel映射</el-button>
+      </div>
+    </el-header>
+    <el-divider />
+    <el-space wrap :size="15">
+      <el-card shadow="hover" v-for="(excel) in excels" style="width: 15vw">
+        <div style="text-align: left; font-size: medium; margin-bottom: 1vh">
+          <b>{{ excel.excelName }}</b>
         </div>
-        <el-divider />
-        <el-row
-            v-for="excel in excels"
-            class="row-bg"
-            style="margin: 3vmin;">
-          <el-col :span="3" />
-          <el-col :span="6"
-                  @click="clickExcel(excel.excelId)"
-                  @mouseenter="editMouseEnterStyle"
-                  @mouseleave="editMouseLeaveStyle">
-            {{ excel.excelName }}
-          </el-col>
-          <el-col :span="15" />
-        </el-row>
-      </el-aside>
-      <el-main>
-        <router-view />
-      </el-main>
-    </el-container>
-<!--    <AddRoleDialog v-model="addRoleFormVisible" @close-add-role="this.addRoleFormVisible=false"></AddRoleDialog>-->
-  </div>
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 1vh">
+          <span style="font-size: small; color: #409EFF"
+                    @click="clickEditExcel(excel.excelId)"
+                    @mouseenter="editMouseEnterStyle"
+                    @mouseleave="editMouseLeaveStyle"
+                    v-if="editExcelButton">
+            编辑映射
+          </span>
+          <span style="font-size: small; color: #D9001B"
+                @click="clickDeleteExcel(excel.excelId)"
+                @mouseenter="editMouseEnterStyle"
+                @mouseleave="editMouseLeaveStyle"
+                v-if="deleteExcelButton">
+            删除映射
+          </span>
+        </div>
+      </el-card>
+    </el-space>
+    <AddExcelDialog
+        v-model="addExcelFormVisible"
+        @close-add-excel="handleCloseAddExcel"
+        @add-excel-success="handleAddExcelSuccess">
+    </AddExcelDialog>
+    <EditExcelDialog
+        v-model="editExcelFormVisible"
+        @close-edit-excel="handleCloseEditExcel"
+        @edit-excel-success="handleEditExcelSuccess">
+    </EditExcelDialog>
+    <UploadExcelDialog
+        v-model="uploadExcelFormVisible"
+        @close-upload-excel="handleUploadExcel">
+    </UploadExcelDialog>
+  </el-container>
 </template>
 
 <script>
+import checkAuthority from "@/utils/checkAuthority";
+import AddExcelDialog from "@/components/dialog/excels/AddExcelDialog";
+import EditExcelDialog from "@/components/dialog/excels/EditExcelDialog";
+import UploadExcelDialog from "@/components/dialog/excels/UploadExcelDialog";
+
 export default {
-  name: "Excel",
+  name: 'Excels',
+  components: {UploadExcelDialog, EditExcelDialog, AddExcelDialog},
   data() {
     return {
-      excels: [],
       addExcelFormVisible: false,
-      addExcelForm: {},
-      addExcelFormRules: {}
+      editExcelFormVisible: false,
+      uploadExcelFormVisible: false,
+      addExcelButton: false,
+      editExcelButton: false,
+      deleteExcelButton: false,
+      uploadExcelButton: false,
+      excels: []
     }
   },
   methods: {
     init() {
-      this.excels = [
-        {
-          excelId: 'E01',
-          excelName: 'excel1'
-        },
-        {
-          excelId: 'E02',
-          excelName: 'excel2'
-        },
-        {
-          excelId: 'E03',
-          excelName: 'excel3'
-        }
-      ]
+      let _this = this;
+      _this.$httpAuthority.get('/excel/getExcels').then(res => {
+        const result = res.data;
+        _this.excels = result.data;
+      }).catch(message => {
+        _this.excels = [];
+      });
     },
     editMouseEnterStyle() {
       document.querySelector('body').style.cursor = 'pointer';
@@ -66,37 +85,87 @@ export default {
     editMouseLeaveStyle() {
       document.querySelector('body').style.cursor = 'default';
     },
-    clickAddExcel() {
-      this.addRoleFormVisible = true;
+    checkAddExcelButtonAuthority() {
+      checkAuthority('Rf4d8ed869b8c4b7db6794d3530f44051').then(res => {
+        const result = res.data;
+        this.addExcelButton = result.data;
+      }).catch(message => {
+        this.addExcelButton = false;
+      });
     },
-    clickExcel(excelId) {
-      this.$router.push({path: '/home/excels/' + excelId});
+    checkEditExcelButtonAuthority() {
+      checkAuthority('R7567cf8ff9c34c489a4c3ffd69154132').then(res => {
+        const result = res.data;
+        this.editExcelButton = result.data;
+      }).catch(message => {
+        this.editExcelButton = false;
+      });
+    },
+    checkDeleteExcelButtonAuthority() {
+      checkAuthority('R60d15fcdc81547ed9883c33bd820878b').then(res => {
+        const result = res.data;
+        this.deleteExcelButton = result.data;
+      }).catch(message => {
+        this.deleteExcelButton = false;
+      });
+    },
+    checkUploadExcelButtonAuthority() {
+      checkAuthority('R8801ffac20684b5084e3930aaecb97cb').then(res => {
+        const result = res.data;
+        this.uploadExcelButton = result.data;
+      }).catch(message => {
+        this.deleteExcelButton = false;
+      });
+    },
+    clickAddExcel() {
+      this.addExcelFormVisible = true;
+    },
+    clickEditExcel(excelId) {
+      this.$store.commit('SET_EXCEL_ID', excelId);
+      this.editExcelFormVisible = true;
+    },
+    clickDeleteExcel(excelId) {
+      console.log(excelId);
+      let _this = this;
+      let deleteExcelForm = {
+        excelId: excelId
+      };
+      _this.$httpAuthority.post('/excel/delete', deleteExcelForm).then(res => {
+        _this.init();
+      });
+    },
+    clickUploadExcel() {
+      this.uploadExcelFormVisible = true;
+    },
+    handleCloseAddExcel() {
+      this.addExcelFormVisible = false;
+    },
+    handleCloseEditExcel() {
+      this.editExcelFormVisible = false;
+      this.$store.commit('RESET_EXCEL_ID');
+    },
+    handleAddExcelSuccess() {
+      this.addExcelFormVisible = false;
+      this.init();
+    },
+    handleEditExcelSuccess() {
+      this.editExcelFormVisible = false;
+      this.init();
+    },
+    handleUploadExcel() {
+      this.uploadExcelFormVisible = false;
     }
   },
   created() {
+    this.checkAddExcelButtonAuthority();
+    this.checkEditExcelButtonAuthority();
+    this.checkDeleteExcelButtonAuthority();
+    this.checkUploadExcelButtonAuthority();
     this.init();
   }
 }
 </script>
 
 <style scoped>
-
-.el-container {
-  padding-top: 1vh;
-  margin: 0;
-  height: 100%;
-}
-
-.el-aside {
-
-}
-
-.contents {
-  padding-left: 1vw;
-}
-
-.content {
-
-}
 
 </style>
