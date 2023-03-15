@@ -5,8 +5,8 @@
         <el-input v-model="searchKeyInput" placeholder="请输入用户名或姓名" autocomplete="off" />
       </el-form-item>
       <div>
-        <el-button type="primary" @click="search">搜索</el-button>
-        <el-button plain @click="reset">重置</el-button>
+        <el-button type="primary" @click="search" :disabled="searchKeyInput === ''">搜索</el-button>
+        <el-button plain @click="reset" :disabled="searchKey === ''">重置</el-button>
       </div>
     </div>
     <div>
@@ -64,7 +64,7 @@ export default {
     init() {
       this.currentPage = 1;
       let roleId = this.roleId;
-      let searchKey = '';
+      let searchKey = this.searchKey;
       let _this = this;
       _this.$httpAuthority.get('/memberRole/getUnaddedUser', {params: {roleId, searchKey}}).then(res => {
         const result = res.data;

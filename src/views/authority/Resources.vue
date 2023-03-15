@@ -5,8 +5,8 @@
         <el-input v-model="searchKeyInput" placeholder="请输入资源名称或资源路径" autocomplete="off" />
       </el-form-item>
       <div>
-        <el-button type="primary" @click="search">搜索</el-button>
-        <el-button plain @click="reset">重置</el-button>
+        <el-button type="primary" @click="search" :disabled="searchKeyInput === ''">搜索</el-button>
+        <el-button plain @click="reset" :disabled="searchKey === ''">重置</el-button>
       </div>
     </div>
     <div style="display: flex; align-items: center; justify-content: right; padding-bottom: 2vh">
