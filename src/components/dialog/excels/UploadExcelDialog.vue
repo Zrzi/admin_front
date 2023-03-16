@@ -119,10 +119,13 @@ export default {
         _this.$httpAuthority.get('/excel/getUploadExcelResult', {params: {taskId}}).then(res => {
           const result = res.data;
           const status = result.data.taskStatus;
+          const insert = result.data.taskSuccessInsert;
+          const update = result.data.taskSuccessUpdate;
+          let message = '成功插入' + insert + '条记录，修改' + update + '条记录。'
           if (status === 1) {
             // 任务成功且没有异常信息
             _this.loading = true;
-            _this.errorMessages = ['文件上传成功'];
+            _this.errorMessages = [message];
             clearInterval(interval);
             ElMessage({
               message: '文件上传成功',
@@ -134,7 +137,10 @@ export default {
             // 任务完成且有异常信息
             _this.loading = true;
             clearInterval(interval);
-            _this.errorMessages = result.data.errorMessage;
+            _this.errorMessages = [message];
+            for (let index=0; index<result.data.errorMessage.length; ++index) {
+              _this.errorMessages.push(result.data.errorMessage[index]);
+            }
           }
         });
       }, 1000);
