@@ -4,7 +4,8 @@
       title="上传Excel文件"
       v-loading="loading"
       @opened="init"
-      @close="cancelUploadExcel">
+      @close="cancelUploadExcel"
+      style="width: 60vw">
     <el-form style="text-align: left" v-show="show">
       <el-upload
           v-model:file-list="fileList"
@@ -23,15 +24,15 @@
         <div class="el-upload__text">
           将文件拖拽至此或<em>点击选择文件</em>
         </div>
-<!--        <template #tip>-->
-<!--          <div class="el-upload__tip">-->
-<!--            jpg/png files with a size less than 500kb-->
-<!--          </div>-->
-<!--        </template>-->
+        <template #tip>
+          <div class="el-upload__tip">
+            只允许上传excel文件，大小不得超过5MB！
+          </div>
+        </template>
       </el-upload>
     </el-form>
-    <el-scrollbar v-show="!show">
-      <el-row v-for="message in errorMessages">
+    <el-scrollbar max-height="40vh" v-show="!show">
+      <el-row v-for="message in errorMessages" style="text-align: left">
         <el-col :span="2"></el-col>
         <el-col :span="20">{{ message }}</el-col>
         <el-col :span="2"></el-col>
