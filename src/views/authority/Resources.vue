@@ -1,12 +1,12 @@
 <template>
   <div style="margin: auto; width: 90vw">
     <div style="display: flex; align-items: center; justify-content: space-between; padding-bottom: 2vh">
-      <el-form-item prop="searchKey" style="width: 20vw">
-        <el-input v-model="searchKey" placeholder="请输入资源名称或资源url" autocomplete="off" />
+      <el-form-item style="width: 20vw">
+        <el-input v-model="searchKeyInput" placeholder="请输入资源名称或资源路径" autocomplete="off" />
       </el-form-item>
       <div>
-        <el-button type="primary">搜索</el-button>
-        <el-button plain>重置</el-button>
+        <el-button type="primary" @click="search" :disabled="searchKeyInput === ''">搜索</el-button>
+        <el-button plain @click="reset" :disabled="searchKey === ''">重置</el-button>
       </div>
     </div>
     <div style="display: flex; align-items: center; justify-content: right; padding-bottom: 2vh">
@@ -138,6 +138,7 @@ export default {
     return {
       systemId: '',
       searchKey: '',
+      searchKeyInput: '',
       resources:[],
       pageSize: 10,
       currentPage: 1,
@@ -229,7 +230,8 @@ export default {
       let systemId = _this.systemId;
       let start = (this.currentPage - 1) * this.pageSize;
       let pageSize = this.pageSize;
-      _this.$httpAuthority.get("/resource/get", {params: {systemId, start, pageSize}}).then(res => {
+      let searchKey = this.searchKey;
+      _this.$httpAuthority.get("/resource/get", {params: {systemId, start, pageSize, searchKey}}).then(res => {
         const result = res.data;
         _this.resources = result.data.resources;
         _this.total = result.data.total;
@@ -351,6 +353,18 @@ export default {
         }
         _this.changeList();
       }).catch(message => {});
+    },
+    search() {
+      this.searchKey = this.searchKeyInput;
+      this.searchKeyInput = '';
+      this.currentPage = 1;
+      this.getData();
+    },
+    reset() {
+      this.searchKey = '';
+      this.searchKeyInput = '';
+      this.currentPage = 1;
+      this.getData();
     }
   },
   created() {

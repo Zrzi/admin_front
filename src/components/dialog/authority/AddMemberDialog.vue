@@ -1,12 +1,12 @@
 <template>
   <el-dialog title="添加成员" :v-model="addMemberFormVisible" @opened="init" @close="cancelAddMember">
     <div style="display: flex; align-items: center; justify-content: space-between">
-      <el-form-item prop="searchKey" style="width: 20vw">
-        <el-input v-model="searchKey" placeholder="请输入用户名或姓名" autocomplete="off" />
+      <el-form-item style="width: 20vw">
+        <el-input v-model="searchKeyInput" placeholder="请输入用户名或姓名" autocomplete="off" />
       </el-form-item>
       <div>
-        <el-button type="primary">搜索</el-button>
-        <el-button plain>重置</el-button>
+        <el-button type="primary" @click="search" :disabled="searchKeyInput === ''">搜索</el-button>
+        <el-button plain @click="reset" :disabled="searchKey === ''">重置</el-button>
       </div>
     </div>
     <div>
@@ -45,6 +45,7 @@ export default {
     return {
       addMemberFormVisible: false,
       searchKey: '',
+      searchKeyInput: '',
       // 用于添加成员时查询到的用户，注意查询到的用户都是不具有该角色的
       usersSelected: [],
       usersSelectedShow: [],
@@ -63,8 +64,9 @@ export default {
     init() {
       this.currentPage = 1;
       let roleId = this.roleId;
+      let searchKey = this.searchKey;
       let _this = this;
-      _this.$httpAuthority.get('/memberRole/getUnaddedUser', {params: {roleId}}).then(res => {
+      _this.$httpAuthority.get('/memberRole/getUnaddedUser', {params: {roleId, searchKey}}).then(res => {
         const result = res.data;
         _this.usersSelected = result.data;
         _this.usersSelectedShow = _this.usersSelected.slice(0, this.pageSize);
@@ -127,6 +129,16 @@ export default {
       this.userNos = array.map(user => {
         return user.userNo;
       });
+    },
+    search() {
+      this.searchKey = this.searchKeyInput;
+      this.searchKeyInput = '';
+      this.init();
+    },
+    reset() {
+      this.searchKey = '';
+      this.searchKeyInput = '';
+      this.init();
     }
   },
   created() {

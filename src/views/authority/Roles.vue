@@ -12,16 +12,24 @@
             +新增角色
           </span>
         </div>
-        <el-scrollbar height="80vh">
+        <el-scrollbar height="100%">
           <el-collapse style="border: none">
-            <el-collapse-item v-for="system in systems" :title="system.systemName" style="margin: 1vw; border: none">
+            <!-- :title="system.systemName" style="border: none; overflow: hidden; text-overflow: ellipsis" -->
+            <el-collapse-item v-for="system in systems" >
+              <template #title>
+                <span style="border: none; overflow: hidden; text-overflow: ellipsis; white-space: nowrap">
+                  {{ system.systemName }}
+                </span>
+              </template>
               <el-row v-for="role in system.roles" style="margin-top: 1vmin; margin-bottom: 1vmin">
                 <el-col :span="3" />
                 <el-col :span="15" style="text-align: left"
                         @click="clickRole(role.roleId)"
                         @mouseenter="editMouseEnterStyle"
                         @mouseleave="editMouseLeaveStyle">
-                  {{ role.roleName }}
+                  <span style="display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap">
+                    {{ role.roleName }}
+                  </span>
                 </el-col>
               </el-row>
             </el-collapse-item>
@@ -116,7 +124,6 @@ export default {
 <style scoped>
 
 .el-container {
-  padding-top: 1vh;
   margin: 0;
   height: 100%;
 }
@@ -126,7 +133,7 @@ export default {
 }
 
 .contents {
-  padding-left: 1vw;
+
 }
 
 .content {

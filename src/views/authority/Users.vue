@@ -13,12 +13,12 @@
     </div>
     <el-divider />
     <div style="display: flex; align-items: center; justify-content: space-between">
-      <el-form-item prop="searchKey" style="width: 20vw">
-        <el-input v-model="searchKey" placeholder="请输入用户名或姓名" autocomplete="off" />
+      <el-form-item style="width: 20vw">
+        <el-input v-model="searchKeyInput" placeholder="请输入用户名或姓名" autocomplete="off" />
       </el-form-item>
       <div>
-        <el-button type="primary">搜索</el-button>
-        <el-button plain>重置</el-button>
+        <el-button type="primary" @click="search" :disabled="searchKeyInput === ''">搜索</el-button>
+        <el-button plain @click="reset" :disabled="searchKey === ''">重置</el-button>
       </div>
     </div>
     <div>
@@ -141,6 +141,7 @@ export default {
     return {
       showStudent: true,
       searchKey: '',
+      searchKeyInput: '',
       pageSize: 10,
       currentPage: 1,
       total: 0,
@@ -179,7 +180,8 @@ export default {
       let userType = this.showStudent ? '学生' : '教师';
       let start = (this.currentPage - 1) * this.pageSize;
       let pageSize = this.pageSize;
-      _this.$httpAuthority.get('/user/get', {params: {userType, start, pageSize}}).then(res => {
+      let searchKey = this.searchKey;
+      _this.$httpAuthority.get('/user/get', {params: {userType, start, pageSize, searchKey}}).then(res => {
         const result = res.data;
         if (_this.showStudent) {
           _this.students = result.data.students;
@@ -269,6 +271,18 @@ export default {
         }
         _this.changeList();
       }).catch(message => {});
+    },
+    search() {
+      this.searchKey = this.searchKeyInput;
+      this.searchKeyInput = '';
+      this.currentPage = 1;
+      this.getData();
+    },
+    reset() {
+      this.searchKey = '';
+      this.searchKeyInput = '';
+      this.currentPage = 1;
+      this.getData();
     }
   },
   created() {

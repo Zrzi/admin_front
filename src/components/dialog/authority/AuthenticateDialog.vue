@@ -1,12 +1,12 @@
 <template>
   <el-dialog v-model="authenticateFormVisible" @opened="init" @close="cancelAuthenticate" title="角色授权" style="text-align: left; width: 70vw">
     <div style="display: flex; align-items: center; justify-content: space-between">
-      <el-form-item prop="searchKey" style="width: 20vw">
-        <el-input v-model="searchKey" placeholder="请输入资源名称或资源路径" autocomplete="off" />
+      <el-form-item style="width: 20vw">
+        <el-input v-model="searchKeyInput" placeholder="请输入资源名称或资源路径" autocomplete="off" />
       </el-form-item>
       <div>
-        <el-button type="primary">搜索</el-button>
-        <el-button plain>重置</el-button>
+        <el-button type="primary" @click="search" :disabled="searchKeyInput === ''">搜索</el-button>
+        <el-button plain @click="reset" :disabled="searchKey === ''">重置</el-button>
       </div>
     </div>
     <div>
@@ -53,6 +53,7 @@ export default {
       roleId: '',
       systemId: '',
       searchKey: '',
+      searchKeyInput: '',
       pageSize: 5,
       total: 0,
       currentPage: 1,
@@ -69,10 +70,14 @@ export default {
       this.currentPage = 1;
       this.roleId = this.$store.state.roleId;
       this.systemId = this.$store.state.systemId;
+      this.getData();
+    },
+    getData() {
       let _this = this;
       let systemId = this.systemId;
       let roleId = this.roleId;
-      _this.$httpAuthority.get('/roleResource/get', {params: {systemId, roleId}}).then(res => {
+      let searchKey = this.searchKey;
+      _this.$httpAuthority.get('/roleResource/get', {params: {systemId, roleId, searchKey}}).then(res => {
         const result = res.data;
         _this.resources = result.data;
         _this.total = _this.resources.length;
@@ -129,6 +134,18 @@ export default {
       }).catch(message => {
 
       });
+    },
+    search() {
+      this.searchKey = this.searchKeyInput;
+      this.searchKeyInput = '';
+      this.currentPage = 1;
+      this.getData();
+    },
+    reset() {
+      this.searchKey = '';
+      this.searchKeyInput = '';
+      this.currentPage = 1;
+      this.getData();
     }
   },
   created() {

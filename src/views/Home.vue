@@ -73,6 +73,7 @@ export default {
   text-align: center;
   line-height: 60px;
   width: 100vw;
+  height: 10vh;
 }
 
 .el-aside {
