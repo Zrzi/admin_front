@@ -88,6 +88,10 @@ httpAuthority.interceptors.response.use(async response => {
     } else if (res.code === 800007) {
         // token 过期
         let config = response.config;
+        console.log(config);
+        if (config.headers['Upload']) {
+            config.headers['Content-Type'] = 'multipart/form-data';
+        }
         if (isRefreshing) {
             // 已经有在刷新token了
             return new Promise((resolve) => {

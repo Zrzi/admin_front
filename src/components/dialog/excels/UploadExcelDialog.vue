@@ -103,7 +103,7 @@ export default {
       this.forms = new FormData();
       this.forms.append('file', file);
       let _this = this;
-      _this.$httpAuthority.post('/excel/upload', this.forms, {headers: {'Content-Type': 'multipart/form-data'}}).then(res => {
+      _this.$httpAuthority.post('/excel/upload', this.forms, {headers: {'Content-Type': 'multipart/form-data', 'Upload': true}}).then(res => {
         const result = res.data;
         _this.taskId = result.data;
         _this.show = false;
