@@ -13,9 +13,8 @@
           </span>
         </div>
         <el-scrollbar height="100%">
-          <el-collapse style="border: none">
-            <!-- :title="system.systemName" style="border: none; overflow: hidden; text-overflow: ellipsis" -->
-            <el-collapse-item v-for="system in systems" >
+          <el-collapse v-model="activeName" accordion style="border: none">
+            <el-collapse-item v-for="system in systems">
               <template #title>
                 <span style="border: none; overflow: hidden; text-overflow: ellipsis; white-space: nowrap">
                   {{ system.systemName }}
@@ -62,7 +61,8 @@ export default {
       show: false,
       addRoleFormVisible: false,
       formLabelWidth: '140px',
-      addRoleButton: false
+      addRoleButton: false,
+      activeName: ''
     }
   },
   computed: {
