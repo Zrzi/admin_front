@@ -15,7 +15,7 @@
     <div>
       <el-table :data="this.resources" style="width: 100%" height="400" ref="resourcesTable">
         <el-table-column prop="resourceId" label="资源编码" :show-overflow-tooltip="true" header-align="center" align="center" />
-        <el-table-column prop="resourceName" label="资源名称" header-align="center" align="center" />
+        <el-table-column prop="resourceName" label="资源名称" :show-overflow-tooltip="true" header-align="center" align="center" />
         <el-table-column prop="systemName" label="所属系统" header-align="center" align="center" />
         <el-table-column prop="resourceUrl" label="资源路径" :show-overflow-tooltip="true" header-align="center" align="center" />
 <!--        <el-table-column prop="parentResource" label="父资源" />-->

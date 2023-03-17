@@ -5,6 +5,7 @@
       <div style="display: flex; align-items: center; justify-content: right">
         <el-button type="primary" @click="clickUploadExcel" v-if="uploadExcelButton">上传excel</el-button>
         <el-button type="primary" @click="clickAddExcel" v-if="addExcelButton">+添加Excel映射</el-button>
+        <el-button type="primary" @click="clickHistoryRecord" v-if="historyRecordButton">历史上传记录</el-button>
       </div>
     </el-header>
     <el-divider />
@@ -45,6 +46,10 @@
         v-model="uploadExcelFormVisible"
         @close-upload-excel="handleUploadExcel">
     </UploadExcelDialog>
+    <HistoryRecordDialog
+        v-model="historyRecordVisible"
+        @close-history-record="handleHistoryRecord">
+    </HistoryRecordDialog>
   </el-container>
 </template>
 
@@ -53,19 +58,22 @@ import checkAuthority from "@/utils/checkAuthority";
 import AddExcelDialog from "@/components/dialog/excels/AddExcelDialog";
 import EditExcelDialog from "@/components/dialog/excels/EditExcelDialog";
 import UploadExcelDialog from "@/components/dialog/excels/UploadExcelDialog";
+import HistoryRecordDialog from "@/components/dialog/excels/HistoryRecordDialog";
 
 export default {
   name: 'Excels',
-  components: {UploadExcelDialog, EditExcelDialog, AddExcelDialog},
+  components: {HistoryRecordDialog, UploadExcelDialog, EditExcelDialog, AddExcelDialog},
   data() {
     return {
       addExcelFormVisible: false,
       editExcelFormVisible: false,
       uploadExcelFormVisible: false,
+      historyRecordVisible: false,
       addExcelButton: false,
       editExcelButton: false,
       deleteExcelButton: false,
       uploadExcelButton: false,
+      historyRecordButton: false,
       excels: []
     }
   },
@@ -114,11 +122,22 @@ export default {
         const result = res.data;
         this.uploadExcelButton = result.data;
       }).catch(message => {
-        this.deleteExcelButton = false;
+        this.uploadExcelButton = false;
+      });
+    },
+    checkHistoryRecordButtonAuthority() {
+      checkAuthority('Rfea74b989acb435b94a0883a3c3ebb52').then(res => {
+        const result = res.data;
+        this.historyRecordButton = result.data;
+      }).catch(message => {
+        this.historyRecordButton = false;
       });
     },
     clickAddExcel() {
       this.addExcelFormVisible = true;
+    },
+    clickHistoryRecord() {
+      this.historyRecordVisible = true;
     },
     clickEditExcel(excelId) {
       this.$store.commit('SET_EXCEL_ID', excelId);
@@ -154,6 +173,9 @@ export default {
     },
     handleUploadExcel() {
       this.uploadExcelFormVisible = false;
+    },
+    handleHistoryRecord() {
+      this.historyRecordVisible = false;
     }
   },
   created() {
@@ -161,6 +183,7 @@ export default {
     this.checkEditExcelButtonAuthority();
     this.checkDeleteExcelButtonAuthority();
     this.checkUploadExcelButtonAuthority();
+    this.checkHistoryRecordButtonAuthority();
     this.init();
   }
 }
