@@ -9,7 +9,7 @@
       <template #title>
         <el-icon><Location /></el-icon>
         <span style="display: block; overflow: hidden; text-overflow: ellipsis">
-          {{ system.systemName}}
+          {{ system.systemName }}
         </span>
       </template>
       <el-menu-item v-for="menu in system.menus"
@@ -20,6 +20,20 @@
         </span>
       </el-menu-item>
     </el-sub-menu>
+<!--    <el-sub-menu>-->
+<!--      <template #title>-->
+<!--        <el-icon><Location /></el-icon>-->
+<!--        <span style="display: block; overflow: hidden; text-overflow: ellipsis">-->
+<!--          测试-->
+<!--        </span>-->
+<!--      </template>-->
+<!--      <el-menu-item index="/system/aaa"-->
+<!--                    @click="handleClick" >-->
+<!--        <span style="display: block; overflow: hidden; text-overflow: ellipsis">-->
+<!--          系统1-页面1-->
+<!--        </span>-->
+<!--      </el-menu-item>-->
+<!--    </el-sub-menu>-->
   </el-menu>
 </template>
 
@@ -34,7 +48,15 @@ export default {
   methods: {
     handleClick(value) {
       let path = value.index;
-      this.$router.push(path);
+      let start = path.indexOf("/home/");
+      if (start === 0) {
+        this.$router.push(path);
+      } else {
+        const { href } = this.$router.resolve({
+          path: path,
+        });
+        window.open(href, '_blank');
+      }
     },
     initSystems() {
       let _this = this;
