@@ -21,15 +21,15 @@
       </el-row>
       <el-scrollbar max-height="40vh">
         <el-row v-for="(item, index) in this.editExcelForm.rows">
-          <el-col :span="2"></el-col>
-          <el-col :span="8">
+          <el-col :span="1"></el-col>
+          <el-col :span="7">
             <span>请输入excel列名</span>
             <el-form-item :prop="'editExcelForm.rows.' + index + '.excelColumn'">
               <el-input v-model="item.excelColumn" />
             </el-form-item>
           </el-col>
-          <el-col :span="2"></el-col>
-          <el-col :span="8">
+          <el-col :span="1"></el-col>
+          <el-col :span="7">
             <span>请选择sql列名</span>
             <el-form-item :prop="'editExcelForm.rows.' + index + '.sqlColumn'">
               <el-select v-model="item.sqlColumn" placeholder="请选择sql列名" no-data-text="请选择sql表">
@@ -38,8 +38,18 @@
             </el-form-item>
           </el-col>
           <el-col :span="1"></el-col>
+          <el-col :span="4">
+            <span>是否需要特殊处理</span>
+            <el-form-item :prop="'editExcelForm.rows.' + index + '.isSpecial'">
+              <el-switch v-model="item.isSpecial"
+                         inline-prompt
+                         active-text="是"
+                         inactive-text="否"
+                         size="default" />
+            </el-form-item>
+          </el-col>
           <el-col :span="3" style="align-items: center; display: flex; justify-content: center">
-            <el-button type="primary" v-if="index === 0" @click="insertRow('', '', true)" circle>
+            <el-button type="primary" v-if="index === 0" @click="insertRow('', '', true, false)" circle>
               <el-icon><Plus /></el-icon>
             </el-button>
             <el-button type="danger" v-if="index !== 0 && item.nullable" @click="deleteRow(index)" circle>
@@ -96,7 +106,8 @@ export default {
           {max: 16, message: '名称最长16个字符', trigger: 'blur'}
         ],
         sqlColumn: [],
-        isCover: []
+        isCover: [],
+        isSpecial: []
       },
       sqlTables: [],
       nonNullList: [],
@@ -126,13 +137,13 @@ export default {
         let tempNonNullList = data.nonNullList;
         for (let i=0; i<tempNonNullList.length; ++i) {
           let info = tempNonNullList[i];
-          this.insertRow(info.excelColumn, info.sqlColumn, false);
+          this.insertRow(info.excelColumn, info.sqlColumn, false, info.isSpecial);
           this.nonNullList.push(info.sqlColumn)
         }
         let tempNullableList = data.nullableList;
         for (let i=0; i<tempNullableList.length; ++i) {
           let info = tempNullableList[i];
-          this.insertRow(info.excelColumn, info.sqlColumn, true);
+          this.insertRow(info.excelColumn, info.sqlColumn, true, info.isSpecial);
           this.nullableList.push(info.sqlColumn)
         }
       } catch (message) {
@@ -164,7 +175,7 @@ export default {
         const data = result.data;
         _this.nonNullList = data.nonNullList;
         for (let i=0; i<_this.nonNullList.length; ++i) {
-          _this.insertRow('', _this.nonNullList[i], false);
+          _this.insertRow('', _this.nonNullList[i], false, false);
         }
         _this.nullableList = data.nullableList;
       }).catch(message => {
@@ -220,11 +231,12 @@ export default {
         }
       });
     },
-    insertRow(excelColumn, sqlColumn, nullable) {
+    insertRow(excelColumn, sqlColumn, nullable, isSpecial) {
       this.editExcelForm.rows.push({
         excelColumn: excelColumn,
         sqlColumn: sqlColumn,
-        nullable: nullable
+        nullable: nullable,
+        isSpecial: isSpecial
       });
     },
     deleteRow(index) {

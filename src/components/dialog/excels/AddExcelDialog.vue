@@ -53,8 +53,8 @@
         </el-row>
         <el-scrollbar max-height="40vh">
           <el-row v-for="(item, index) in this.addExcelForm.rows">
-            <el-col :span="2"></el-col>
-            <el-col :span="8">
+            <el-col :span="1"></el-col>
+            <el-col :span="7">
               <span>请输入excel列名</span>
               <el-form-item :prop="'addExcelForm.rows.' + index + '.excelColumn'">
                 <el-select v-model="item.excelColumn" placeholder="请选择excel列名">
@@ -62,8 +62,8 @@
                 </el-select>
               </el-form-item>
             </el-col>
-            <el-col :span="2"></el-col>
-            <el-col :span="8">
+            <el-col :span="1"></el-col>
+            <el-col :span="7">
               <span>请选择sql列名</span>
               <el-form-item :prop="'addExcelForm.rows.' + index + '.sqlColumn'">
                 <el-select v-model="item.sqlColumn" placeholder="请选择sql列名" no-data-text="请选择sql表">
@@ -72,6 +72,16 @@
               </el-form-item>
             </el-col>
             <el-col :span="1"></el-col>
+            <el-col :span="4">
+              <span>是否需要特殊处理</span>
+              <el-form-item :prop="'addExcelForm.rows.' + index + '.isSpecial'">
+                <el-switch v-model="item.isSpecial"
+                           inline-prompt
+                           active-text="是"
+                           inactive-text="否"
+                           size="default" />
+              </el-form-item>
+            </el-col>
             <el-col :span="3" style="align-items: center; display: flex; justify-content: center">
               <el-button type="primary" v-if="index === 0" @click="insertRow('', true)" circle>
                 <el-icon><Plus /></el-icon>
@@ -135,7 +145,8 @@ export default {
           {max: 16, message: '名称最长16个字符', trigger: 'blur'}
         ],
         sqlColumn: [],
-        isCover: []
+        isCover: [],
+        isSpecial: []
       },
       sqlTables: [],
       nonNullList: [],
@@ -218,7 +229,8 @@ export default {
       this.addExcelForm.rows.push({
         excelColumn: '',
         sqlColumn: sqlColumn,
-        nullable: nullable
+        nullable: nullable,
+        isSpecial: false
       });
     },
     deleteRow(index) {
