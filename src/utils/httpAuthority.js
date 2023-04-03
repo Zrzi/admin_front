@@ -18,7 +18,7 @@ const httpAuthority = axios.create({
 
 // 线上测试
 // const httpAuthority = axios.create({
-//     baseURL: 'http://101.200.134.20:8080/authority',
+//     baseURL: 'http://101.200.134.20:8080/api/authority',
 //     timeout: 10 * 60 * 1000,
 //     headers: {
 //         "Content-Type": "application/json; charset=utf-8"
