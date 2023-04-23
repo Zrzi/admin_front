@@ -13,6 +13,10 @@ const Systems = () => import('../views/authority/Systems');
 const Excels = () => import('../views/excels/Excels');
 const Resources = () => import('../views/authority/Resources');
 
+const Classrooms = () => import('../views/test/classrooms');
+const GetTestSchedule = () => import('../views/test/getTestschedule');
+const SetTestSchedule = () => import('../views/test/setTestschedule');
+
 const routes = [
   {
     path: '/login',
@@ -78,6 +82,36 @@ const routes = [
         component: Excels,
         meta: {
           title: 'excel映射管理',
+          requireAuth: false,
+          resourceId: 'R5197664e9df34269b99da27e5c33483f'
+        }
+      },
+      {
+        path: 'classrooms',
+        name: 'classrooms',
+        component: Classrooms,
+        meta: {
+          title: '教室详情列表',
+          requireAuth: false,
+          resourceId: ''
+        }
+      },
+      {
+        path: 'getTestSchedule',
+        name: 'getTestSchedule',
+        component: GetTestSchedule,
+        meta: {
+          title: '考试安排通知',
+          requireAuth: false,
+          resourceId: ''
+        }
+      },
+      {
+        path: 'setTestSchedule',
+        name: 'setTestSchedule',
+        component: SetTestSchedule,
+        meta: {
+          title: '课程考试安排',
           requireAuth: false,
           resourceId: ''
         }

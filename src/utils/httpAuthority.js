@@ -27,7 +27,7 @@ import {rsaEncrypt} from "@/utils/rsaEncrypt";
 
 // 生产环境
 const httpAuthority = axios.create({
-    baseURL: 'http://192.168.50.1:8080/api/authority',
+    baseURL: 'http://192.168.50.1:8080/api',
     timeout: 10 * 60 * 1000,
     headers: {
         "Content-Type": "application/json; charset=utf-8"

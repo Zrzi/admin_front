@@ -5,7 +5,7 @@ const { ElementPlusResolver } = require('unplugin-vue-components/resolvers')
 
 module.exports = defineConfig({
 
-  outputDir: './authority',
+  outputDir: './dist',
 
   assetsDir: './assets',
 
