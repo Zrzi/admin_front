@@ -115,7 +115,168 @@ const routes = [
           requireAuth: false,
           resourceId: ''
         }
-      }
+      },
+      {
+        path: '/Home',
+        name: 'Home',
+        component: () => import('../views/practice/Home.vue'),
+        redirect: '/home1',
+        meta: { title: '主页' },
+        children: [
+          {
+            path: '/information',
+            name: 'information',
+            component: () => import('../views/practice/information.vue'),
+            meta: {
+              title: '个人信息',
+              requireAuth: false,
+              resourceId: ''
+            },
+          },
+          {
+            path: '/home1',
+            name: 'home1',
+            component: () => import('../views/practice/home1.vue'),
+            meta: {
+              title: '主页',
+              requireAuth: false,
+              resourceId: ''
+            },
+          },
+
+          {
+            path: '/Header',
+            name: 'Header',
+            component: () => import('../views/practice/Header.vue')
+          },
+
+          {
+            path: '/student',
+            name: 'student',
+            component: () => import('../views/practice/student.vue'),
+            meta: {
+              title: '学生组队',
+              requireAuth: false,
+              resourceId: ''
+            },
+          },
+          {
+            path: '/course',
+            name: 'course',
+            component: () => import('../views/practice/course.vue'),
+            meta: {
+              title: '实习名单确认',
+              requireAuth: false,
+              resourceId: ''
+            },
+          },
+          {
+            path: '/studentIntroduce',
+            name: 'studentIntroduce',
+            component: () => import('../views/practice/studentIntroduce.vue'),
+            meta: {
+              title: '个人简历',
+              requireAuth: false,
+              resourceId: ''
+            },
+          },
+          {
+            path: '/score',
+            name: 'score',
+            component: () => import('../views/practice/score.vue'),
+            meta: {
+              title: '实习成绩评定',
+              requireAuth: false,
+              resourceId: ''
+            }
+          },
+
+          {
+            path: '/innovation',
+            name: 'innovation',
+            component: () => import('../views/practice/innovation.vue'),
+            meta: {
+              title: '实践过程管理',
+              requireAuth: false,
+              resourceId: ''
+            }
+          },
+
+          {
+            path: '/honor',
+            name: 'honor',
+            component: () => import('../views/practice/honor.vue'),
+            meta: {
+              title: '实训学生组队',
+              requireAuth: false,
+              resourceId: ''
+            }
+          },
+
+          {
+            path: '/activity',
+            name: 'activity',
+            component: () => import('../views/practice/activity.vue'),
+            meta: {
+              title: '实训学生选题',
+              requireAuth: false,
+              resourceId: ''
+            }
+          },
+
+          {
+            path: '/dailyRecord',
+            name: 'dailyRecord',
+            component: () => import('../views/practice/daily.vue'),
+            meta: {
+              title: '课题管理',
+              requireAuth: false,
+              resourceId: ''
+            }
+          },
+          {
+            path: '/blog',
+            name: 'blog',
+            component: () => import('../views/practice/blog.vue'),
+            meta: {
+              title: '实习任务详情',
+              requireAuth: false,
+              resourceId: ''
+            }
+          },
+          //底下这些好像是否访问都差不多,先不展示了吧
+          {
+            path: '/BaseForm',
+            name: 'BaseForm',
+            component: () => import('@/components/BaseForm.vue')
+          },
+          {
+            path: '/JumpForm',
+            name: 'JumpForm',
+            component: () => import('@/components/JumpForm.vue')
+          },
+          {
+            path: '/comment',
+            name: 'comment',
+            component: () => import('../views/practice/Comment.vue'),
+            meta: {
+              title: '学生互评',
+              requireAuth: false,
+              resourceId: ''
+            }
+          },
+          {
+            path: '/teachIntroduce',
+            name: 'teachIntroduce',
+            component: () => import('../views/practice/teachIntroduce.vue'),
+            meta: {
+              title: '教师主页',
+              requireAuth: false,
+              resourceId: ''
+            }
+          }
+        ]
+      },
     ]
   },
   {
@@ -134,6 +295,11 @@ const routes = [
     meta: {
       requireAuth: false
     }
+  },
+  {
+    path: '/404',
+    name: '404',
+    component: () => import('../views/practice/404.vue')
   }
 ]
 

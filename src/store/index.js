@@ -1,4 +1,5 @@
 import { createStore } from 'vuex'
+import router from "@/router";
 
 export default createStore({
   state: {
@@ -9,7 +10,18 @@ export default createStore({
     userNo: '',
     excelId: '',
     roleChange: false,
-    publicKey: ''
+    publicKey: '',
+    loggedIn: false,
+    username: "",
+    jwtToken: "",
+    routerName: "",
+    studentNum1:"10",
+    courseNum1:"23",
+    projectNum1:"13",
+    honerNum1:"2",
+    activityNum1:"3",
+    dailyNum1:"123",
+    list: []
   },
   getters: {
   },
@@ -73,9 +85,76 @@ export default createStore({
       state.excelId = '';
       state.roleChange = false;
       state.publicKey = '';
+    },
+
+    studentNumplus(state){
+      state.studentNum1++
+    },
+    studentNumminus(state){
+      state.studentNum1--
+    },
+    honerNumplus(state){
+      state.honerNum1++
+    },
+    honerNumminus(state){
+      state.honerNum1--
+    },
+    projectNumplus(state){
+      state.projectNum1++
+    },
+    projectNumminus(state){
+      state.projectNum1--
+    },
+
+    courseNumplus(state){
+      state.courseNum1++
+    },
+    courseNumminus(state){
+      state.courseNum1--
+    },
+    dailyNumplus(state){
+      state.dailyNum1++
+    },
+    dailyNumminus(state){
+      state.dailyNum1--
+    },
+    activityNumminus(state){
+      state.activityNum1--
+    },
+    activityNumplus(state){
+      state.activityNum1++
+    },
+
+    navi(state, data) {
+      state.list = data
+    },
+    setRouterName(state, val) {
+      state.routerName = val
+    },
+    login(state, { username, jwtToken }) {
+      state.loggedIn = true,
+          state.username = username,
+          state.jwtToken = jwtToken
+    },
+    logout(state) {
+      state.loggedIn = false,
+          state.username = "",
+          state.jwtToken = "",
+          state.list = []
     }
   },
   actions: {
+    login({ commit }, { username, password }) {
+      return userLoginReq(username, password)
+          .then((jwtToken) => {
+            commit('login', { username, jwtToken })
+            getUimsConfig().then(res => {
+              var list = res.data.data.uims.menu
+              commit('navi', list)
+              router.push('/Home')
+            })
+          })
+    }
   },
   modules: {
   }
