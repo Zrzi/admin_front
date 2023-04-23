@@ -53,7 +53,7 @@ export default {
   methods: {
     init() {
       let _this = this;
-      _this.$httpAuthority.get('/system/get').then(res => {
+      _this.$httpAuthority.get('/authority/system/get').then(res => {
         const result = res.data;
         _this.systems = result.data;
       }).catch(message => {
@@ -73,7 +73,7 @@ export default {
         let roleForm = this.addRoleForm;
         let _this = this;
         if (valid) {
-          _this.$httpAuthority.post('/role/post', roleForm).then(res => {
+          _this.$httpAuthority.post('/authority/role/post', roleForm).then(res => {
             ElMessage({
               message: '添加成功',
               duration: 3 * 1000,

@@ -66,7 +66,7 @@ export default {
       let roleId = this.roleId;
       let searchKey = this.searchKey;
       let _this = this;
-      _this.$httpAuthority.get('/memberRole/getUnaddedUser', {params: {roleId, searchKey}}).then(res => {
+      _this.$httpAuthority.get('/authority/memberRole/getUnaddedUser', {params: {roleId, searchKey}}).then(res => {
         const result = res.data;
         _this.usersSelected = result.data;
         _this.usersSelectedShow = _this.usersSelected.slice(0, this.pageSize);
@@ -111,7 +111,7 @@ export default {
           roleId: _this.roleId,
           userNos: _this.userNos
         }
-        _this.$httpAuthority.post('/memberRole/addMemberRole', addMemberRoleForm).then(res => {
+        _this.$httpAuthority.post('/authority/memberRole/addMemberRole', addMemberRoleForm).then(res => {
           ElMessage({
             message: '添加成功',
             duration: 3 * 1000,

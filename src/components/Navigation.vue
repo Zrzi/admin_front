@@ -86,7 +86,7 @@ export default {
     },
     logout() {
       let _this = this;
-      _this.$httpAuthority.post("/logout").then(res => {
+      _this.$httpAuthority.post("/authority/logout").then(res => {
         localStorage.clear();
         sessionStorage.clear();
         this.$store.commit("RESET_STATE");
@@ -106,7 +106,7 @@ export default {
       let _this = this;
       this.$refs['resetPasswordForm'].validate((valid) => {
         if (valid) {
-          _this.$httpAuthority.post('/resetPassword', resetPasswordForm, {headers: {encrypted: 1}}).then(res => {
+          _this.$httpAuthority.post('/authority/resetPassword', resetPasswordForm, {headers: {encrypted: 1}}).then(res => {
             ElMessage({
               message: '修改成功',
               duration: 3 * 1000,

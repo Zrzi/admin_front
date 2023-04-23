@@ -4,6 +4,13 @@ const Components = require('unplugin-vue-components/webpack')
 const { ElementPlusResolver } = require('unplugin-vue-components/resolvers')
 
 module.exports = defineConfig({
+
+  outputDir: './authority',
+
+  assetsDir: './assets',
+
+  publicPath: './',
+
   transpileDependencies: true,
 
   chainWebpack: config => {

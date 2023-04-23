@@ -170,7 +170,7 @@ export default {
     getRole() {
       let roleId = this.roleId;
       let _this = this;
-      _this.$httpAuthority.get('/role/getByRoleId', {params: {roleId}}).then(res => {
+      _this.$httpAuthority.get('/authority/role/getByRoleId', {params: {roleId}}).then(res => {
         const result = res.data;
         _this.roleName = result.data.roleName;
         _this.systemId = result.data.systemId;
@@ -186,7 +186,7 @@ export default {
       let start = (this.currentPage - 1) * this.pageSize;
       let pageSize = this.pageSize;
       let searchKey = this.searchKey;
-      _this.$httpAuthority.get('/memberRole/get', {params: {roleId, start, pageSize, searchKey}}).then(res => {
+      _this.$httpAuthority.get('/authority/memberRole/get', {params: {roleId, start, pageSize, searchKey}}).then(res => {
         const result = res.data;
         _this.users = result.data.users;
         _this.total = result.data.count;
@@ -217,7 +217,7 @@ export default {
         roleId: roleId,
         userNo: userNo
       }
-      _this.$httpAuthority.post('/memberRole/deleteMemberRole', deleteMemberRoleForm).then(res => {
+      _this.$httpAuthority.post('/authority/memberRole/deleteMemberRole', deleteMemberRoleForm).then(res => {
         ElMessage({
           message: '删除成功',
           duration: 3 * 1000,
@@ -246,7 +246,7 @@ export default {
       let deleteRoleForm = {
         roleId: roleId
       };
-      _this.$httpAuthority.post('/role/delete', deleteRoleForm).then(res => {
+      _this.$httpAuthority.post('/authority/role/delete', deleteRoleForm).then(res => {
         ElMessage({
           message: '删除成功',
           duration: 3 * 1000,

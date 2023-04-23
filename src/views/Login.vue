@@ -55,7 +55,7 @@ export default {
       let _this = this;
       this.$refs['loginForm'].validate((valid) => {
         if (valid) {
-          _this.$httpAuthority.post('/login', loginForm, {headers: {encrypted: 1}}).then(res => {
+          _this.$httpAuthority.post('/authority/login', loginForm, {headers: {encrypted: 1}}).then(res => {
             const response = res.data;
             let token = response.data.token;
             let refreshToken = response.data.refreshToken;

@@ -195,7 +195,7 @@ export default {
       };
       _this.$refs['addTeacherForm'].validate(valid => {
         if (valid) {
-          _this.$httpAuthority.post('/user/post', addUserForm).then(res => {
+          _this.$httpAuthority.post('/authority/user/post', addUserForm).then(res => {
             ElMessage({
               message: '添加成功',
               duration: 3 * 1000,

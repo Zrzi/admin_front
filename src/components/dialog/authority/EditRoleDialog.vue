@@ -40,7 +40,7 @@ export default {
       this.roleId = this.$store.state.roleId;
       let roleId = this.roleId;
       let _this = this;
-      _this.$httpAuthority.get('/role/getByRoleId', {params: {roleId}}).then(res => {
+      _this.$httpAuthority.get('/authority/role/getByRoleId', {params: {roleId}}).then(res => {
         console.log(res);
         const result = res.data;
         _this.editRoleForm.roleName = result.data.roleName;
@@ -60,7 +60,7 @@ export default {
       roleForm.roleId = this.roleId;
       _this.$refs['editRoleForm'].validate(valid => {
         if (valid) {
-          _this.$httpAuthority.post('/role/update', roleForm).then(res => {
+          _this.$httpAuthority.post('/authority/role/update', roleForm).then(res => {
             ElMessage({
               message: '修改成功',
               duration: 3 * 1000,

@@ -177,7 +177,7 @@ export default {
       let userNo = this.userNo;
       let _this = this;
       let userType = '教师';
-      _this.$httpAuthority.get('/user/getByUserNo', {params: {userNo, userType}}).then(res => {
+      _this.$httpAuthority.get('/authority/user/getByUserNo', {params: {userNo, userType}}).then(res => {
         const result = res.data;
         _this.editTeacherForm.empName = result.data.empName;
         _this.editTeacherForm.sex = result.data.sex;
@@ -219,7 +219,7 @@ export default {
       _this.$refs['editTeacherForm'].validate(valid => {
         if (valid) {
           console.log(editUserForm);
-          _this.$httpAuthority.post('/user/update', editUserForm).then(res => {
+          _this.$httpAuthority.post('/authority/user/update', editUserForm).then(res => {
             ElMessage({
               message: '编辑成功',
               duration: 3 * 1000,

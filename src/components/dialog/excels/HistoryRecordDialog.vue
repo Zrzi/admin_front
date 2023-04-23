@@ -78,7 +78,7 @@ export default {
       let _this = this;
       let start = (this.currentPage - 1) * this.pageSize;
       let pageSize = this.pageSize;
-      _this.$httpAuthority.get('/excel/getHistoryUploadExcelResult', {params: {start, pageSize}}).then(res => {
+      _this.$httpAuthority.get('/authority/excel/getHistoryUploadExcelResult', {params: {start, pageSize}}).then(res => {
         const result = res.data;
         const historyResult = result.data;
         _this.excelTasks = historyResult.excelTasks;

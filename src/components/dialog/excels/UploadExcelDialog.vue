@@ -103,7 +103,7 @@ export default {
       this.forms = new FormData();
       this.forms.append('file', file);
       let _this = this;
-      _this.$httpAuthority.post('/excel/upload', this.forms, {headers: {'Content-Type': 'multipart/form-data', 'Upload': true}}).then(res => {
+      _this.$httpAuthority.post('/authority/excel/upload', this.forms, {headers: {'Content-Type': 'multipart/form-data', 'Upload': true}}).then(res => {
         const result = res.data;
         _this.taskId = result.data;
         _this.show = false;
@@ -117,7 +117,7 @@ export default {
       let _this = this;
       let taskId = _this.taskId;
       let interval = setInterval(() => {
-        _this.$httpAuthority.get('/excel/getUploadExcelResult', {params: {taskId}}).then(res => {
+        _this.$httpAuthority.get('/authority/excel/getUploadExcelResult', {params: {taskId}}).then(res => {
           const result = res.data;
           const status = result.data.taskStatus;
           const insert = result.data.taskSuccessInsert;

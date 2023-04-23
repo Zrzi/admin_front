@@ -114,7 +114,7 @@ export default {
     },
     init() {
       let _this = this;
-      _this.$httpAuthority.get('/system/get').then(res => {
+      _this.$httpAuthority.get('/authority/system/get').then(res => {
         const result = res.data;
         _this.systems = result.data;
         _this.systemsNum = _this.systems.length;
@@ -169,7 +169,7 @@ export default {
       let _this = this;
       this.$refs['addSystemForm'].validate((valid) => {
         if (valid) {
-          _this.$httpAuthority.post('/system/post', form).then(res => {
+          _this.$httpAuthority.post('/authority/system/post', form).then(res => {
             ElMessage({
               message: '添加成功',
               duration: 3 * 1000,
@@ -206,7 +206,7 @@ export default {
       form.systemId = this.systemSelected.systemId;
       this.$refs['editSystemForm'].validate((valid) => {
         if (valid) {
-          _this.$httpAuthority.post('/system/update', form).then(res => {
+          _this.$httpAuthority.post('/authority/system/update', form).then(res => {
             ElMessage({
               message: '修改成功',
               duration: 3 * 1000,

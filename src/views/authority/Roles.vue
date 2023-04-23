@@ -93,7 +93,7 @@ export default {
       let _this = this;
       // let res = await this.$httpAuthority.get('/role/get');
       // this.systems = res.data.data;
-      _this.$httpAuthority.get('/role/get').then(res => {
+      _this.$httpAuthority.get('/authority/role/get').then(res => {
         const result = res.data;
         _this.systems = result.data;
       }).catch(message => {

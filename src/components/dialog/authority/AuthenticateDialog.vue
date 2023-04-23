@@ -77,7 +77,7 @@ export default {
       let systemId = this.systemId;
       let roleId = this.roleId;
       let searchKey = this.searchKey;
-      _this.$httpAuthority.get('/roleResource/get', {params: {systemId, roleId, searchKey}}).then(res => {
+      _this.$httpAuthority.get('/authority/roleResource/get', {params: {systemId, roleId, searchKey}}).then(res => {
         const result = res.data;
         _this.resources = result.data;
         _this.total = _this.resources.length;
@@ -123,7 +123,7 @@ export default {
         systemId: _this.systemId,
         resourceIds: _this.resourcesSelected
       };
-      _this.$httpAuthority.post('/roleResource/post', editRoleResourceForm).then(res => {
+      _this.$httpAuthority.post('/authority/roleResource/post', editRoleResourceForm).then(res => {
         ElMessage({
           message: '提交成功',
           duration: 3 * 1000,

@@ -206,7 +206,7 @@ export default {
       let resourceId = this.editResourceSelectedId;
       if (resourceId) {
         let _this = this;
-        _this.$httpAuthority.get('/resource/getById', {params: {resourceId}}).then(res => {
+        _this.$httpAuthority.get('/authority/resource/getById', {params: {resourceId}}).then(res => {
           const result = res.data;
           _this.editResourceForm.resourceId = result.data.resourceId;
           _this.editResourceForm.resourceType = result.data.resourceType;
@@ -231,7 +231,7 @@ export default {
       let start = (this.currentPage - 1) * this.pageSize;
       let pageSize = this.pageSize;
       let searchKey = this.searchKey;
-      _this.$httpAuthority.get("/resource/get", {params: {systemId, start, pageSize, searchKey}}).then(res => {
+      _this.$httpAuthority.get("/authority/resource/get", {params: {systemId, start, pageSize, searchKey}}).then(res => {
         const result = res.data;
         _this.resources = result.data.resources;
         _this.total = result.data.total;
@@ -270,7 +270,7 @@ export default {
       let _this = this;
       _this.$refs['addResourceForm'].validate((valid) => {
         if (valid) {
-          _this.$httpAuthority.post('/resource/post', resourceForm).then(res => {
+          _this.$httpAuthority.post('/authority/resource/post', resourceForm).then(res => {
             ElMessage({
               message: '添加成功',
               duration: 3 * 1000,
@@ -311,7 +311,7 @@ export default {
       resourceForm.resourceId = this.editResourceSelectedId;
       _this.$refs['editResourceForm'].validate((valid) => {
         if (valid) {
-          this.$httpAuthority.post('/resource/update', resourceForm).then(res => {
+          this.$httpAuthority.post('/authority/resource/update', resourceForm).then(res => {
             ElMessage({
               message: '修改成功',
               duration: 3 * 1000,
@@ -341,7 +341,7 @@ export default {
       let deleteResourceForm = {
         resourceId: resourceId
       }
-      _this.$httpAuthority.post('/resource/delete', deleteResourceForm).then(res => {
+      _this.$httpAuthority.post('/authority/resource/delete', deleteResourceForm).then(res => {
         ElMessage({
           message: '删除成功',
           duration: 3 * 1000,

@@ -161,7 +161,7 @@ export default {
     },
     getSqlTables() {
       let _this = this;
-      _this.$httpAuthority.get('/excel/getSqlTables').then(res => {
+      _this.$httpAuthority.get('/authority/excel/getSqlTables').then(res => {
         const result = res.data;
         _this.sqlTables = result.data;
       }).catch(message => {
@@ -172,7 +172,7 @@ export default {
       this.addExcelForm.rows = [];
       let _this = this;
       let sqlTableName = this.addExcelForm.sqlName;
-      _this.$httpAuthority.get('/excel/getSqlColumns', {params: {sqlTableName: sqlTableName}}).then(res => {
+      _this.$httpAuthority.get('/authority/excel/getSqlColumns', {params: {sqlTableName: sqlTableName}}).then(res => {
         const result = res.data;
         const data = result.data;
         _this.nonNullList = data.nonNullList;
@@ -205,7 +205,7 @@ export default {
       let addExcelForm = this.addExcelForm;
       _this.$refs['addExcelForm'].validate(valid => {
         if (valid) {
-          _this.$httpAuthority.post('/excel/add', addExcelForm).then(res => {
+          _this.$httpAuthority.post('/authority/excel/add', addExcelForm).then(res => {
             ElMessage({
               message: '添加成功',
               duration: 3 * 1000,
@@ -278,7 +278,7 @@ export default {
     uploadExcel(params) {
       let _this = this;
       let excelName = this.title;
-      _this.$httpAuthority.get('/excel/checkExistExcelName', {params: {excelName}}).then(res => {
+      _this.$httpAuthority.get('/authority/excel/checkExistExcelName', {params: {excelName}}).then(res => {
         const result = res.data;
         if (result.data) {
           _this.state = 1;

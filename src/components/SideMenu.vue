@@ -27,7 +27,7 @@
 <!--          测试-->
 <!--        </span>-->
 <!--      </template>-->
-<!--      <el-menu-item index="/system/aaa"-->
+<!--      <el-menu-item index="/system/index.html"-->
 <!--                    @click="handleClick" >-->
 <!--        <span style="display: block; overflow: hidden; text-overflow: ellipsis">-->
 <!--          系统1-页面1-->
@@ -52,15 +52,20 @@ export default {
       if (start === 0) {
         this.$router.push(path);
       } else {
-        const { href } = this.$router.resolve({
-          path: path,
-        });
+        let href = window.location.protocol+"//"+window.location.host+"/";
+        path = path.substring(1);
+        let index = path.indexOf('/');
+        if (index !== -1) {
+          href = href + path.substring(0, index) + '/#' + path.substring(index);
+        } else {
+          href = href + path;
+        }
         window.open(href, '_blank');
       }
     },
     initSystems() {
       let _this = this;
-      _this.$httpAuthority.get('/getMenus').then(res => {
+      _this.$httpAuthority.get('/authority/getMenus').then(res => {
         const response = res.data;
         _this.systems = response.data;
       });

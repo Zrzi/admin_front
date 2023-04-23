@@ -80,7 +80,7 @@ export default {
   methods: {
     init() {
       let _this = this;
-      _this.$httpAuthority.get('/excel/getExcels').then(res => {
+      _this.$httpAuthority.get('/authority/excel/getExcels').then(res => {
         const result = res.data;
         _this.excels = result.data;
       }).catch(message => {
@@ -149,7 +149,7 @@ export default {
       let deleteExcelForm = {
         excelId: excelId
       };
-      _this.$httpAuthority.post('/excel/delete', deleteExcelForm).then(res => {
+      _this.$httpAuthority.post('/authority/excel/delete', deleteExcelForm).then(res => {
         _this.init();
       });
     },

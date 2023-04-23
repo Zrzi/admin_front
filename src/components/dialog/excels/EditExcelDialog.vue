@@ -127,7 +127,7 @@ export default {
       let _this = this;
       let excelId = this.excelId;
       try {
-        const res = await _this.$httpAuthority.get('/excel/getExcelByExcelId', {params: {excelId: excelId}});
+        const res = await _this.$httpAuthority.get('/authority/excel/getExcelByExcelId', {params: {excelId: excelId}});
         const result = res.data;
         const data = result.data;
         this.editExcelForm.excelId = data.excelId;
@@ -159,7 +159,7 @@ export default {
     },
     getSqlTables() {
       let _this = this;
-      _this.$httpAuthority.get('/excel/getSqlTables').then(res => {
+      _this.$httpAuthority.get('/authority/excel/getSqlTables').then(res => {
         const result = res.data;
         _this.sqlTables = result.data;
       }).catch(message => {
@@ -170,7 +170,7 @@ export default {
       this.editExcelForm.rows = [];
       let _this = this;
       let sqlTableName = this.editExcelForm.sqlName;
-      _this.$httpAuthority.get('/excel/getSqlColumns', {params: {sqlTableName: sqlTableName}}).then(res => {
+      _this.$httpAuthority.get('/authority/excel/getSqlColumns', {params: {sqlTableName: sqlTableName}}).then(res => {
         const result = res.data;
         const data = result.data;
         _this.nonNullList = data.nonNullList;
@@ -186,7 +186,7 @@ export default {
     getSqlColumnsInit() {
       let _this = this;
       let sqlTableName = this.editExcelForm.sqlName;
-      _this.$httpAuthority.get('/excel/getSqlColumns', {params: {sqlTableName: sqlTableName}}).then(res => {
+      _this.$httpAuthority.get('/authority/excel/getSqlColumns', {params: {sqlTableName: sqlTableName}}).then(res => {
         const result = res.data;
         const data = result.data;
         _this.nullableList = data.nullableList;
@@ -211,7 +211,7 @@ export default {
       let editExcelForm = this.editExcelForm;
       _this.$refs['editExcelForm'].validate(valid => {
         if (valid) {
-          _this.$httpAuthority.post('/excel/update', editExcelForm).then(res => {
+          _this.$httpAuthority.post('/authority/excel/update', editExcelForm).then(res => {
             ElMessage({
               message: '编辑成功',
               duration: 3 * 1000,

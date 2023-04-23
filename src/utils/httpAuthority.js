@@ -8,13 +8,13 @@ import {getKey, aesEncrypt} from "@/utils/aesEncrypt";
 import {rsaEncrypt} from "@/utils/rsaEncrypt";
 
 // 本地测试
-const httpAuthority = axios.create({
-    baseURL: 'http://localhost:8000',
-    timeout: 10 * 60 * 1000,
-    headers: {
-        "Content-Type": "application/json; charset=utf-8"
-    }
-});
+// const httpAuthority = axios.create({
+//     baseURL: 'http://localhost:8080/api/authority',
+//     timeout: 10 * 60 * 1000,
+//     headers: {
+//         "Content-Type": "application/json; charset=utf-8"
+//     }
+// });
 
 // 线上测试
 // const httpAuthority = axios.create({
@@ -24,6 +24,15 @@ const httpAuthority = axios.create({
 //         "Content-Type": "application/json; charset=utf-8"
 //     }
 // });
+
+// 生产环境
+const httpAuthority = axios.create({
+    baseURL: 'http://192.168.50.1:8080/api/authority',
+    timeout: 10 * 60 * 1000,
+    headers: {
+        "Content-Type": "application/json; charset=utf-8"
+    }
+});
 
 // 是否正在刷新token
 let isRefreshing = false;

@@ -181,7 +181,7 @@ export default {
       let start = (this.currentPage - 1) * this.pageSize;
       let pageSize = this.pageSize;
       let searchKey = this.searchKey;
-      _this.$httpAuthority.get('/user/get', {params: {userType, start, pageSize, searchKey}}).then(res => {
+      _this.$httpAuthority.get('/authority/user/get', {params: {userType, start, pageSize, searchKey}}).then(res => {
         const result = res.data;
         if (_this.showStudent) {
           _this.students = result.data.students;
@@ -240,7 +240,7 @@ export default {
       let deleteUserForm = {
         userNo: stuNo
       };
-      _this.$httpAuthority.post("/user/delete", deleteUserForm).then(res => {
+      _this.$httpAuthority.post("/authority/user/delete", deleteUserForm).then(res => {
         ElMessage({
           message: '删除成功',
           duration: 3 * 1000,
@@ -259,7 +259,7 @@ export default {
       let deleteUserForm = {
         userNo: empNo
       };
-      _this.$httpAuthority.post("/user/delete", deleteUserForm).then(res => {
+      _this.$httpAuthority.post("/authority/user/delete", deleteUserForm).then(res => {
         ElMessage({
           message: '删除成功',
           duration: 3 * 1000,
