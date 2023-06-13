@@ -113,7 +113,7 @@ const checkAuthority = function(resourceId) {
   if (!resourceId) {
     return Promise.reject('resourceId不存在');
   }
-  return httpAuthority.get('/checkAuthority', {params: {resourceId: resourceId}});
+  return httpAuthority.get('/authority/checkAuthority', {params: {resourceId: resourceId}});
 }
 
 router.beforeEach((to, from, next) => {

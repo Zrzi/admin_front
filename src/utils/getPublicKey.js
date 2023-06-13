@@ -7,7 +7,7 @@ export default async function() {
     }
     let publicKey = '';
     try {
-        const res = await httpAuthority.get('/getRsaPublicKey');
+        const res = await httpAuthority.get('/authority/getRsaPublicKey');
         publicKey = res.data.data;
         store.commit('SET_PUBLIC_KEY', publicKey);
     } catch (e) {

@@ -138,7 +138,7 @@ export default {
       addExcelRules: {
         excelName: [
           {required: true, message: '请输入excel表格名', trigger: 'blur'},
-          {max: 16, message: '名称最长16个字符', trigger: 'blur'}
+          {max: 64, message: '名称最长64个字符', trigger: 'blur'}
         ],
         excelColumn: [
           {required: true, message: '请输入excel表格列名', trigger: 'blur'},

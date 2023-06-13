@@ -7,9 +7,9 @@ import getPublicKey from "@/utils/getPublicKey";
 import {getKey, aesEncrypt} from "@/utils/aesEncrypt";
 import {rsaEncrypt} from "@/utils/rsaEncrypt";
 
-// 本地测试
+// 本地测试，注意，目前如果本地测试需要开启Nginx代理
 // const httpAuthority = axios.create({
-//     baseURL: 'http://localhost:8080/api/authority',
+//     baseURL: 'http://localhost:8080/api',
 //     timeout: 10 * 60 * 1000,
 //     headers: {
 //         "Content-Type": "application/json; charset=utf-8"
@@ -18,7 +18,7 @@ import {rsaEncrypt} from "@/utils/rsaEncrypt";
 
 // 线上测试
 // const httpAuthority = axios.create({
-//     baseURL: 'http://101.200.134.20:8080/api/authority',
+//     baseURL: 'http://101.200.134.20:8080/api',
 //     timeout: 10 * 60 * 1000,
 //     headers: {
 //         "Content-Type": "application/json; charset=utf-8"
@@ -27,7 +27,7 @@ import {rsaEncrypt} from "@/utils/rsaEncrypt";
 
 // 生产环境
 const httpAuthority = axios.create({
-    baseURL: 'http://192.168.50.1:8080/api/authority',
+    baseURL: 'http://192.168.50.142:8080/api',
     timeout: 10 * 60 * 1000,
     headers: {
         "Content-Type": "application/json; charset=utf-8"
@@ -118,7 +118,7 @@ httpAuthority.interceptors.response.use(async response => {
                 refreshToken: refreshToken
             }
             try {
-                const res = await httpAuthority.post('/refreshToken', refreshTokenForm);
+                const res = await httpAuthority.post('/authority/refreshToken', refreshTokenForm);
                 const response = res.data;
                 // 其它情况，系统没能刷新token
                 if (response.code === 200) {

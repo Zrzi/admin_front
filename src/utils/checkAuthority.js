@@ -4,5 +4,5 @@ export default function (resourceId) {
     if (!resourceId) {
         return Promise.reject('resourceId不存在');
     }
-    return httpAuthority.get('/checkAuthority', {params: {resourceId}});
+    return httpAuthority.get('/authority/checkAuthority', {params: {resourceId}});
 };
